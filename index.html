@@ -94,6 +94,7 @@
   }
   .count-opt.active{ background:var(--sun); border-color:var(--sun-dark); box-shadow:0 3px 0 var(--sun-dark); }
   .count-opt:active{ transform: translateY(2px); }
+  .count-opt.diff-opt{ min-width:auto; height:auto; padding:12px 20px; font-family:'Nunito'; font-size:15px; }
 
   /* Auto-generated group cards */
   .group-cards{ display:flex; flex-direction:column; gap:10px; margin-top:16px; }
@@ -243,8 +244,8 @@
       <button class="game-card" data-target="ev">
         <span class="emoji">🏠</span>
         <h3>Ev Etkinlikleri</h3>
-        <p>Öğrencilerin evde yapabileceği etkinlikler yakında burada olacak.</p>
-        <span class="tag" style="background:var(--grass-dark)">Yakında</span>
+        <p>Öğrencilerin evde tek başına oynayabileceği matematik, Türkçe ve mantık oyunları.</p>
+        <span class="tag" style="background:var(--grass-dark)">Etkinlikler</span>
       </button>
       <button class="game-card" data-target="ogrenciler">
         <span class="emoji">👤</span>
@@ -275,12 +276,202 @@
     </div>
   </section>
 
-  <!-- ================= EV ETKİNLİKLERİ ================= -->
+  <!-- ================= EV ETKİNLİKLERİ (3 kategori) ================= -->
   <section class="screen" id="screen-ev">
     <h2 class="game-title">🏠 Ev Etkinlikleri</h2>
-    <p class="game-desc">Öğrencilerin evde yapabileceği etkinlikler.</p>
+    <p class="game-desc">Öğrencinin evde tek başına, istediği kadar oynayabileceği alıştırma oyunları.</p>
+    <div class="card-grid">
+      <button class="game-card" data-target="evMatematik">
+        <span class="emoji">🔢</span>
+        <h3>Matematik</h3>
+        <p>Sayı Şimşeği, 24'e Ulaş, Sayı Örüntüsü Avcısı, Yüksek mi Alçak mı ve Saat/Para Problemleri.</p>
+        <span class="tag" style="background:var(--sun-dark)">5 oyun</span>
+      </button>
+      <button class="game-card" data-target="evTurkce">
+        <span class="emoji">📖</span>
+        <h3>Türkçe</h3>
+        <p>Anagram, eş/zıt anlam eşleştirme, cümle tamamlama, hecelere ayırma ve noktalama oyunları.</p>
+        <span class="tag" style="background:var(--sky-dark)">Yakında</span>
+      </button>
+      <button class="game-card" data-target="evMantik">
+        <span class="emoji">🧠</span>
+        <h3>Mantık</h3>
+        <p>Tek farklı olanı bulma, şekil örüntüsü, sıralama bulmacası ve mantık zincirleri.</p>
+        <span class="tag" style="background:var(--grape-dark)">Yakında</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ================= EV: MATEMATİK (oyun listesi) ================= -->
+  <section class="screen" id="screen-evMatematik">
+    <h2 class="game-title">🔢 Matematik</h2>
+    <p class="game-desc">İstediğin oyunu seç, sonu gelmeyen yeni sorularla pratik yap.</p>
+    <div class="card-grid">
+      <button class="game-card" data-target="evSayi">
+        <span class="emoji">⚡</span>
+        <h3>Sayı Şimşeği (Ev)</h3>
+        <p>Kolay, orta veya zor seviye seç; toplama, çıkarma ve çarpım sorularını hızlıca çöz.</p>
+        <span class="tag" style="background:var(--sun-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="ev24">
+        <span class="emoji">🎯</span>
+        <h3>24'e Ulaş</h3>
+        <p>4 sayı verilir; +, −, ×, ÷ kullanarak 24'e ulaşmaya çalış. Her seferinde yeni sayılar!</p>
+        <span class="tag" style="background:var(--sky-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evOruntu">
+        <span class="emoji">🧩</span>
+        <h3>Sayı Örüntüsü Avcısı</h3>
+        <p>"3, 6, 9, 12, ?" gibi örüntülerde bir sonraki sayıyı bul.</p>
+        <span class="tag" style="background:var(--grass-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evYuksekAlcak">
+        <span class="emoji">🔼</span>
+        <h3>Yüksek mi Alçak mı</h3>
+        <p>1-100 arasında tutulan sayıyı en az tahminle bulmaya çalış.</p>
+        <span class="tag" style="background:var(--grape-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evSaatPara">
+        <span class="emoji">🕒</span>
+        <h3>Saat ve Para Problemleri</h3>
+        <p>Günlük hayattan saat ve para sorularını çöz.</p>
+        <span class="tag" style="background:var(--coral-dark)">Bireysel</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ================= EV: TÜRKÇE (yakında) ================= -->
+  <section class="screen" id="screen-evTurkce">
+    <h2 class="game-title">📖 Türkçe</h2>
+    <p class="game-desc">Kelime ve cümle oyunları.</p>
     <div class="panel" style="text-align:center;">
-      <p class="empty-note">Burası hazırlanıyor 👀<br>Yakında ev etkinlikleri eklenecek.</p>
+      <p class="empty-note">Burası hazırlanıyor 👀<br>Anagram, eş/zıt anlam, cümle tamamlama, hecelere ayırma ve noktalama oyunları yakında burada olacak.</p>
+    </div>
+  </section>
+
+  <!-- ================= EV: MANTIK (yakında) ================= -->
+  <section class="screen" id="screen-evMantik">
+    <h2 class="game-title">🧠 Mantık</h2>
+    <p class="game-desc">Görsel ve sözel mantık oyunları.</p>
+    <div class="panel" style="text-align:center;">
+      <p class="empty-note">Burası hazırlanıyor 👀<br>Tek farklı olanı bulma, şekil örüntüsü, sıralama bulmacası ve mantık zincirleri yakında burada olacak.</p>
+    </div>
+  </section>
+
+  <!-- ================= EV: SAYI ŞİMŞEĞİ ================= -->
+  <section class="screen" id="screen-evSayi">
+    <div class="subview active" id="evSayiConfig">
+      <h2 class="game-title">⚡ Sayı Şimşeği (Ev)</h2>
+      <p class="game-desc">Bir zorluk seviyesi seç ve başla. Süre yok, istediğin kadar soru çözebilirsin.</p>
+      <div class="panel">
+        <div class="field-label">Zorluk seviyesi</div>
+        <div class="count-options" id="evSayiDiffOptions">
+          <button type="button" class="count-opt diff-opt active" data-diff="kolay">Kolay</button>
+          <button type="button" class="count-opt diff-opt" data-diff="orta">Orta</button>
+          <button type="button" class="count-opt diff-opt" data-diff="zor">Zor</button>
+        </div>
+        <div class="row">
+          <button class="btn grass" id="evSayiStartBtn">▶️ Başla</button>
+        </div>
+        <p class="hint">Kolay: 1-10 arası toplama/çıkarma. Orta: 1-50 arası toplama/çıkarma + küçük çarpım tablosu. Zor: 1-100 arası toplama/çıkarma + çarpım ve bölme.</p>
+      </div>
+    </div>
+    <div class="subview" id="evSayiPlay">
+      <div class="panel">
+        <div class="timer-count">
+          <div class="stat"><div class="num" id="evSayiScore">0</div><div class="lbl">DOĞRU</div></div>
+        </div>
+        <div class="problem-box"><div class="problem-text" id="evSayiProblemText">-</div></div>
+        <div class="row" style="max-width:340px; margin:0 auto;">
+          <input class="field" id="evSayiAnswerInput" placeholder="Cevap" type="text" inputmode="numeric" pattern="-?[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false">
+          <button class="btn coral" id="evSayiAnswerBtn">Cevapla</button>
+        </div>
+        <div class="flash-msg" id="evSayiFlash"></div>
+        <div class="row" style="justify-content:center; margin-top:16px;">
+          <button class="btn ghost" id="evSayiBitirBtn">Bitir</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: 24'E ULAŞ ================= -->
+  <section class="screen" id="screen-ev24">
+    <h2 class="game-title">🎯 24'e Ulaş</h2>
+    <p class="game-desc">Aşağıdaki 4 sayıyı, her birini tam olarak bir kez kullanarak +, −, ×, ÷ ve parantezlerle 24'e ulaştır.</p>
+    <div class="panel">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="ev24Score">0</div><div class="lbl">ÇÖZÜLEN</div></div>
+      </div>
+      <div class="chip-list" id="ev24Numbers"></div>
+      <div class="row">
+        <input class="field" id="ev24Input" placeholder="Örn: (3+5)*2+... " type="text" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="btn coral" id="ev24CheckBtn">Kontrol Et</button>
+      </div>
+      <div class="flash-msg" id="ev24Flash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="ev24NewBtn">🎲 Yeni Sayılar</button>
+      </div>
+      <p class="hint">Sadece rakamlar, + − × ÷ (x veya * de kullanılabilir) ve parantez kullan. Her sayıyı tam olarak bir kez kullanmalısın. Bazı sayı setleri 24'e ulaşmaya uygun olmayabilir; öyle görünüyorsa "Yeni Sayılar" ile devam et.</p>
+    </div>
+  </section>
+
+  <!-- ================= EV: SAYI ÖRÜNTÜSÜ AVCISI ================= -->
+  <section class="screen" id="screen-evOruntu">
+    <h2 class="game-title">🧩 Sayı Örüntüsü Avcısı</h2>
+    <p class="game-desc">Örüntüyü incele ve bir sonraki sayıyı bul.</p>
+    <div class="panel">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evOruntuScore">0</div><div class="lbl">DOĞRU</div></div>
+      </div>
+      <div class="problem-box"><div class="problem-text" id="evOruntuText" style="font-size:clamp(24px,4.5vw,36px);">-</div></div>
+      <div class="row" style="max-width:340px; margin:0 auto;">
+        <input class="field" id="evOruntuInput" placeholder="Sonraki sayı" type="text" inputmode="numeric" pattern="-?[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="btn coral" id="evOruntuCheckBtn">Kontrol Et</button>
+      </div>
+      <div class="flash-msg" id="evOruntuFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evOruntuNewBtn">Yeni Örüntü</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: YÜKSEK Mİ ALÇAK MI ================= -->
+  <section class="screen" id="screen-evYuksekAlcak">
+    <h2 class="game-title">🔼 Yüksek mi Alçak mı</h2>
+    <p class="game-desc">1 ile 100 arasında bir sayı tuttum. Bulmaya çalış!</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evYaAttempts">0</div><div class="lbl">TAHMİN</div></div>
+        <div class="stat"><div class="num" id="evYaWins">0</div><div class="lbl">BİLİNEN</div></div>
+      </div>
+      <div class="row" style="max-width:340px; margin:0 auto;">
+        <input class="field" id="evYaInput" placeholder="Tahminin (1-100)" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="btn coral" id="evYaGuessBtn">Tahmin Et</button>
+      </div>
+      <div class="flash-msg" id="evYaFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evYaNewBtn">🎲 Yeni Oyun</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: SAAT VE PARA PROBLEMLERİ ================= -->
+  <section class="screen" id="screen-evSaatPara">
+    <h2 class="game-title">🕒 Saat ve Para Problemleri</h2>
+    <p class="game-desc">Günlük hayattan saat ve para sorularını çöz.</p>
+    <div class="panel">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evSpScore">0</div><div class="lbl">DOĞRU</div></div>
+      </div>
+      <div class="problem-box"><div class="problem-text" id="evSpText" style="font-size:clamp(18px,3vw,24px); line-height:1.4;">-</div></div>
+      <div class="row" style="max-width:340px; margin:0 auto;">
+        <input class="field" id="evSpInput" placeholder="Cevap (saat için Ö:DD, örn 4:15)" type="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="btn coral" id="evSpCheckBtn">Kontrol Et</button>
+      </div>
+      <div class="flash-msg" id="evSpFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evSpNewBtn">Yeni Soru</button>
+      </div>
     </div>
   </section>
 
@@ -366,7 +557,7 @@
       <button class="game-card" data-target="kutu">
         <span class="emoji">📦</span>
         <h3>Gizemli Kutu</h3>
-        <p>Her grup için farklı bir görsel bulanık şekilde çıkar. 3 tahmin hakkı vardır, erken bilen daha çok puan kazanır.</p>
+        <p>Her grup için farklı bir görsel bulanık şekilde çıkar. 3 tahmin hakkı ve 60 saniyesi vardır, erken bilen daha çok puan kazanır.</p>
         <span class="tag" style="background:var(--sky-dark)">Grup yarışması</span>
       </button>
       <button class="game-card" data-target="sayi">
@@ -382,7 +573,7 @@
       <h3 style="font-size:19px; margin-bottom:12px; color:var(--coral-dark);">Nasıl kullanılır?</h3>
       <div class="tips-grid">
         <div class="tip"><strong>💥 Kelime Oyunu:</strong> Sırası gelen gruba 2 farklı kategori gelir, ikisi için toplam 2 dakikaları vardır. Kategoriyle ilgili her tekrarsız kelime, uygunluğuna göre 2-5 puan arası kazandırır; alakasız kelimeler kabul edilmez (gerekirse siz yine de kabul edebilirsiniz).</div>
-        <div class="tip"><strong>📦 Gizemli Kutu:</strong> Her grup kendi bulanık görselini tahmin etmeye çalışır. 1. tahminde bilirse 30, 2. tahminde 20, 3. tahminde 10 puan kazanır; yanlış tahminlerden sonra görsel biraz daha netleşir.</div>
+        <div class="tip"><strong>📦 Gizemli Kutu:</strong> Her grup kendi bulanık görselini tahmin etmeye çalışır. Grubun 60 saniyesi ve 3 tahmin hakkı vardır. 1. tahminde bilirse 30, 2. tahminde 20, 3. tahminde 10 puan kazanır; yanlış tahminlerden sonra görsel biraz daha netleşir. Süre dolarsa tur 0 puanla biter.</div>
         <div class="tip"><strong>🔢 Sayı Şimşeği:</strong> Sırası gelen grup, süre bitene kadar art arda gelen matematik sorularını sözlü ya da yazarak cevaplar; her doğru cevap 10 puan kazandırır.</div>
       </div>
       <p class="hint">Oyun bitiminde gruplar puanına göre sıralanır: 1. olan gruptaki her öğrenci +15, 2. olan +10, 3. olan +5 puan kazanır (4. ve sonrası 0 puan) ve bu puanlar otomatik olarak Öğrenci Profilleri'ne işlenir.</p>
@@ -464,7 +655,7 @@
           </label>
           <button class="btn grass" id="kutStartBtn">▶️ Oyuna Başla</button>
         </div>
-        <p class="hint">Her tur her gruba farklı bir görsel verilir. Her grubun 3 tahmin hakkı vardır: 1. tahminde 30, 2. tahminde 20, 3. tahminde 10 puan kazanılır. Yanlış tahminden sonra görsel biraz netleşir. Üçü de yanlışsa 0 puan.</p>
+        <p class="hint">Her tur her gruba farklı bir görsel verilir. Her grubun 60 saniyesi ve 3 tahmin hakkı vardır: 1. tahminde 30, 2. tahminde 20, 3. tahminde 10 puan kazanılır. Yanlış tahminden sonra görsel biraz netleşir. Süre dolarsa ya da üçü de yanlışsa 0 puan.</p>
       </div>
     </div>
 
@@ -473,6 +664,9 @@
       <div id="kutPlayPanel">
         <div class="panel box-wrap">
           <div class="turn-banner" id="kutTurnBanner"></div>
+          <div class="timer-count">
+            <div class="stat"><div class="num" id="kutTime">60</div><div class="lbl">SANİYE</div></div>
+          </div>
           <div class="box-emoji" id="kutBoxEmoji">📦</div>
           <div class="attempts-row" id="kutAttemptsRow"></div>
           <div class="row" style="max-width:420px; margin:0 auto;">
@@ -678,6 +872,7 @@
       '<div class="rank-item"><span class="rank-medal">'+medalFor(i)+'</span><span class="rank-name">'+esc(g.name)+'</span><span class="rank-score">'+g.score+' puan</span></div>'
     ).join('');
   }
+  function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 
   /* ---------------- Navigation (with parent map for nested back) ---------------- */
   const screens = document.querySelectorAll('.screen');
@@ -685,6 +880,9 @@
   const headerTitle = document.getElementById('gameHeaderTitle');
   const titles = {
     sinif:'🏫 Sınıf Etkinlikleri', ev:'🏠 Ev Etkinlikleri',
+    evMatematik:'🔢 Matematik', evTurkce:'📖 Türkçe', evMantik:'🧠 Mantık',
+    evSayi:'⚡ Sayı Şimşeği (Ev)', ev24:"🎯 24'e Ulaş", evOruntu:'🧩 Sayı Örüntüsü Avcısı',
+    evYuksekAlcak:'🔼 Yüksek mi Alçak mı', evSaatPara:'🕒 Saat ve Para Problemleri',
     ogrenciler:'👤 Öğrenci Profilleri', studentProfile:'👤 Öğrenci Profili',
     yetkiKapisi:'🔒 Yetkili Girişi',
     grup:'🤝 Grup Oyunları', kelime:'💥 Kelime Oyunu', kutu:'📦 Gizemli Kutu',
@@ -692,6 +890,9 @@
   };
   const PARENT = {
     sinif:'home', ev:'home',
+    evMatematik:'ev', evTurkce:'ev', evMantik:'ev',
+    evSayi:'evMatematik', ev24:'evMatematik', evOruntu:'evMatematik',
+    evYuksekAlcak:'evMatematik', evSaatPara:'evMatematik',
     ogrenciler:'home', studentProfile:'ogrenciler', yetkiKapisi:'ogrenciler',
     grup:'sinif', kelime:'grup', kutu:'grup', sayi:'grup',
     bireysel:'sinif'
@@ -1142,7 +1343,7 @@
   kelHomeBtn.addEventListener('click', ()=> showScreen('grup'));
 
   /* =========================================================
-     2. GİZEMLİ KUTU
+     2. GİZEMLİ KUTU (60 saniyelik geri sayım + 3 tahmin hakkı)
      ========================================================= */
   const SECRETS = [
     {e:'🐘', n:'Fil'}, {e:'🍕', n:'Pizza'}, {e:'🦋', n:'Kelebek'}, {e:'🚀', n:'Roket'},
@@ -1153,6 +1354,7 @@
     {e:'🦔', n:'Kirpi'}, {e:'🐌', n:'Salyangoz'}, {e:'🌻', n:'Ayçiçeği'}, {e:'🧦', n:'Çorap'}
   ];
   const ATTEMPT_BLUR = [18, 10, 4];
+  const KUTU_TURN_SECONDS = 60;
 
   const kutRoundCount = document.getElementById('kutRoundCount');
   const kutStartBtn = document.getElementById('kutStartBtn');
@@ -1160,6 +1362,7 @@
   const kutPlayPanel = document.getElementById('kutPlayPanel');
   const kutRecapPanel = document.getElementById('kutRecapPanel');
   const kutTurnBanner = document.getElementById('kutTurnBanner');
+  const kutTime = document.getElementById('kutTime');
   const kutBoxEmoji = document.getElementById('kutBoxEmoji');
   const kutAttemptsRow = document.getElementById('kutAttemptsRow');
   const kutTahminInput = document.getElementById('kutTahminInput');
@@ -1180,7 +1383,7 @@
   kutStartBtn.addEventListener('click', ()=>{
     if(appGroups.length < 2) return;
     const rounds = Math.max(1, Math.min(10, parseInt(kutRoundCount.value,10) || 3));
-    kut = { numRounds: rounds, currentRound: 1, deck: shuffle(SECRETS), roundSecrets: [], activeIndex: 0, perGroup: [] };
+    kut = { numRounds: rounds, currentRound: 1, deck: shuffle(SECRETS), roundSecrets: [], activeIndex: 0, perGroup: [], timeLeft: KUTU_TURN_SECONDS, timerHandle: null };
     kutShowSubview('kutuPlay');
     kutStartRound();
   });
@@ -1197,6 +1400,9 @@
     kutRenderTurn();
   }
   function kutRenderTurn(){
+    clearInterval(kut.timerHandle);
+    kut.timeLeft = KUTU_TURN_SECONDS;
+    kutTime.textContent = kut.timeLeft;
     renderScoreboardInto(kutScoreboard, appGroups, kut.activeIndex);
     const g = appGroups[kut.activeIndex];
     const secret = kut.roundSecrets[kut.activeIndex];
@@ -1212,10 +1418,23 @@
     kutGuessStatus.textContent = 'Kalan tahmin hakkı: '+(3-pg.attemptsUsed)+'/3';
     kutGuessStatus.style.color = 'var(--ink-soft)';
     kutTahminInput.focus();
+    kut.timerHandle = setInterval(kutTick, 1000);
+  }
+  function kutTick(){
+    kut.timeLeft--;
+    kutTime.textContent = Math.max(0, kut.timeLeft);
+    if(kut.timeLeft<=0){
+      clearInterval(kut.timerHandle);
+      const pg = kut.perGroup[kut.activeIndex];
+      if(!pg.done){
+        pg.done = true; pg.correct = false;
+        kutShowGroupResult(0, false, true);
+      }
+    }
   }
   function kutGuess(){
     const pg = kut.perGroup[kut.activeIndex];
-    if(pg.done) return;
+    if(pg.done || kut.timeLeft<=0) return;
     const g = appGroups[kut.activeIndex];
     const secret = kut.roundSecrets[kut.activeIndex];
     const raw = kutTahminInput.value.trim();
@@ -1226,12 +1445,14 @@
       const pts = [30,20,10][pg.attemptsUsed];
       g.score += pts;
       pg.done = true; pg.correct = true;
-      kutShowGroupResult(pts, true);
+      clearInterval(kut.timerHandle);
+      kutShowGroupResult(pts, true, false);
     } else {
       pg.attemptsUsed++;
       if(pg.attemptsUsed >= 3){
         pg.done = true; pg.correct = false;
-        kutShowGroupResult(0, false);
+        clearInterval(kut.timerHandle);
+        kutShowGroupResult(0, false, false);
       } else {
         kutGuessStatus.style.color='var(--coral-dark)';
         kutGuessStatus.textContent = 'Yanlış! Kalan tahmin hakkı: '+(3-pg.attemptsUsed)+'/3';
@@ -1246,16 +1467,21 @@
   kutTahminBtn.addEventListener('click', kutGuess);
   kutTahminInput.addEventListener('keydown', e=>{ if(e.key==='Enter') kutGuess(); });
 
-  function kutShowGroupResult(pts, correct){
+  function kutShowGroupResult(pts, correct, timeUp){
+    clearInterval(kut.timerHandle);
     renderScoreboardInto(kutScoreboard, appGroups, kut.activeIndex);
     const g = appGroups[kut.activeIndex];
     const secret = kut.roundSecrets[kut.activeIndex];
     kutPlayPanel.style.display='none';
     kutRecapPanel.style.display='block';
     kutBoxEmojiFinal.textContent = secret.e;
-    kutRecapTitle.textContent = correct
-      ? (g.name+' doğru bildi: '+secret.n+'! +'+pts+' puan 🎉')
-      : (g.name+' bilemedi. Cevap: '+secret.n+'. 0 puan.');
+    if(correct){
+      kutRecapTitle.textContent = g.name+' doğru bildi: '+secret.n+'! +'+pts+' puan 🎉';
+    } else if(timeUp){
+      kutRecapTitle.textContent = '⏰ Süre doldu! '+g.name+' bilemedi. Cevap: '+secret.n+'. 0 puan.';
+    } else {
+      kutRecapTitle.textContent = g.name+' bilemedi. Cevap: '+secret.n+'. 0 puan.';
+    }
     const isLastGroup = kut.activeIndex === appGroups.length-1;
     const isLastRound = kut.currentRound === kut.numRounds;
     if(isLastGroup && isLastRound) kutContinueBtn.textContent = '🏁 Sonuçları Gör';
@@ -1306,7 +1532,6 @@
   function sayShowSubview(id){
     document.querySelectorAll('#screen-sayi .subview').forEach(s=>s.classList.toggle('active', s.id===id));
   }
-  function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
   function generateProblem(){
     if(Math.random() < 0.2){
       const start = randInt(1,10), step = randInt(2,5);
@@ -1406,6 +1631,288 @@
     sayStartGroupTurn();
   });
   sayHomeBtn.addEventListener('click', ()=> showScreen('grup'));
+
+  /* =========================================================
+     EV ETKİNLİKLERİ — MATEMATİK (bireysel, sınırsız pratik)
+     ========================================================= */
+
+  /* ---- 1) Sayı Şimşeği (Ev) ---- */
+  const evSayiDiffOptions = document.getElementById('evSayiDiffOptions');
+  const evSayiStartBtn = document.getElementById('evSayiStartBtn');
+  const evSayiScoreEl = document.getElementById('evSayiScore');
+  const evSayiProblemText = document.getElementById('evSayiProblemText');
+  const evSayiAnswerInput = document.getElementById('evSayiAnswerInput');
+  const evSayiAnswerBtn = document.getElementById('evSayiAnswerBtn');
+  const evSayiFlash = document.getElementById('evSayiFlash');
+  const evSayiBitirBtn = document.getElementById('evSayiBitirBtn');
+  let evSayiDiff = 'kolay';
+  let evSayiScore = 0;
+  let evSayiProblem = null;
+
+  evSayiDiffOptions.addEventListener('click', e=>{
+    const btn = e.target.closest('.count-opt');
+    if(!btn) return;
+    evSayiDiff = btn.dataset.diff;
+    evSayiDiffOptions.querySelectorAll('.count-opt').forEach(b=>b.classList.toggle('active', b===btn));
+  });
+  function evSayiGenerate(){
+    if(evSayiDiff === 'kolay'){
+      if(Math.random()<0.5){
+        const a=randInt(1,10), b=randInt(1,10);
+        return {text:a+' + '+b+' = ?', answer:a+b};
+      }
+      const a=randInt(1,10), b=randInt(1,a);
+      return {text:a+' - '+b+' = ?', answer:a-b};
+    }
+    if(evSayiDiff === 'orta'){
+      const r = Math.random();
+      if(r<0.4){ const a=randInt(1,50), b=randInt(1,50); return {text:a+' + '+b+' = ?', answer:a+b}; }
+      if(r<0.75){ const a=randInt(1,50), b=randInt(1,a); return {text:a+' - '+b+' = ?', answer:a-b}; }
+      const a=randInt(2,5), b=randInt(2,5);
+      return {text:a+' × '+b+' = ?', answer:a*b};
+    }
+    const r = Math.random();
+    if(r<0.3){ const a=randInt(1,100), b=randInt(1,100); return {text:a+' + '+b+' = ?', answer:a+b}; }
+    if(r<0.55){ const a=randInt(1,100), b=randInt(1,a); return {text:a+' - '+b+' = ?', answer:a-b}; }
+    if(r<0.8){ const a=randInt(2,10), b=randInt(2,10); return {text:a+' × '+b+' = ?', answer:a*b}; }
+    const b=randInt(2,10), q=randInt(2,10), a=b*q;
+    return {text:a+' ÷ '+b+' = ?', answer:q};
+  }
+  function evSayiNext(){
+    evSayiProblem = evSayiGenerate();
+    evSayiProblemText.textContent = evSayiProblem.text;
+    evSayiAnswerInput.value=''; evSayiFlash.textContent='';
+    evSayiAnswerInput.focus();
+  }
+  evSayiStartBtn.addEventListener('click', ()=>{
+    evSayiScore = 0; evSayiScoreEl.textContent='0';
+    document.getElementById('evSayiConfig').classList.remove('active');
+    document.getElementById('evSayiPlay').classList.add('active');
+    evSayiNext();
+  });
+  function evSayiCheck(){
+    const raw = evSayiAnswerInput.value.trim();
+    if(raw==='') return;
+    const val = parseInt(raw,10);
+    if(isNaN(val)) return;
+    if(val === evSayiProblem.answer){
+      evSayiScore++; evSayiScoreEl.textContent = evSayiScore;
+      evSayiFlash.style.color='var(--grass-dark)'; evSayiFlash.textContent='Doğru! ✔️';
+    } else {
+      evSayiFlash.style.color='var(--coral-dark)'; evSayiFlash.textContent='Yanlış! Doğru cevap: '+evSayiProblem.answer;
+    }
+    setTimeout(evSayiNext, 600);
+  }
+  evSayiAnswerBtn.addEventListener('click', evSayiCheck);
+  evSayiAnswerInput.addEventListener('keydown', e=>{ if(e.key==='Enter') evSayiCheck(); });
+  evSayiBitirBtn.addEventListener('click', ()=>{
+    document.getElementById('evSayiPlay').classList.remove('active');
+    document.getElementById('evSayiConfig').classList.add('active');
+  });
+
+  /* ---- 2) 24'e Ulaş ---- */
+  const ev24Numbers = document.getElementById('ev24Numbers');
+  const ev24Input = document.getElementById('ev24Input');
+  const ev24CheckBtn = document.getElementById('ev24CheckBtn');
+  const ev24Flash = document.getElementById('ev24Flash');
+  const ev24NewBtn = document.getElementById('ev24NewBtn');
+  const ev24ScoreEl = document.getElementById('ev24Score');
+  let ev24Score = 0;
+  let ev24Nums = [];
+  function ev24Generate(){
+    ev24Nums = Array.from({length:4}, ()=>randInt(1,9));
+    ev24Numbers.innerHTML = ev24Nums.map(n=>'<span class="chip">'+n+'</span>').join('');
+    ev24Input.value=''; ev24Flash.textContent='';
+    ev24Input.focus();
+  }
+  function ev24Check(){
+    const raw = ev24Input.value.trim();
+    if(!raw) return;
+    if(!/^[0-9+\-*/x×().\s]+$/.test(raw)){
+      ev24Flash.style.color='var(--coral-dark)';
+      ev24Flash.textContent='Sadece rakam, + − × ÷ ve parantez kullan.';
+      return;
+    }
+    const usedNums = (raw.match(/\d+/g)||[]).map(Number).sort((a,b)=>a-b);
+    const expected = [...ev24Nums].sort((a,b)=>a-b);
+    if(usedNums.length !== expected.length || usedNums.some((n,i)=>n!==expected[i])){
+      ev24Flash.style.color='var(--coral-dark)';
+      ev24Flash.textContent = 'Verilen 4 sayıyı tam olarak birer kez kullanmalısın.';
+      return;
+    }
+    const normalized = raw.replace(/x|×/gi,'*').replace(/÷/g,'/');
+    let result;
+    try{ result = Function('"use strict"; return ('+normalized+')')(); }
+    catch(e){
+      ev24Flash.style.color='var(--coral-dark)';
+      ev24Flash.textContent = 'İfadeni kontrol et, geçerli bir işlem yaz.';
+      return;
+    }
+    if(typeof result === 'number' && Math.abs(result-24) < 1e-9){
+      ev24Score++; ev24ScoreEl.textContent = ev24Score;
+      ev24Flash.style.color='var(--grass-dark)';
+      ev24Flash.textContent = 'Harika! 24\'e ulaştın! 🎉';
+    } else {
+      ev24Flash.style.color='var(--coral-dark)';
+      ev24Flash.textContent = 'Sonucun 24 değil (bulunan: '+result+'). Tekrar dene.';
+    }
+  }
+  ev24CheckBtn.addEventListener('click', ev24Check);
+  ev24Input.addEventListener('keydown', e=>{ if(e.key==='Enter') ev24Check(); });
+  ev24NewBtn.addEventListener('click', ev24Generate);
+
+  /* ---- 3) Sayı Örüntüsü Avcısı ---- */
+  const evOruntuText = document.getElementById('evOruntuText');
+  const evOruntuInput = document.getElementById('evOruntuInput');
+  const evOruntuCheckBtn = document.getElementById('evOruntuCheckBtn');
+  const evOruntuFlash = document.getElementById('evOruntuFlash');
+  const evOruntuNewBtn = document.getElementById('evOruntuNewBtn');
+  const evOruntuScoreEl = document.getElementById('evOruntuScore');
+  let evOruntuScore = 0;
+  let evOruntuAnswer = null;
+  function evOruntuGenerate(){
+    let terms, answer;
+    if(Math.random() < 0.7){
+      const start = randInt(1,15), step = randInt(2,8);
+      terms = [0,1,2,3].map(i=>start+i*step);
+      answer = start+4*step;
+    } else {
+      const start = randInt(1,4), ratio = randInt(2,3);
+      terms = [0,1,2,3].map(i=>start*Math.pow(ratio,i));
+      answer = start*Math.pow(ratio,4);
+    }
+    evOruntuAnswer = answer;
+    evOruntuText.textContent = terms.join(', ')+', ?';
+    evOruntuInput.value=''; evOruntuFlash.textContent='';
+    evOruntuInput.focus();
+  }
+  function evOruntuCheck(){
+    const raw = evOruntuInput.value.trim();
+    if(raw==='') return;
+    const val = parseInt(raw,10);
+    if(isNaN(val)) return;
+    if(val === evOruntuAnswer){
+      evOruntuScore++; evOruntuScoreEl.textContent = evOruntuScore;
+      evOruntuFlash.style.color='var(--grass-dark)'; evOruntuFlash.textContent='Doğru! ✔️';
+    } else {
+      evOruntuFlash.style.color='var(--coral-dark)'; evOruntuFlash.textContent='Yanlış! Doğru cevap: '+evOruntuAnswer;
+    }
+    setTimeout(evOruntuGenerate, 900);
+  }
+  evOruntuCheckBtn.addEventListener('click', evOruntuCheck);
+  evOruntuInput.addEventListener('keydown', e=>{ if(e.key==='Enter') evOruntuCheck(); });
+  evOruntuNewBtn.addEventListener('click', evOruntuGenerate);
+
+  /* ---- 4) Yüksek mi Alçak mı ---- */
+  const evYaAttemptsEl = document.getElementById('evYaAttempts');
+  const evYaWinsEl = document.getElementById('evYaWins');
+  const evYaInput = document.getElementById('evYaInput');
+  const evYaGuessBtn = document.getElementById('evYaGuessBtn');
+  const evYaFlash = document.getElementById('evYaFlash');
+  const evYaNewBtn = document.getElementById('evYaNewBtn');
+  let evYaSecret = randInt(1,100);
+  let evYaAttempts = 0;
+  let evYaWins = 0;
+  function evYaNewGame(){
+    evYaSecret = randInt(1,100);
+    evYaAttempts = 0; evYaAttemptsEl.textContent='0';
+    evYaInput.value=''; evYaFlash.style.color='var(--ink-soft)';
+    evYaFlash.textContent = '1-100 arasında yeni bir sayı tuttum!';
+    evYaInput.disabled=false; evYaGuessBtn.disabled=false;
+    evYaInput.focus();
+  }
+  function evYaGuess(){
+    const raw = evYaInput.value.trim();
+    if(raw==='') return;
+    const val = parseInt(raw,10);
+    if(isNaN(val) || val<1 || val>100) return;
+    evYaAttempts++; evYaAttemptsEl.textContent = evYaAttempts;
+    if(val === evYaSecret){
+      evYaWins++; evYaWinsEl.textContent = evYaWins;
+      evYaFlash.style.color='var(--grass-dark)';
+      evYaFlash.textContent = 'Bildin! 🎉 ('+evYaAttempts+' tahminde) — Yeni oyun için butona bas.';
+      evYaInput.disabled=true; evYaGuessBtn.disabled=true;
+    } else if(val < evYaSecret){
+      evYaFlash.style.color='var(--sky-dark)';
+      evYaFlash.textContent = 'Daha büyük söyle! 🔼';
+      evYaInput.value=''; evYaInput.focus();
+    } else {
+      evYaFlash.style.color='var(--coral-dark)';
+      evYaFlash.textContent = 'Daha küçük söyle! 🔽';
+      evYaInput.value=''; evYaInput.focus();
+    }
+  }
+  evYaGuessBtn.addEventListener('click', evYaGuess);
+  evYaInput.addEventListener('keydown', e=>{ if(e.key==='Enter') evYaGuess(); });
+  evYaNewBtn.addEventListener('click', evYaNewGame);
+
+  /* ---- 5) Saat ve Para Problemleri ---- */
+  const evSpText = document.getElementById('evSpText');
+  const evSpInput = document.getElementById('evSpInput');
+  const evSpCheckBtn = document.getElementById('evSpCheckBtn');
+  const evSpFlash = document.getElementById('evSpFlash');
+  const evSpNewBtn = document.getElementById('evSpNewBtn');
+  const evSpScoreEl = document.getElementById('evSpScore');
+  let evSpScore = 0;
+  let evSpProblem = null;
+  function evSpGenerateSaat(){
+    const startH = randInt(1,12);
+    const startM = randInt(0,11)*5;
+    const addM = randInt(1,11)*5;
+    let totalM = startH*60+startM+addM;
+    let endH = Math.floor(totalM/60) % 12; if(endH===0) endH=12;
+    let endM = totalM % 60;
+    return {
+      text: 'Saat '+startH+':'+String(startM).padStart(2,'0')+'. '+addM+' dakika sonra saat kaç olur? (Örn: 4:15 şeklinde yaz)',
+      type:'saat', answerH: endH, answerM: endM
+    };
+  }
+  function evSpGeneratePara(){
+    const total = randInt(20,100);
+    const spend = randInt(1,total-1);
+    return {
+      text: 'Cebinde '+total+' TL var. '+spend+' TL harcadın. Kaç TL paran kaldı?',
+      type:'para', answer: total-spend
+    };
+  }
+  function evSpNext(){
+    evSpProblem = Math.random()<0.5 ? evSpGenerateSaat() : evSpGeneratePara();
+    evSpText.textContent = evSpProblem.text;
+    evSpInput.value=''; evSpFlash.textContent='';
+    evSpInput.focus();
+  }
+  function evSpCheck(){
+    const raw = evSpInput.value.trim();
+    if(raw==='') return;
+    let correct = false;
+    if(evSpProblem.type === 'para'){
+      const val = parseInt(raw,10);
+      correct = !isNaN(val) && val === evSpProblem.answer;
+    } else {
+      const m = raw.replace(/\s+/g,'').match(/^(\d{1,2})[:.,](\d{1,2})$/);
+      if(m){
+        const h = parseInt(m[1],10), mm = parseInt(m[2],10);
+        correct = (h===evSpProblem.answerH) && (mm===evSpProblem.answerM);
+      }
+    }
+    if(correct){
+      evSpScore++; evSpScoreEl.textContent = evSpScore;
+      evSpFlash.style.color='var(--grass-dark)'; evSpFlash.textContent='Doğru! ✔️';
+    } else {
+      const doğruCevap = evSpProblem.type==='para' ? (evSpProblem.answer+' TL') : (evSpProblem.answerH+':'+String(evSpProblem.answerM).padStart(2,'0'));
+      evSpFlash.style.color='var(--coral-dark)'; evSpFlash.textContent='Yanlış! Doğru cevap: '+doğruCevap;
+    }
+    setTimeout(evSpNext, 1200);
+  }
+  evSpCheckBtn.addEventListener('click', evSpCheck);
+  evSpInput.addEventListener('keydown', e=>{ if(e.key==='Enter') evSpCheck(); });
+  evSpNewBtn.addEventListener('click', evSpNext);
+
+  /* Initialize ev games' first screens/data when their screens are first shown */
+  ev24Generate();
+  evOruntuGenerate();
+  evYaNewGame();
+  evSpNext();
 
   /* ---------------- Initial render ---------------- */
   renderStudentList();
