@@ -74,6 +74,7 @@
   .row{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
   .field{ flex:1; min-width:160px; border:2px solid var(--line); background:var(--paper); color:var(--ink); border-radius:14px; padding:14px 16px; font-size:16px; font-weight:700; font-family:inherit; }
   .field:focus{ outline:3px solid var(--sky); border-color:var(--sky); }
+  .field[readonly]{ cursor:default; }
   .game-title{ font-size: clamp(22px,3.4vw,30px); margin-bottom:4px; }
   .game-desc{ color:var(--ink-soft); font-weight:700; font-size:14px; margin-bottom:20px; }
   .hint{ color:var(--ink-soft); font-weight:600; font-size:13px; margin-top:14px; line-height:1.5; }
@@ -175,6 +176,20 @@
   /* Sayı Şimşeği */
   .problem-box{ text-align:center; background:var(--paper); border:2px solid var(--line); border-radius:18px; padding:22px; margin-bottom:18px; }
   .problem-text{ font-family:'Baloo 2'; font-size: clamp(32px,6vw,50px); color:var(--ink); }
+
+  /* Tıklamalı sayı/işlem klavyesi (akıllı tahta ve tablet için) */
+  .keypad{ display:flex; flex-direction:column; gap:8px; margin-top:14px; max-width:360px; }
+  .keypad-row{ display:flex; gap:8px; }
+  .keypad-btn{ flex:1; min-height:54px; border-radius:14px; border:2px solid var(--line); background:var(--paper); font-family:'Baloo 2'; font-size:20px; font-weight:800; color:var(--ink); cursor:pointer; }
+  .keypad-btn:active{ transform: translateY(2px); }
+  .keypad-btn.keypad-del{ background:var(--paper-2); font-size:15px; }
+  .keypad-btn.keypad-clear{ background:var(--coral); color:#fff; border:none; }
+  .keypad-btn.keypad-enter{ background:var(--grass); color:#fff; border:none; }
+  .keypad-btn.op{ background:var(--sky); color:#fff; border:none; font-size:24px; }
+  .keypad-spacer{ visibility:hidden; }
+  .num-tile{ background:var(--sun); color:var(--ink); font-family:'Baloo 2'; font-weight:800; font-size:18px; border:none; border-radius:999px; padding:10px 22px; cursor:pointer; box-shadow:0 3px 0 var(--sun-dark); }
+  .num-tile.used{ opacity:.3; pointer-events:none; box-shadow:none; }
+  .expr-display{ min-height:52px; background:var(--paper); border:2px dashed var(--line); border-radius:14px; padding:12px 16px; font-family:'Baloo 2'; font-size:clamp(20px,3.4vw,28px); text-align:center; margin:14px 0; letter-spacing:1px; }
 
   /* Öğrenci profilleri */
   .student-list{ display:flex; flex-direction:column; gap:10px; }
@@ -316,7 +331,7 @@
       <button class="game-card" data-target="ev24">
         <span class="emoji">🎯</span>
         <h3>24'e Ulaş</h3>
-        <p>4 sayı verilir; +, −, ×, ÷ kullanarak 24'e ulaşmaya çalış. Her seferinde yeni sayılar!</p>
+        <p>4 sayı verilir; +, −, ×, ÷ ile soldan sağa sırayla ilerleyerek 24'e ulaşmaya çalış. Her seferinde yeni sayılar!</p>
         <span class="tag" style="background:var(--sky-dark)">Bireysel</span>
       </button>
       <button class="game-card" data-target="evOruntu">
@@ -383,9 +398,10 @@
         </div>
         <div class="problem-box"><div class="problem-text" id="evSayiProblemText">-</div></div>
         <div class="row" style="max-width:340px; margin:0 auto;">
-          <input class="field" id="evSayiAnswerInput" placeholder="Cevap" type="text" inputmode="numeric" pattern="-?[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false">
+          <input class="field" id="evSayiAnswerInput" placeholder="Cevap" type="text" inputmode="none" pattern="-?[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" readonly>
           <button class="btn coral" id="evSayiAnswerBtn">Cevapla</button>
         </div>
+        <div class="keypad" id="evSayiKeypad"></div>
         <div class="flash-msg" id="evSayiFlash"></div>
         <div class="row" style="justify-content:center; margin-top:16px;">
           <button class="btn ghost" id="evSayiBitirBtn">Bitir</button>
@@ -397,21 +413,31 @@
   <!-- ================= EV: 24'E ULAŞ ================= -->
   <section class="screen" id="screen-ev24">
     <h2 class="game-title">🎯 24'e Ulaş</h2>
-    <p class="game-desc">Aşağıdaki 4 sayıyı, her birini tam olarak bir kez kullanarak +, −, ×, ÷ ve parantezlerle 24'e ulaştır.</p>
+    <p class="game-desc">Aşağıdaki 4 sayının hepsini birer kez kullanarak, soldan sağa sırayla işlem yaparak 24'e ulaşmaya çalış.</p>
     <div class="panel">
       <div class="timer-count">
         <div class="stat"><div class="num" id="ev24Score">0</div><div class="lbl">ÇÖZÜLEN</div></div>
       </div>
       <div class="chip-list" id="ev24Numbers"></div>
-      <div class="row">
-        <input class="field" id="ev24Input" placeholder="Örn: (3+5)*2+... " type="text" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
-        <button class="btn coral" id="ev24CheckBtn">Kontrol Et</button>
+      <div class="expr-display" id="ev24Expr">Bir sayıya dokun...</div>
+      <div class="keypad">
+        <div class="keypad-row">
+          <button type="button" class="keypad-btn op" id="ev24OpPlus" data-op="+">+</button>
+          <button type="button" class="keypad-btn op" id="ev24OpMinus" data-op="-">−</button>
+          <button type="button" class="keypad-btn op" id="ev24OpMul" data-op="×">×</button>
+          <button type="button" class="keypad-btn op" id="ev24OpDiv" data-op="÷">÷</button>
+        </div>
+        <div class="keypad-row">
+          <button type="button" class="keypad-btn keypad-del" id="ev24UndoBtn">⌫ Geri Al</button>
+          <button type="button" class="keypad-btn keypad-clear" id="ev24ClearBtn">Temizle</button>
+          <button type="button" class="keypad-btn keypad-enter" id="ev24CheckBtn">Kontrol Et ✔️</button>
+        </div>
       </div>
       <div class="flash-msg" id="ev24Flash"></div>
       <div class="row" style="justify-content:center; margin-top:14px;">
         <button class="btn ghost" id="ev24NewBtn">🎲 Yeni Sayılar</button>
       </div>
-      <p class="hint">Sadece rakamlar, + − × ÷ (x veya * de kullanılabilir) ve parantez kullan. Her sayıyı tam olarak bir kez kullanmalısın. Bazı sayı setleri 24'e ulaşmaya uygun olmayabilir; öyle görünüyorsa "Yeni Sayılar" ile devam et.</p>
+      <p class="hint">Önce bir sayıya, sonra bir işleme, sonra başka bir sayıya dokun; sırayla ilerle. Parantez ya da işlem önceliği yok — her şey soldan sağa, dokunduğun sırayla hesaplanır. 4 sayının hepsini kullanmalısın.</p>
     </div>
   </section>
 
@@ -425,9 +451,10 @@
       </div>
       <div class="problem-box"><div class="problem-text" id="evOruntuText" style="font-size:clamp(24px,4.5vw,36px);">-</div></div>
       <div class="row" style="max-width:340px; margin:0 auto;">
-        <input class="field" id="evOruntuInput" placeholder="Sonraki sayı" type="text" inputmode="numeric" pattern="-?[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="field" id="evOruntuInput" placeholder="Sonraki sayı" type="text" inputmode="none" pattern="-?[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" readonly>
         <button class="btn coral" id="evOruntuCheckBtn">Kontrol Et</button>
       </div>
+      <div class="keypad" id="evOruntuKeypad"></div>
       <div class="flash-msg" id="evOruntuFlash"></div>
       <div class="row" style="justify-content:center; margin-top:14px;">
         <button class="btn ghost" id="evOruntuNewBtn">Yeni Örüntü</button>
@@ -445,9 +472,10 @@
         <div class="stat"><div class="num" id="evYaWins">0</div><div class="lbl">BİLİNEN</div></div>
       </div>
       <div class="row" style="max-width:340px; margin:0 auto;">
-        <input class="field" id="evYaInput" placeholder="Tahminin (1-100)" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="field" id="evYaInput" placeholder="Tahminin (1-100)" type="text" inputmode="none" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" readonly>
         <button class="btn coral" id="evYaGuessBtn">Tahmin Et</button>
       </div>
+      <div class="keypad" id="evYaKeypad" style="margin-left:auto; margin-right:auto;"></div>
       <div class="flash-msg" id="evYaFlash"></div>
       <div class="row" style="justify-content:center; margin-top:14px;">
         <button class="btn ghost" id="evYaNewBtn">🎲 Yeni Oyun</button>
@@ -465,9 +493,10 @@
       </div>
       <div class="problem-box"><div class="problem-text" id="evSpText" style="font-size:clamp(18px,3vw,24px); line-height:1.4;">-</div></div>
       <div class="row" style="max-width:340px; margin:0 auto;">
-        <input class="field" id="evSpInput" placeholder="Cevap (saat için Ö:DD, örn 4:15)" type="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="field" id="evSpInput" placeholder="Cevap (saat için Ö:DD, örn 4:15)" type="text" autocomplete="off" autocorrect="off" spellcheck="false" readonly>
         <button class="btn coral" id="evSpCheckBtn">Kontrol Et</button>
       </div>
+      <div class="keypad" id="evSpKeypad"></div>
       <div class="flash-msg" id="evSpFlash"></div>
       <div class="row" style="justify-content:center; margin-top:14px;">
         <button class="btn ghost" id="evSpNewBtn">Yeni Soru</button>
@@ -726,9 +755,10 @@
             <div class="problem-text" id="sayProblemText">-</div>
           </div>
           <div class="row" style="max-width:340px; margin:0 auto;">
-            <input class="field" id="sayAnswerInput" placeholder="Cevap" type="text" inputmode="numeric" pattern="-?[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false">
+            <input class="field" id="sayAnswerInput" placeholder="Cevap" type="text" inputmode="none" pattern="-?[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" readonly>
             <button class="btn coral" id="sayAnswerBtn">Cevapla</button>
           </div>
+          <div class="keypad" id="sayKeypad"></div>
           <div class="flash-msg" id="sayFlash"></div>
           <div class="row" style="justify-content:center; margin-top:16px;">
             <button class="btn ghost" id="sayEndTurnBtn">Turu Bitir</button>
@@ -873,6 +903,45 @@
     ).join('');
   }
   function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+  /* ---------------- Tıklamalı sayı klavyesi (matematik oyunları için) ----------------
+     Sadece rakam (ve isteğe bağlı ':' saat ayracı) girişi olan alanlar için.
+     İlgili <input readonly> alanına klavyeden yazma yerine dokunarak değer girilir. */
+  function renderNumKeypad(containerEl, inputEl, opts){
+    if(!containerEl || !inputEl) return;
+    opts = opts || {};
+    const rows = [
+      ['7','8','9'],
+      ['4','5','6'],
+      ['1','2','3'],
+      [opts.colon ? ':' : '', '0', '⌫']
+    ];
+    let html = '';
+    rows.forEach(row=>{
+      html += '<div class="keypad-row">';
+      row.forEach(k=>{
+        if(k===''){ html += '<span class="keypad-btn keypad-spacer"></span>'; return; }
+        const cls = k==='⌫' ? 'keypad-btn keypad-del' : 'keypad-btn';
+        html += '<button type="button" class="'+cls+'" data-key="'+esc(k)+'">'+esc(k)+'</button>';
+      });
+      html += '</div>';
+    });
+    html += '<div class="keypad-row">'+
+      '<button type="button" class="keypad-btn keypad-clear" data-action="clear">Temizle</button>'+
+      '<button type="button" class="keypad-btn keypad-enter" data-action="enter">Onayla ✔️</button>'+
+    '</div>';
+    containerEl.innerHTML = html;
+    containerEl.addEventListener('click', function(e){
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      if(btn.dataset.action === 'clear'){ inputEl.value=''; return; }
+      if(btn.dataset.action === 'enter'){ if(opts.onEnter) opts.onEnter(); return; }
+      const key = btn.dataset.key;
+      if(!key) return;
+      if(key === '⌫'){ inputEl.value = inputEl.value.slice(0,-1); }
+      else { inputEl.value += key; }
+    });
+  }
 
   /* ---------------- Navigation (with parent map for nested back) ---------------- */
   const screens = document.querySelectorAll('.screen');
@@ -1710,55 +1779,103 @@
     document.getElementById('evSayiConfig').classList.add('active');
   });
 
-  /* ---- 2) 24'e Ulaş ---- */
+  /* ---- 2) 24'e Ulaş (soldan sağa, parantezsiz ve işlem önceliksiz) ---- */
   const ev24Numbers = document.getElementById('ev24Numbers');
-  const ev24Input = document.getElementById('ev24Input');
-  const ev24CheckBtn = document.getElementById('ev24CheckBtn');
+  const ev24Expr = document.getElementById('ev24Expr');
   const ev24Flash = document.getElementById('ev24Flash');
   const ev24NewBtn = document.getElementById('ev24NewBtn');
   const ev24ScoreEl = document.getElementById('ev24Score');
+  const ev24UndoBtn = document.getElementById('ev24UndoBtn');
+  const ev24ClearBtn = document.getElementById('ev24ClearBtn');
+  const ev24CheckBtn = document.getElementById('ev24CheckBtn');
   let ev24Score = 0;
-  let ev24Nums = [];
+  let ev24Nums = [];      // [{value, used}]
+  let ev24Tokens = [];    // sırayla: {type:'num', value, idx} | {type:'op', value}
+
   function ev24Generate(){
-    ev24Nums = Array.from({length:4}, ()=>randInt(1,9));
-    ev24Numbers.innerHTML = ev24Nums.map(n=>'<span class="chip">'+n+'</span>').join('');
-    ev24Input.value=''; ev24Flash.textContent='';
-    ev24Input.focus();
+    ev24Nums = Array.from({length:4}, ()=>({ value: randInt(1,9), used:false }));
+    ev24Tokens = [];
+    ev24Flash.textContent = '';
+    ev24RenderNumbers();
+    ev24RenderExpr();
   }
+  function ev24RenderNumbers(){
+    ev24Numbers.innerHTML = ev24Nums.map((n,i)=>
+      '<button type="button" class="num-tile'+(n.used?' used':'')+'" data-idx="'+i+'">'+n.value+'</button>'
+    ).join('');
+  }
+  function ev24LastTokenType(){
+    return ev24Tokens.length ? ev24Tokens[ev24Tokens.length-1].type : null;
+  }
+  function ev24RenderExpr(){
+    ev24Expr.textContent = ev24Tokens.length ? ev24Tokens.map(t=>t.value).join(' ') : 'Bir sayıya dokun...';
+  }
+  ev24Numbers.addEventListener('click', e=>{
+    const btn = e.target.closest('.num-tile');
+    if(!btn) return;
+    const idx = +btn.dataset.idx;
+    const n = ev24Nums[idx];
+    if(!n || n.used) return;
+    if(ev24LastTokenType() === 'num') return; // bir sayıdan hemen sonra sayı gelemez, önce işlem seçilmeli
+    n.used = true;
+    ev24Tokens.push({type:'num', value:String(n.value), idx});
+    ev24RenderNumbers();
+    ev24RenderExpr();
+    ev24Flash.textContent='';
+  });
+  document.querySelectorAll('#screen-ev24 .keypad-btn.op').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(ev24LastTokenType() !== 'num') return; // işlem, ancak bir sayıdan sonra girilebilir
+      ev24Tokens.push({type:'op', value:btn.dataset.op});
+      ev24RenderExpr();
+      ev24Flash.textContent='';
+    });
+  });
+  ev24UndoBtn.addEventListener('click', ()=>{
+    const last = ev24Tokens.pop();
+    if(last && last.type==='num'){ ev24Nums[last.idx].used = false; ev24RenderNumbers(); }
+    ev24RenderExpr();
+    ev24Flash.textContent='';
+  });
+  ev24ClearBtn.addEventListener('click', ()=>{
+    ev24Tokens = [];
+    ev24Nums.forEach(n=>n.used=false);
+    ev24RenderNumbers(); ev24RenderExpr();
+    ev24Flash.textContent='';
+  });
   function ev24Check(){
-    const raw = ev24Input.value.trim();
-    if(!raw) return;
-    if(!/^[0-9+\-*/x×().\s]+$/.test(raw)){
+    if(ev24Tokens.length===0) return;
+    if(ev24LastTokenType() !== 'num'){
       ev24Flash.style.color='var(--coral-dark)';
-      ev24Flash.textContent='Sadece rakam, + − × ÷ ve parantez kullan.';
+      ev24Flash.textContent = 'Bir işlemle bitiremezsin, son olarak bir sayıya dokun.';
       return;
     }
-    const usedNums = (raw.match(/\d+/g)||[]).map(Number).sort((a,b)=>a-b);
-    const expected = [...ev24Nums].sort((a,b)=>a-b);
-    if(usedNums.length !== expected.length || usedNums.some((n,i)=>n!==expected[i])){
+    if(ev24Nums.some(n=>!n.used)){
       ev24Flash.style.color='var(--coral-dark)';
-      ev24Flash.textContent = 'Verilen 4 sayıyı tam olarak birer kez kullanmalısın.';
+      ev24Flash.textContent = '4 sayının hepsini kullanmalısın.';
       return;
     }
-    const normalized = raw.replace(/x|×/gi,'*').replace(/÷/g,'/');
-    let result;
-    try{ result = Function('"use strict"; return ('+normalized+')')(); }
-    catch(e){
-      ev24Flash.style.color='var(--coral-dark)';
-      ev24Flash.textContent = 'İfadeni kontrol et, geçerli bir işlem yaz.';
-      return;
+    // Soldan sağa hesapla — parantez ya da işlem önceliği yok
+    let result = Number(ev24Tokens[0].value);
+    for(let i=1;i<ev24Tokens.length;i+=2){
+      const op = ev24Tokens[i].value;
+      const nextVal = Number(ev24Tokens[i+1].value);
+      if(op==='+') result += nextVal;
+      else if(op==='-') result -= nextVal;
+      else if(op==='×') result *= nextVal;
+      else if(op==='÷') result = nextVal!==0 ? result/nextVal : NaN;
     }
-    if(typeof result === 'number' && Math.abs(result-24) < 1e-9){
+    if(Number.isFinite(result) && Math.abs(result-24) < 1e-9){
       ev24Score++; ev24ScoreEl.textContent = ev24Score;
       ev24Flash.style.color='var(--grass-dark)';
       ev24Flash.textContent = 'Harika! 24\'e ulaştın! 🎉';
+      setTimeout(ev24Generate, 900);
     } else {
       ev24Flash.style.color='var(--coral-dark)';
-      ev24Flash.textContent = 'Sonucun 24 değil (bulunan: '+result+'). Tekrar dene.';
+      ev24Flash.textContent = 'Sonuç 24 değil (bulunan: '+(Number.isFinite(result)?result:'—')+'). "Temizle"ye basıp tekrar dene.';
     }
   }
   ev24CheckBtn.addEventListener('click', ev24Check);
-  ev24Input.addEventListener('keydown', e=>{ if(e.key==='Enter') ev24Check(); });
   ev24NewBtn.addEventListener('click', ev24Generate);
 
   /* ---- 3) Sayı Örüntüsü Avcısı ---- */
@@ -1913,6 +2030,13 @@
   evOruntuGenerate();
   evYaNewGame();
   evSpNext();
+
+  /* ---------------- Tıklamalı sayı klavyelerini ilgili alanlara bağla ---------------- */
+  renderNumKeypad(document.getElementById('sayKeypad'), sayAnswerInput, { onEnter: sayAnswer });
+  renderNumKeypad(document.getElementById('evSayiKeypad'), evSayiAnswerInput, { onEnter: evSayiCheck });
+  renderNumKeypad(document.getElementById('evOruntuKeypad'), evOruntuInput, { onEnter: evOruntuCheck });
+  renderNumKeypad(document.getElementById('evYaKeypad'), evYaInput, { onEnter: evYaGuess });
+  renderNumKeypad(document.getElementById('evSpKeypad'), evSpInput, { colon: true, onEnter: evSpCheck });
 
   /* ---------------- Initial render ---------------- */
   renderStudentList();
