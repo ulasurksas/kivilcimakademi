@@ -295,7 +295,17 @@
   <section class="screen" id="screen-ev">
     <h2 class="game-title">🏠 Ev Etkinlikleri</h2>
     <p class="game-desc">Öğrencinin evde tek başına, istediği kadar oynayabileceği alıştırma oyunları.</p>
-    <div class="card-grid">
+    <div class="panel">
+      <div class="field-label">Kim oynuyor?</div>
+      <div class="row">
+        <select class="field" id="evStudentSelect">
+          <option value="">Adını seç...</option>
+        </select>
+      </div>
+      <p class="hint" id="evStudentHint">Oyunlara başlamadan önce adını seç — ilerlemen öğretmenine kaydedilir, oynadıkça öğretmenin bunu görüp sana puan verebilir.</p>
+      <p class="hint" id="evStudentActiveNote" style="display:none; color:var(--grass-dark); font-weight:800;"></p>
+    </div>
+    <div class="card-grid" id="evCardGrid">
       <button class="game-card" data-target="evMatematik">
         <span class="emoji">🔢</span>
         <h3>Matematik</h3>
@@ -413,31 +423,34 @@
   <!-- ================= EV: 24'E ULAŞ ================= -->
   <section class="screen" id="screen-ev24">
     <h2 class="game-title">🎯 24'e Ulaş</h2>
-    <p class="game-desc">Aşağıdaki 4 sayının hepsini birer kez kullanarak, soldan sağa sırayla işlem yaparak 24'e ulaşmaya çalış.</p>
+    <p class="game-desc">4 sayıyı sırayla kullanarak, her adımda sonucu görerek 24'e ulaşmaya çalış.</p>
     <div class="panel">
+      <div class="field-label">Hangi işlemlerle?</div>
+      <div class="count-options" id="ev24ModeOptions">
+        <button type="button" class="count-opt diff-opt active" data-mode="tc">Toplama - Çıkarma</button>
+        <button type="button" class="count-opt diff-opt" data-mode="tcc">Toplama - Çıkarma - Çarpma</button>
+      </div>
       <div class="timer-count">
-        <div class="stat"><div class="num" id="ev24Score">0</div><div class="lbl">ÇÖZÜLEN</div></div>
+        <div class="stat"><div class="num" id="ev24Score">0</div><div class="lbl">ULAŞILAN</div></div>
       </div>
       <div class="chip-list" id="ev24Numbers"></div>
       <div class="expr-display" id="ev24Expr">Bir sayıya dokun...</div>
       <div class="keypad">
-        <div class="keypad-row">
-          <button type="button" class="keypad-btn op" id="ev24OpPlus" data-op="+">+</button>
-          <button type="button" class="keypad-btn op" id="ev24OpMinus" data-op="-">−</button>
-          <button type="button" class="keypad-btn op" id="ev24OpMul" data-op="×">×</button>
-          <button type="button" class="keypad-btn op" id="ev24OpDiv" data-op="÷">÷</button>
+        <div class="keypad-row" id="ev24OpRow">
+          <button type="button" class="keypad-btn op" data-op="+">+</button>
+          <button type="button" class="keypad-btn op" data-op="-">−</button>
+          <button type="button" class="keypad-btn op" data-op="×" id="ev24OpMul" style="display:none;">×</button>
         </div>
         <div class="keypad-row">
           <button type="button" class="keypad-btn keypad-del" id="ev24UndoBtn">⌫ Geri Al</button>
           <button type="button" class="keypad-btn keypad-clear" id="ev24ClearBtn">Temizle</button>
-          <button type="button" class="keypad-btn keypad-enter" id="ev24CheckBtn">Kontrol Et ✔️</button>
         </div>
       </div>
       <div class="flash-msg" id="ev24Flash"></div>
       <div class="row" style="justify-content:center; margin-top:14px;">
         <button class="btn ghost" id="ev24NewBtn">🎲 Yeni Sayılar</button>
       </div>
-      <p class="hint">Önce bir sayıya, sonra bir işleme, sonra başka bir sayıya dokun; sırayla ilerle. Parantez ya da işlem önceliği yok — her şey soldan sağa, dokunduğun sırayla hesaplanır. 4 sayının hepsini kullanmalısın.</p>
+      <p class="hint">Önce bir sayıya dokun, sonra bir işleme, sonra başka bir sayıya dokun — sonucu hemen göreceksin. O sonuçtan devam ederek 4 sayının hepsini kullan ve 24'e ulaşmaya çalış. Parantez ya da işlem önceliği yok, her şey dokunduğun sırayla hesaplanır. Her sayı setinin mutlaka bir çözümü vardır.</p>
     </div>
   </section>
 
@@ -552,6 +565,11 @@
       <div class="row" style="justify-content:center; margin-top:20px;">
         <button class="btn ghost" id="profDeleteBtn">Bu öğrenciyi sil</button>
       </div>
+    </div>
+    <div class="panel">
+      <h3 style="font-size:17px; margin-bottom:10px; color:var(--coral-dark);">🏠 Ev İlerlemesi</h3>
+      <p class="hint" style="margin-top:0;">Bu öğrencinin evde oynadığı oyunlardan otomatik toplanan sayılar — puan değil, sadece bilgi. İstersen buna bakarak yukarıdan puan ekleyebilirsin.</p>
+      <div id="evProgressList"></div>
     </div>
   </section>
 
@@ -860,7 +878,7 @@
       if(doc.exists){
         const data = doc.data();
         if(Array.isArray(data.students) && data.students.length){
-          appStudents = data.students.map(s=>({ id: s.id, name: s.name, score: s.score||0, log: Array.isArray(s.log)?s.log:[] }));
+          appStudents = data.students.map(s=>({ id: s.id, name: s.name, score: s.score||0, log: Array.isArray(s.log)?s.log:[], evProgress: (s.evProgress && typeof s.evProgress==='object') ? s.evProgress : {} }));
           studentIdCounter = Math.max(0, ...appStudents.map(s=>s.id)) + 1;
         }
         if(Array.isArray(data.groups)){
@@ -874,6 +892,7 @@
       renderStudentList();
       renderGroupSection();
       if(currentScreenId==='studentProfile') renderStudentProfile();
+      if(currentScreenId==='ev') renderEvStudentSelect();
     }).catch(err=>{
       console.error('Firebase okuma hatası:', err);
       setCloudStatus('⚠️ Bulut verisi okunamadı, bu cihazdaki veriler kullanılıyor', 'var(--coral-dark)');
@@ -980,6 +999,7 @@
     }
     if(id === 'ogrenciler') renderStudentList();
     if(id === 'grup') renderGroupSection();
+    if(id === 'ev') renderEvStudentSelect();
     window.scrollTo({top:0, behavior:'instant'});
   }
   backBtn.addEventListener('click', ()=> showScreen(PARENT[currentScreenId] || 'home'));
@@ -1031,7 +1051,7 @@
     "Yağız Köksaldı","Yunus Doğan","Amine Yılmaz","Elif Arslan","Ömer Halis Demir",
     "Yavuz Tunahan Özdemir","Zeynep İsra Geçal","Muhammed Emin Eren","Ravzanur Açıkgöz",
     "Ayaz Eymen Çelik"
-  ].map(name => ({ id: studentIdCounter++, name, score:0, log:[] }));
+  ].map(name => ({ id: studentIdCounter++, name, score:0, log:[], evProgress:{} }));
 
   const studentNameInput = document.getElementById('studentNameInput');
   const addStudentBtn = document.getElementById('addStudentBtn');
@@ -1039,6 +1059,72 @@
 
   function initialOf(name){ return name.trim().charAt(0).toLocaleUpperCase('tr-TR'); }
   function findStudentById(id){ return appStudents.find(s=>s.id===id); }
+
+  /* ---- Ev etkinlikleri ilerleme takibi (puan değil, sadece bilgi amaçlı sayaç) ---- */
+  function evEnsureProgress(student, key){
+    if(!student.evProgress) student.evProgress = {};
+    if(!student.evProgress[key]) student.evProgress[key] = {};
+    return student.evProgress[key];
+  }
+  function evRecordProgress(key, field){
+    if(!currentEvStudentId) return;
+    const student = findStudentById(currentEvStudentId);
+    if(!student) return;
+    const bucket = evEnsureProgress(student, key);
+    bucket[field] = (bucket[field]||0) + 1;
+    if(currentStudentIndex !== null && appStudents[currentStudentIndex] === student) renderEvProgress(student);
+    scheduleSave();
+  }
+  function renderEvProgress(student){
+    const el = document.getElementById('evProgressList');
+    if(!el) return;
+    const ep = student.evProgress || {};
+    const rows = [];
+    if(ep.sayiEv && ep.sayiEv.correct) rows.push('⚡ Sayı Şimşeği (Ev): '+ep.sayiEv.correct+' doğru cevap');
+    if(ep.oruntu && ep.oruntu.correct) rows.push('🧩 Sayı Örüntüsü Avcısı: '+ep.oruntu.correct+' doğru cevap');
+    if(ep.yuksekAlcak && ep.yuksekAlcak.wins) rows.push('🔼 Yüksek mi Alçak mı: '+ep.yuksekAlcak.wins+' kez bildi');
+    if(ep.saatPara && ep.saatPara.correct) rows.push('🕒 Saat ve Para Problemleri: '+ep.saatPara.correct+' doğru cevap');
+    if(ep.zincirTC && ep.zincirTC.solved) rows.push('🎯 24\'e Ulaş (Toplama-Çıkarma): '+ep.zincirTC.solved+' kez hedefe ulaştı');
+    if(ep.zincirTCC && ep.zincirTCC.solved) rows.push('🎯 24\'e Ulaş (Toplama-Çıkarma-Çarpma): '+ep.zincirTCC.solved+' kez hedefe ulaştı');
+    el.innerHTML = rows.length
+      ? rows.map(r=>'<div class="log-item">'+esc(r)+'</div>').join('')
+      : '<div class="empty-note">Henüz ev etkinliği kaydı yok.</div>';
+  }
+
+  /* ---- Ev Etkinlikleri: "Kim oynuyor?" seçimi ---- */
+  let currentEvStudentId = null;
+  const evStudentSelect = document.getElementById('evStudentSelect');
+  const evStudentHint = document.getElementById('evStudentHint');
+  const evStudentActiveNote = document.getElementById('evStudentActiveNote');
+  const evCardGridCards = document.querySelectorAll('#evCardGrid .game-card');
+  function renderEvStudentSelect(){
+    const prevVal = currentEvStudentId;
+    evStudentSelect.innerHTML = '<option value="">Adını seç...</option>' +
+      appStudents.map(s=>'<option value="'+s.id+'">'+esc(s.name)+'</option>').join('');
+    if(prevVal && appStudents.some(s=>s.id===prevVal)){
+      evStudentSelect.value = String(prevVal);
+    } else {
+      currentEvStudentId = null;
+    }
+    updateEvLock();
+  }
+  function updateEvLock(){
+    const student = currentEvStudentId ? findStudentById(currentEvStudentId) : null;
+    const unlocked = !!student;
+    evCardGridCards.forEach(c => c.classList.toggle('disabled', !unlocked));
+    evStudentHint.style.display = unlocked ? 'none' : 'block';
+    if(unlocked){
+      evStudentActiveNote.style.display = 'block';
+      evStudentActiveNote.textContent = '✔️ Şu an oynayan: '+student.name;
+    } else {
+      evStudentActiveNote.style.display = 'none';
+    }
+  }
+  evStudentSelect.addEventListener('change', ()=>{
+    const val = evStudentSelect.value;
+    currentEvStudentId = val ? parseInt(val,10) : null;
+    updateEvLock();
+  });
 
   function renderStudentList(){
     const sorted = [...appStudents].sort((a,b)=>b.score-a.score);
@@ -1062,9 +1148,10 @@
   function doAddStudent(){
     const val = studentNameInput.value.trim();
     if(!val) return;
-    appStudents.push({id: studentIdCounter++, name:val, score:0, log:[]});
+    appStudents.push({id: studentIdCounter++, name:val, score:0, log:[], evProgress:{}});
     studentNameInput.value='';
     renderStudentList();
+    renderEvStudentSelect();
     scheduleSave();
     showScreen('ogrenciler');
   }
@@ -1100,6 +1187,7 @@
         '<div class="log-item'+(entry.delta<0?' neg':'')+'"><span>'+esc(entry.label)+'</span><span class="delta">'+(entry.delta>0?'+':'')+entry.delta+' → '+entry.total+'</span></div>'
       ).join('');
     }
+    renderEvProgress(s);
     profAmountInput.focus();
   }
   function applyPointChange(sign){
@@ -1767,6 +1855,7 @@
     if(val === evSayiProblem.answer){
       evSayiScore++; evSayiScoreEl.textContent = evSayiScore;
       evSayiFlash.style.color='var(--grass-dark)'; evSayiFlash.textContent='Doğru! ✔️';
+      evRecordProgress('sayiEv','correct');
     } else {
       evSayiFlash.style.color='var(--coral-dark)'; evSayiFlash.textContent='Yanlış! Doğru cevap: '+evSayiProblem.answer;
     }
@@ -1779,7 +1868,7 @@
     document.getElementById('evSayiConfig').classList.add('active');
   });
 
-  /* ---- 2) 24'e Ulaş (soldan sağa, parantezsiz ve işlem önceliksiz) ---- */
+  /* ---- 2) 24'e Ulaş (adım adım, garanti çözülebilir, parantezsiz/önceliksiz) ---- */
   const ev24Numbers = document.getElementById('ev24Numbers');
   const ev24Expr = document.getElementById('ev24Expr');
   const ev24Flash = document.getElementById('ev24Flash');
@@ -1787,14 +1876,47 @@
   const ev24ScoreEl = document.getElementById('ev24Score');
   const ev24UndoBtn = document.getElementById('ev24UndoBtn');
   const ev24ClearBtn = document.getElementById('ev24ClearBtn');
-  const ev24CheckBtn = document.getElementById('ev24CheckBtn');
+  const ev24ModeOptions = document.getElementById('ev24ModeOptions');
+  const ev24OpMulBtn = document.getElementById('ev24OpMul');
   let ev24Score = 0;
-  let ev24Nums = [];      // [{value, used}]
-  let ev24Tokens = [];    // sırayla: {type:'num', value, idx} | {type:'op', value}
+  let ev24Mode = 'tc'; // 'tc' = toplama-çıkarma, 'tcc' = + toplama-çıkarma-çarpma
+  let ev24Nums = [];        // [{value, used}]
+  let ev24Running = null;   // o anki sonuç (henüz sayı seçilmediyse null)
+  let ev24PendingOp = null; // seçilmiş ama henüz uygulanmamış işlem
+  let ev24UndoStack = [];
 
+  /* Hedefi (24) geriye doğru çözerek HER ZAMAN en az bir çözümü olan 4 sayı üretir. */
+  function ev24TryGenerate(allowMul){
+    const ops = allowMul ? ['+','-','×'] : ['+','-'];
+    for(let attempt=0; attempt<500; attempt++){
+      const n2 = randInt(1,9), n3 = randInt(1,9), n4 = randInt(1,9);
+      const op1 = ops[randInt(0,ops.length-1)];
+      const op2 = ops[randInt(0,ops.length-1)];
+      const op3 = ops[randInt(0,ops.length-1)];
+      let r2;
+      if(op3==='+') r2 = 24 - n4;
+      else if(op3==='-') r2 = 24 + n4;
+      else { if(n4===0 || 24 % n4 !==0) continue; r2 = 24 / n4; }
+      if(!Number.isInteger(r2) || r2<0 || r2>60) continue;
+      let r1;
+      if(op2==='+') r1 = r2 - n3;
+      else if(op2==='-') r1 = r2 + n3;
+      else { if(n3===0 || r2 % n3 !==0) continue; r1 = r2 / n3; }
+      if(!Number.isInteger(r1) || r1<0 || r1>60) continue;
+      let n1;
+      if(op1==='+') n1 = r1 - n2;
+      else if(op1==='-') n1 = r1 + n2;
+      else { if(n2===0 || r1 % n2 !==0) continue; n1 = r1 / n2; }
+      if(!Number.isInteger(n1) || n1<1 || n1>20) continue;
+      return [n1, n2, n3, n4];
+    }
+    return [10, 10, 2, 2]; // garanti yedek: 10+10+2+2=24
+  }
   function ev24Generate(){
-    ev24Nums = Array.from({length:4}, ()=>({ value: randInt(1,9), used:false }));
-    ev24Tokens = [];
+    ev24Nums = ev24TryGenerate(ev24Mode==='tcc').map(v=>({ value:v, used:false }));
+    ev24Running = null;
+    ev24PendingOp = null;
+    ev24UndoStack = [];
     ev24Flash.textContent = '';
     ev24RenderNumbers();
     ev24RenderExpr();
@@ -1804,78 +1926,94 @@
       '<button type="button" class="num-tile'+(n.used?' used':'')+'" data-idx="'+i+'">'+n.value+'</button>'
     ).join('');
   }
-  function ev24LastTokenType(){
-    return ev24Tokens.length ? ev24Tokens[ev24Tokens.length-1].type : null;
-  }
   function ev24RenderExpr(){
-    ev24Expr.textContent = ev24Tokens.length ? ev24Tokens.map(t=>t.value).join(' ') : 'Bir sayıya dokun...';
+    if(ev24Running===null){ ev24Expr.textContent = 'Bir sayıya dokun...'; return; }
+    ev24Expr.textContent = ev24Running + (ev24PendingOp ? (' '+ev24PendingOp+' ...') : '');
   }
+  function ev24Snapshot(){
+    return { running: ev24Running, pendingOp: ev24PendingOp, nums: ev24Nums.map(n=>({...n})) };
+  }
+  function ev24PushUndo(){
+    ev24UndoStack.push(ev24Snapshot());
+    if(ev24UndoStack.length>20) ev24UndoStack.shift();
+  }
+  ev24ModeOptions.addEventListener('click', e=>{
+    const btn = e.target.closest('.count-opt');
+    if(!btn) return;
+    ev24Mode = btn.dataset.mode;
+    ev24ModeOptions.querySelectorAll('.count-opt').forEach(b=>b.classList.toggle('active', b===btn));
+    ev24OpMulBtn.style.display = ev24Mode==='tcc' ? 'inline-block' : 'none';
+    ev24Generate();
+  });
   ev24Numbers.addEventListener('click', e=>{
     const btn = e.target.closest('.num-tile');
     if(!btn) return;
     const idx = +btn.dataset.idx;
     const n = ev24Nums[idx];
     if(!n || n.used) return;
-    if(ev24LastTokenType() === 'num') return; // bir sayıdan hemen sonra sayı gelemez, önce işlem seçilmeli
+    if(ev24Running === null){
+      ev24PushUndo();
+      n.used = true;
+      ev24Running = n.value;
+      ev24RenderNumbers(); ev24RenderExpr();
+      ev24Flash.textContent='';
+      return;
+    }
+    if(ev24PendingOp === null) return; // önce bir işlem seçilmeli
+    ev24PushUndo();
+    const prev = ev24Running;
+    const op = ev24PendingOp;
+    let result;
+    if(op==='+') result = prev + n.value;
+    else if(op==='-') result = prev - n.value;
+    else result = prev * n.value;
     n.used = true;
-    ev24Tokens.push({type:'num', value:String(n.value), idx});
+    ev24Running = result;
+    ev24PendingOp = null;
     ev24RenderNumbers();
     ev24RenderExpr();
-    ev24Flash.textContent='';
+    if(ev24Nums.every(x=>x.used)){
+      if(result === 24){
+        ev24Score++; ev24ScoreEl.textContent = ev24Score;
+        ev24Flash.style.color='var(--grass-dark)';
+        ev24Flash.textContent = prev+' '+op+' '+n.value+' = '+result+' — Harika, 24\'e ulaştın! 🎉';
+        evRecordProgress(ev24Mode==='tcc' ? 'zincirTCC' : 'zincirTC', 'solved');
+        setTimeout(ev24Generate, 1100);
+      } else {
+        ev24Flash.style.color='var(--coral-dark)';
+        ev24Flash.textContent = prev+' '+op+' '+n.value+' = '+result+' — 24 değil. "Geri Al" ile farklı bir yol dene.';
+      }
+    } else {
+      ev24Flash.style.color='var(--ink-soft)';
+      ev24Flash.textContent = prev+' '+op+' '+n.value+' = '+result;
+    }
   });
   document.querySelectorAll('#screen-ev24 .keypad-btn.op').forEach(btn=>{
     btn.addEventListener('click', ()=>{
-      if(ev24LastTokenType() !== 'num') return; // işlem, ancak bir sayıdan sonra girilebilir
-      ev24Tokens.push({type:'op', value:btn.dataset.op});
+      if(ev24Running===null) return; // önce bir sayı seçilmeli
+      if(ev24Nums.every(x=>x.used)) return; // zaten tamamlandı
+      ev24PushUndo();
+      ev24PendingOp = btn.dataset.op;
       ev24RenderExpr();
-      ev24Flash.textContent='';
     });
   });
   ev24UndoBtn.addEventListener('click', ()=>{
-    const last = ev24Tokens.pop();
-    if(last && last.type==='num'){ ev24Nums[last.idx].used = false; ev24RenderNumbers(); }
-    ev24RenderExpr();
-    ev24Flash.textContent='';
-  });
-  ev24ClearBtn.addEventListener('click', ()=>{
-    ev24Tokens = [];
-    ev24Nums.forEach(n=>n.used=false);
+    const snap = ev24UndoStack.pop();
+    if(!snap) return;
+    ev24Running = snap.running;
+    ev24PendingOp = snap.pendingOp;
+    ev24Nums = snap.nums;
     ev24RenderNumbers(); ev24RenderExpr();
     ev24Flash.textContent='';
   });
-  function ev24Check(){
-    if(ev24Tokens.length===0) return;
-    if(ev24LastTokenType() !== 'num'){
-      ev24Flash.style.color='var(--coral-dark)';
-      ev24Flash.textContent = 'Bir işlemle bitiremezsin, son olarak bir sayıya dokun.';
-      return;
-    }
-    if(ev24Nums.some(n=>!n.used)){
-      ev24Flash.style.color='var(--coral-dark)';
-      ev24Flash.textContent = '4 sayının hepsini kullanmalısın.';
-      return;
-    }
-    // Soldan sağa hesapla — parantez ya da işlem önceliği yok
-    let result = Number(ev24Tokens[0].value);
-    for(let i=1;i<ev24Tokens.length;i+=2){
-      const op = ev24Tokens[i].value;
-      const nextVal = Number(ev24Tokens[i+1].value);
-      if(op==='+') result += nextVal;
-      else if(op==='-') result -= nextVal;
-      else if(op==='×') result *= nextVal;
-      else if(op==='÷') result = nextVal!==0 ? result/nextVal : NaN;
-    }
-    if(Number.isFinite(result) && Math.abs(result-24) < 1e-9){
-      ev24Score++; ev24ScoreEl.textContent = ev24Score;
-      ev24Flash.style.color='var(--grass-dark)';
-      ev24Flash.textContent = 'Harika! 24\'e ulaştın! 🎉';
-      setTimeout(ev24Generate, 900);
-    } else {
-      ev24Flash.style.color='var(--coral-dark)';
-      ev24Flash.textContent = 'Sonuç 24 değil (bulunan: '+(Number.isFinite(result)?result:'—')+'). "Temizle"ye basıp tekrar dene.';
-    }
-  }
-  ev24CheckBtn.addEventListener('click', ev24Check);
+  ev24ClearBtn.addEventListener('click', ()=>{
+    ev24Nums.forEach(n=>n.used=false);
+    ev24Running = null;
+    ev24PendingOp = null;
+    ev24UndoStack = [];
+    ev24RenderNumbers(); ev24RenderExpr();
+    ev24Flash.textContent='';
+  });
   ev24NewBtn.addEventListener('click', ev24Generate);
 
   /* ---- 3) Sayı Örüntüsü Avcısı ---- */
@@ -1911,6 +2049,7 @@
     if(val === evOruntuAnswer){
       evOruntuScore++; evOruntuScoreEl.textContent = evOruntuScore;
       evOruntuFlash.style.color='var(--grass-dark)'; evOruntuFlash.textContent='Doğru! ✔️';
+      evRecordProgress('oruntu','correct');
     } else {
       evOruntuFlash.style.color='var(--coral-dark)'; evOruntuFlash.textContent='Yanlış! Doğru cevap: '+evOruntuAnswer;
     }
@@ -1949,6 +2088,7 @@
       evYaFlash.style.color='var(--grass-dark)';
       evYaFlash.textContent = 'Bildin! 🎉 ('+evYaAttempts+' tahminde) — Yeni oyun için butona bas.';
       evYaInput.disabled=true; evYaGuessBtn.disabled=true;
+      evRecordProgress('yuksekAlcak','wins');
     } else if(val < evYaSecret){
       evYaFlash.style.color='var(--sky-dark)';
       evYaFlash.textContent = 'Daha büyük söyle! 🔼';
@@ -2015,6 +2155,7 @@
     if(correct){
       evSpScore++; evSpScoreEl.textContent = evSpScore;
       evSpFlash.style.color='var(--grass-dark)'; evSpFlash.textContent='Doğru! ✔️';
+      evRecordProgress('saatPara','correct');
     } else {
       const doğruCevap = evSpProblem.type==='para' ? (evSpProblem.answer+' TL') : (evSpProblem.answerH+':'+String(evSpProblem.answerM).padStart(2,'0'));
       evSpFlash.style.color='var(--coral-dark)'; evSpFlash.textContent='Yanlış! Doğru cevap: '+doğruCevap;
