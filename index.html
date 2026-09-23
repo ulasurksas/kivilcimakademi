@@ -1113,7 +1113,7 @@
     return student.evProgress[key];
   }
   function evRecordProgress(key, field){
-    if(!currentEvStudentId) return;
+    if(currentEvStudentId == null) return;
     const student = findStudentById(currentEvStudentId);
     if(!student) return;
     const bucket = evEnsureProgress(student, key);
@@ -1147,7 +1147,7 @@
     const prevVal = currentEvStudentId;
     evStudentSelect.innerHTML = '<option value="">Adını seç...</option>' +
       appStudents.map(s=>'<option value="'+s.id+'">'+esc(s.name)+'</option>').join('');
-    if(prevVal && appStudents.some(s=>s.id===prevVal)){
+    if(prevVal != null && appStudents.some(s=>s.id===prevVal)){
       evStudentSelect.value = String(prevVal);
     } else {
       currentEvStudentId = null;
@@ -1155,7 +1155,7 @@
     updateEvLock();
   }
   function updateEvLock(){
-    const student = currentEvStudentId ? findStudentById(currentEvStudentId) : null;
+    const student = (currentEvStudentId != null) ? findStudentById(currentEvStudentId) : null;
     const unlocked = !!student;
     evCardGridCards.forEach(c => { c.classList.toggle('disabled', !unlocked); c.disabled = !unlocked; });
     evStudentHint.style.display = unlocked ? 'none' : 'block';
