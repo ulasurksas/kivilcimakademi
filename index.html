@@ -1055,12 +1055,39 @@
 
   </section>
 
-  <!-- ================= BİREYSEL OYUNLAR ================= -->
+  <!-- ================= BİREYSEL OYUNLAR (SINIF İÇİ) ================= -->
   <section class="screen" id="screen-bireysel">
-    <h2 class="game-title">🧍 Bireysel Oyunlar</h2>
-    <p class="game-desc">Öğrencilerin tek başına, kendi sırasında oynayacağı oyunlar.</p>
-    <div class="panel" style="text-align:center;">
-      <p class="empty-note">Burası hazırlanıyor 👀<br>Yakında bireysel oyunlar eklenecek ve öğrenci puanları doğrudan <strong>Öğrenci Profilleri</strong> ile aynı tabloya işlenecek.</p>
+    <h2 class="game-title">🧍 Bireysel Oyunlar (Sınıf İçi)</h2>
+    <p class="game-desc">Bir öğrenci seç, sırayla kendi ekranında oynasın — bu modda doğru cevaplar puanı doğrudan Öğrenci Profilleri'ne işler.</p>
+    <div class="panel">
+      <div class="field-label">Kim oynuyor?</div>
+      <div class="row">
+        <select class="field" id="bireyselStudentSelect">
+          <option value="">Adını seç...</option>
+        </select>
+      </div>
+      <p class="hint" id="bireyselStudentHint">Oyuna başlamadan önce öğrencinin adını seç.</p>
+      <p class="hint" id="bireyselStudentActiveNote" style="display:none; color:var(--grass-dark); font-weight:800;"></p>
+    </div>
+    <div class="card-grid" id="bireyselCardGrid">
+      <button class="game-card" data-target="evMatematik">
+        <span class="emoji">🔢</span>
+        <h3>Matematik</h3>
+        <p>Sayı Şimşeği, 24'e Ulaş, Sayı Örüntüsü Avcısı, Yüksek mi Alçak mı ve Saat/Para Problemleri.</p>
+        <span class="tag" style="background:var(--sun-dark)">5 oyun</span>
+      </button>
+      <button class="game-card" data-target="evTurkce">
+        <span class="emoji">📖</span>
+        <h3>Türkçe</h3>
+        <p>Anagram, eş/zıt anlam, cümle tamamlama, hecelere ayırma ve noktalama oyunları.</p>
+        <span class="tag" style="background:var(--sky-dark)">5 oyun</span>
+      </button>
+      <button class="game-card" data-target="evMantik">
+        <span class="emoji">🧠</span>
+        <h3>Mantık</h3>
+        <p>Tek farklı olanı bulma, şekil örüntüsü, sıralama bulmacası ve mantık zincirleri.</p>
+        <span class="tag" style="background:var(--grape-dark)">4 oyun</span>
+      </button>
     </div>
   </section>
 
@@ -1239,7 +1266,7 @@
   };
   const PARENT = {
     sinif:'home', ev:'home',
-    evMatematik:'ev', evTurkce:'ev', evMantik:'ev',
+    evMatematik:'__evhub__', evTurkce:'__evhub__', evMantik:'__evhub__',
     evSayi:'evMatematik', ev24:'evMatematik', evOruntu:'evMatematik',
     evYuksekAlcak:'evMatematik', evSaatPara:'evMatematik',
     evAnagram:'evTurkce', evEsZit:'evTurkce', evCumle:'evTurkce',
@@ -1252,9 +1279,19 @@
     bireysel:'sinif'
   };
   let currentScreenId = 'home';
+  // Ev Etkinlikleri ve Bireysel Oyunlar aynı oyun ekranlarını paylaşır; hangi
+  // hub'dan girildiğini hatırlayarak geri butonu doğru yere dönsün ve
+  // "sınıf modu" (puanların doğrudan işlendiği mod) doğru tespit edilsin.
+  let lastEvHub = 'ev';
+  function resolveParent(id){
+    const p = PARENT[id];
+    return p === '__evhub__' ? lastEvHub : p;
+  }
+  function isClassMode(){ return lastEvHub === 'bireysel'; }
   function showScreen(id){
     currentScreenId = id;
     screens.forEach(s => s.classList.toggle('active', s.id === 'screen-'+id));
+    if(id === 'ev' || id === 'bireysel') lastEvHub = id;
     if(id === 'home'){
       document.body.classList.remove('in-game');
       headerTitle.style.display='none';
@@ -1265,11 +1302,11 @@
     }
     if(id === 'ogrenciler') renderStudentList();
     if(id === 'grup') renderGroupSection();
-    if(id === 'ev') renderEvStudentSelect();
+    if(id === 'ev' || id === 'bireysel') renderEvStudentSelect();
     if(id === 'arsiv') renderArsivList();
     window.scrollTo({top:0, behavior:'instant'});
   }
-  backBtn.addEventListener('click', ()=> showScreen(PARENT[currentScreenId] || 'home'));
+  backBtn.addEventListener('click', ()=> showScreen(resolveParent(currentScreenId) || 'home'));
   /* Event delegation: sonradan eklenecek yeni oyun kartları (ör. bireysel oyunlar) için
      tek tek addEventListener bağlamaya gerek kalmaz, hepsi otomatik çalışır. */
   document.addEventListener('click', (e)=>{
@@ -1331,7 +1368,15 @@
   function initialOf(name){ return name.trim().charAt(0).toLocaleUpperCase('tr-TR'); }
   function findStudentById(id){ return appStudents.find(s=>s.id===id); }
 
-  /* ---- Ev etkinlikleri ilerleme takibi (puan değil, sadece bilgi amaçlı sayaç) ---- */
+  /* ---- Ev etkinlikleri ilerleme takibi (Ev modunda puan değil, sadece bilgi amaçlı sayaç;
+     Bireysel Oyunlar/Sınıf modunda ise doğrudan puana da işlenir) ---- */
+  const SINIF_MODU_PUAN = 2;
+  const EV_GAME_LABELS = {
+    sayiEv:'Sayı Şimşeği (Ev)', oruntu:'Sayı Örüntüsü Avcısı', yuksekAlcak:'Yüksek mi Alçak mı',
+    saatPara:'Saat ve Para Problemleri', zincirTC:"24'e Ulaş (Toplama-Çıkarma)", zincirTCC:"24'e Ulaş (Toplama-Çıkarma-Çarpma)",
+    anagram:'Anagram', esZit:'Eş - Zıt Anlam', cumle:'Cümle Tamamlama', hece:'Hecelere Ayırma', noktalama:'Noktalama',
+    farkli:'Tek Farklı Olanı Bulma', sekilOruntu:'Şekil Örüntüsü', siralama:'Sıralama Bulmacası', mantikZincir:'Mantık Zincirleri'
+  };
   function evEnsureProgress(student, key){
     if(!student.evProgress) student.evProgress = {};
     if(!student.evProgress[key]) student.evProgress[key] = {};
@@ -1344,6 +1389,12 @@
     const bucket = evEnsureProgress(student, key);
     bucket[field] = (bucket[field]||0) + 1;
     if(currentStudentIndex !== null && appStudents[currentStudentIndex] === student) renderEvProgress(student);
+    if(isClassMode()){
+      student.score += SINIF_MODU_PUAN;
+      student.log.unshift({ label: 'Sınıf Modu — '+(EV_GAME_LABELS[key]||key), delta: SINIF_MODU_PUAN, total: student.score });
+      if(currentStudentIndex !== null && appStudents[currentStudentIndex] === student) renderStudentProfile();
+      renderStudentList();
+    }
     scheduleSave();
   }
   function renderEvProgress(student){
@@ -1377,13 +1428,22 @@
   const evStudentHint = document.getElementById('evStudentHint');
   const evStudentActiveNote = document.getElementById('evStudentActiveNote');
   const evCardGridCards = document.querySelectorAll('#evCardGrid .game-card');
-  function renderEvStudentSelect(){
+  const bireyselStudentSelect = document.getElementById('bireyselStudentSelect');
+  const bireyselStudentHint = document.getElementById('bireyselStudentHint');
+  const bireyselStudentActiveNote = document.getElementById('bireyselStudentActiveNote');
+  const bireyselCardGridCards = document.querySelectorAll('#bireyselCardGrid .game-card');
+  function renderStudentSelectInto(selectEl){
     const prevVal = currentEvStudentId;
-    evStudentSelect.innerHTML = '<option value="">Adını seç...</option>' +
+    selectEl.innerHTML = '<option value="">Adını seç...</option>' +
       appStudents.map(s=>'<option value="'+s.id+'">'+esc(s.name)+'</option>').join('');
     if(prevVal != null && appStudents.some(s=>s.id===prevVal)){
-      evStudentSelect.value = String(prevVal);
-    } else {
+      selectEl.value = String(prevVal);
+    }
+  }
+  function renderEvStudentSelect(){
+    renderStudentSelectInto(evStudentSelect);
+    renderStudentSelectInto(bireyselStudentSelect);
+    if(!(currentEvStudentId != null && appStudents.some(s=>s.id===currentEvStudentId))){
       currentEvStudentId = null;
     }
     updateEvLock();
@@ -1392,19 +1452,22 @@
     const student = (currentEvStudentId != null) ? findStudentById(currentEvStudentId) : null;
     const unlocked = !!student;
     evCardGridCards.forEach(c => { c.classList.toggle('disabled', !unlocked); c.disabled = !unlocked; });
+    bireyselCardGridCards.forEach(c => { c.classList.toggle('disabled', !unlocked); c.disabled = !unlocked; });
     evStudentHint.style.display = unlocked ? 'none' : 'block';
-    if(unlocked){
-      evStudentActiveNote.style.display = 'block';
-      evStudentActiveNote.textContent = '✔️ Şu an oynayan: '+student.name;
-    } else {
-      evStudentActiveNote.style.display = 'none';
-    }
+    bireyselStudentHint.style.display = unlocked ? 'none' : 'block';
+    const noteText = unlocked ? ('✔️ Şu an oynayan: '+student.name+(isClassMode() ? ' (Sınıf Modu — puanlar doğrudan işlenir)' : '')) : '';
+    evStudentActiveNote.style.display = unlocked ? 'block' : 'none';
+    evStudentActiveNote.textContent = noteText;
+    bireyselStudentActiveNote.style.display = unlocked ? 'block' : 'none';
+    bireyselStudentActiveNote.textContent = noteText;
   }
-  evStudentSelect.addEventListener('change', ()=>{
-    const val = evStudentSelect.value;
+  function onStudentSelectChange(selectEl){
+    const val = selectEl.value;
     currentEvStudentId = val ? parseInt(val,10) : null;
     updateEvLock();
-  });
+  }
+  evStudentSelect.addEventListener('change', ()=> onStudentSelectChange(evStudentSelect));
+  bireyselStudentSelect.addEventListener('change', ()=> onStudentSelectChange(bireyselStudentSelect));
 
   function renderStudentList(){
     const sorted = [...appStudents].sort((a,b)=>b.score-a.score);
@@ -2836,7 +2899,14 @@
      ========================================================= */
 
   /* ---- Tek Farklı Olanı Bulma ---- */
-  const FARKLI_EMOJIS = ['🐶','🐱','🐰','🐻','🦊','🐸','🐵','🐷','🦁','🐯','⚽','🏀','🎈','🍎','🍌','🍇','⭐','🌙','☀️','🌈','🚗','🚌','✈️','🚀','🎸','🥁','🎨','📚'];
+  const FARKLI_KATEGORILER = [
+    ['🐶','🐱','🐰','🐻','🦊','🐸','🐵','🐷'],
+    ['🍎','🍌','🍇','🍉','🍓','🍒','🍍','🍑'],
+    ['⭐','🌙','☀️','🌈','☁️','⚡','❄️','🔥'],
+    ['🚗','🚌','✈️','🚀','🚲','🚂','⛵','🚁'],
+    ['⚽','🏀','🎾','🏈','🎱','🏐','🎳','🥎'],
+    ['🎸','🥁','🎹','🎺','🎻','🪘','🎷','🪗']
+  ];
   let evFarkRecent = [];
   const evFarkGrid = document.getElementById('evFarkGrid');
   const evFarkFlash = document.getElementById('evFarkFlash');
@@ -2847,13 +2917,14 @@
   function evFarkNext(){
     let same, diff, tries = 0;
     do {
-      const pick = shuffle(FARKLI_EMOJIS).slice(0,2);
+      const cat = FARKLI_KATEGORILER[randInt(0, FARKLI_KATEGORILER.length-1)];
+      const pick = shuffle(cat).slice(0,2);
       same = pick[0]; diff = pick[1];
       tries++;
     } while(evFarkRecent.includes(same+diff) && tries < 25);
     evFarkRecent.push(same+diff);
     if(evFarkRecent.length > 15) evFarkRecent.shift();
-    const gridSize = 6;
+    const gridSize = 8;
     evFarkDiffIdx = randInt(0, gridSize-1);
     let html = '';
     for(let i=0;i<gridSize;i++){
