@@ -365,21 +365,73 @@
     </div>
   </section>
 
-  <!-- ================= EV: TÜRKÇE (yakında) ================= -->
+  <!-- ================= EV: TÜRKÇE ================= -->
   <section class="screen" id="screen-evTurkce">
     <h2 class="game-title">📖 Türkçe</h2>
-    <p class="game-desc">Kelime ve cümle oyunları.</p>
-    <div class="panel" style="text-align:center;">
-      <p class="empty-note">Burası hazırlanıyor 👀<br>Anagram, eş/zıt anlam, cümle tamamlama, hecelere ayırma ve noktalama oyunları yakında burada olacak.</p>
+    <p class="game-desc">İstediğin oyunu seç, sonu gelmeyen yeni sorularla pratik yap.</p>
+    <div class="card-grid">
+      <button class="game-card" data-target="evAnagram">
+        <span class="emoji">🔤</span>
+        <h3>Anagram</h3>
+        <p>Harfleri karışık verilen kelimeyi bul.</p>
+        <span class="tag" style="background:var(--sun-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evEsZit">
+        <span class="emoji">🔁</span>
+        <h3>Eş - Zıt Anlam</h3>
+        <p>Kelimenin eş ya da zıt anlamlısını seçeneklerden bul.</p>
+        <span class="tag" style="background:var(--sky-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evCumle">
+        <span class="emoji">✏️</span>
+        <h3>Cümle Tamamlama</h3>
+        <p>Cümledeki boşluğa uygun kelimeyi seç.</p>
+        <span class="tag" style="background:var(--grass-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evHece">
+        <span class="emoji">🔠</span>
+        <h3>Hecelere Ayırma</h3>
+        <p>Kelimenin kaç heceli olduğunu bul.</p>
+        <span class="tag" style="background:var(--grape-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evNoktalama">
+        <span class="emoji">❓</span>
+        <h3>Noktalama</h3>
+        <p>Cümlenin sonuna doğru noktalama işaretini yerleştir.</p>
+        <span class="tag" style="background:var(--coral-dark)">Bireysel</span>
+      </button>
     </div>
   </section>
 
-  <!-- ================= EV: MANTIK (yakında) ================= -->
+  <!-- ================= EV: MANTIK ================= -->
   <section class="screen" id="screen-evMantik">
     <h2 class="game-title">🧠 Mantık</h2>
-    <p class="game-desc">Görsel ve sözel mantık oyunları.</p>
-    <div class="panel" style="text-align:center;">
-      <p class="empty-note">Burası hazırlanıyor 👀<br>Tek farklı olanı bulma, şekil örüntüsü, sıralama bulmacası ve mantık zincirleri yakında burada olacak.</p>
+    <p class="game-desc">İstediğin oyunu seç, sonu gelmeyen yeni sorularla pratik yap.</p>
+    <div class="card-grid">
+      <button class="game-card" data-target="evFarkli">
+        <span class="emoji">🔍</span>
+        <h3>Tek Farklı Olanı Bulma</h3>
+        <p>Aralarından farklı olan simgeye dokun.</p>
+        <span class="tag" style="background:var(--sun-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evSekilOruntu">
+        <span class="emoji">🔶</span>
+        <h3>Şekil Örüntüsü</h3>
+        <p>Örüntüde eksik olan rengi/şekli bul.</p>
+        <span class="tag" style="background:var(--sky-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evSiralama">
+        <span class="emoji">📊</span>
+        <h3>Sıralama Bulmacası</h3>
+        <p>İpucuna göre isimlere doğru sırayla dokun.</p>
+        <span class="tag" style="background:var(--grass-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evZincir">
+        <span class="emoji">🔗</span>
+        <h3>Mantık Zincirleri</h3>
+        <p>"Eğer... o zaman..." bulmacalarını çöz.</p>
+        <span class="tag" style="background:var(--grape-dark)">Bireysel</span>
+      </button>
     </div>
   </section>
 
@@ -513,6 +565,171 @@
       <div class="flash-msg" id="evSpFlash"></div>
       <div class="row" style="justify-content:center; margin-top:14px;">
         <button class="btn ghost" id="evSpNewBtn">Yeni Soru</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: ANAGRAM ================= -->
+  <section class="screen" id="screen-evAnagram">
+    <h2 class="game-title">🔤 Anagram</h2>
+    <p class="game-desc">Harfleri karışık verilen kelimeyi bul.</p>
+    <div class="panel">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evAnaScore">0</div><div class="lbl">DOĞRU</div></div>
+      </div>
+      <div class="problem-box"><div class="problem-text" id="evAnaText" style="letter-spacing:6px;">-</div></div>
+      <div class="row" style="max-width:340px; margin:0 auto;">
+        <input class="field" id="evAnaInput" placeholder="Kelimeyi yaz" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <button class="btn coral" id="evAnaCheckBtn">Kontrol Et</button>
+      </div>
+      <div class="flash-msg" id="evAnaFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evAnaNewBtn">Yeni Kelime</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: EŞ - ZIT ANLAM ================= -->
+  <section class="screen" id="screen-evEsZit">
+    <h2 class="game-title">🔁 Eş - Zıt Anlam</h2>
+    <p class="game-desc">Verilen kelimenin eş ya da zıt anlamlısını seçeneklerden seç.</p>
+    <div class="panel">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evEzScore">0</div><div class="lbl">DOĞRU</div></div>
+      </div>
+      <div class="kategori-top"><span class="kategori-label" id="evEzMode">-</span></div>
+      <div class="problem-box"><div class="problem-text" id="evEzWord" style="font-size:clamp(26px,4vw,38px);">-</div></div>
+      <div class="chip-list" id="evEzOptions" style="justify-content:center;"></div>
+      <div class="flash-msg" id="evEzFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evEzNewBtn">Yeni Soru</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: CÜMLE TAMAMLAMA ================= -->
+  <section class="screen" id="screen-evCumle">
+    <h2 class="game-title">✏️ Cümle Tamamlama</h2>
+    <p class="game-desc">Cümledeki boşluğa uygun kelimeyi seç.</p>
+    <div class="panel">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evCumScore">0</div><div class="lbl">DOĞRU</div></div>
+      </div>
+      <div class="problem-box"><div class="problem-text" id="evCumText" style="font-size:clamp(18px,3vw,26px); line-height:1.5;">-</div></div>
+      <div class="chip-list" id="evCumOptions" style="justify-content:center;"></div>
+      <div class="flash-msg" id="evCumFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evCumNewBtn">Yeni Cümle</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: HECELERE AYIRMA ================= -->
+  <section class="screen" id="screen-evHece">
+    <h2 class="game-title">🔠 Hecelere Ayırma</h2>
+    <p class="game-desc">Kelimenin kaç heceli olduğunu bul.</p>
+    <div class="panel">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evHeceScore">0</div><div class="lbl">DOĞRU</div></div>
+      </div>
+      <div class="problem-box"><div class="problem-text" id="evHeceText">-</div></div>
+      <div class="row" style="max-width:340px; margin:0 auto;">
+        <input class="field" id="evHeceInput" placeholder="Hece sayısı" type="text" inputmode="none" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" readonly>
+        <button class="btn coral" id="evHeceCheckBtn">Kontrol Et</button>
+      </div>
+      <div class="keypad" id="evHeceKeypad"></div>
+      <div class="flash-msg" id="evHeceFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evHeceNewBtn">Yeni Kelime</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: NOKTALAMA ================= -->
+  <section class="screen" id="screen-evNoktalama">
+    <h2 class="game-title">❓ Noktalama</h2>
+    <p class="game-desc">Cümlenin sonuna hangi noktalama işareti gelmeli?</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evNoktaScore">0</div><div class="lbl">DOĞRU</div></div>
+      </div>
+      <div class="problem-box"><div class="problem-text" id="evNoktaText" style="font-size:clamp(18px,3vw,26px);">-</div></div>
+      <div class="row" style="justify-content:center; gap:14px;">
+        <button class="num-tile" id="evNoktaNokta" style="font-size:26px;">.</button>
+        <button class="num-tile" id="evNoktaSoru" style="font-size:26px;">?</button>
+        <button class="num-tile" id="evNoktaUnlem" style="font-size:26px;">!</button>
+      </div>
+      <div class="flash-msg" id="evNoktaFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evNoktaNewBtn">Yeni Cümle</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: TEK FARKLI OLANI BULMA ================= -->
+  <section class="screen" id="screen-evFarkli">
+    <h2 class="game-title">🔍 Tek Farklı Olanı Bulma</h2>
+    <p class="game-desc">Aralarından farklı olan simgeye dokun.</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evFarkScore">0</div><div class="lbl">DOĞRU</div></div>
+      </div>
+      <div class="chip-list" id="evFarkGrid" style="justify-content:center;"></div>
+      <div class="flash-msg" id="evFarkFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evFarkNewBtn">Yeni Soru</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: ŞEKİL ÖRÜNTÜSÜ ================= -->
+  <section class="screen" id="screen-evSekilOruntu">
+    <h2 class="game-title">🔶 Şekil Örüntüsü</h2>
+    <p class="game-desc">Örüntüde eksik olan rengi bul.</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evSekScore">0</div><div class="lbl">DOĞRU</div></div>
+      </div>
+      <div class="chip-list" id="evSekPattern" style="justify-content:center; font-size:36px;"></div>
+      <div class="chip-list" id="evSekOptions" style="justify-content:center; margin-top:20px;"></div>
+      <div class="flash-msg" id="evSekFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evSekNewBtn">Yeni Örüntü</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: SIRALAMA BULMACASI ================= -->
+  <section class="screen" id="screen-evSiralama">
+    <h2 class="game-title">📊 Sıralama Bulmacası</h2>
+    <p class="game-desc">İpucuna göre isimlere doğru sırayla dokun.</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evSiraScore">0</div><div class="lbl">DOĞRU</div></div>
+      </div>
+      <div class="problem-box"><div class="problem-text" id="evSiraText" style="font-size:clamp(16px,2.6vw,22px); line-height:1.5;">-</div></div>
+      <div class="chip-list" id="evSiraOptions" style="justify-content:center;"></div>
+      <p class="hint" id="evSiraProgress" style="text-align:center;"></p>
+      <div class="flash-msg" id="evSiraFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evSiraNewBtn">Yeni Bulmaca</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EV: MANTIK ZİNCİRLERİ ================= -->
+  <section class="screen" id="screen-evZincir">
+    <h2 class="game-title">🔗 Mantık Zincirleri</h2>
+    <p class="game-desc">"Eğer... o zaman..." bulmacalarını çöz.</p>
+    <div class="panel">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="evZinScore">0</div><div class="lbl">DOĞRU</div></div>
+      </div>
+      <div class="problem-box"><div class="problem-text" id="evZinText" style="font-size:clamp(16px,2.6vw,22px); line-height:1.5;">-</div></div>
+      <div class="chip-list" id="evZinOptions" style="justify-content:center;"></div>
+      <div class="flash-msg" id="evZinFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="evZinNewBtn">Yeni Soru</button>
       </div>
     </div>
   </section>
@@ -1011,6 +1228,10 @@
     evMatematik:'🔢 Matematik', evTurkce:'📖 Türkçe', evMantik:'🧠 Mantık',
     evSayi:'⚡ Sayı Şimşeği (Ev)', ev24:"🎯 24'e Ulaş", evOruntu:'🧩 Sayı Örüntüsü Avcısı',
     evYuksekAlcak:'🔼 Yüksek mi Alçak mı', evSaatPara:'🕒 Saat ve Para Problemleri',
+    evAnagram:'🔤 Anagram', evEsZit:'🔁 Eş - Zıt Anlam', evCumle:'✏️ Cümle Tamamlama',
+    evHece:'🔠 Hecelere Ayırma', evNoktalama:'❓ Noktalama',
+    evFarkli:'🔍 Tek Farklı Olanı Bulma', evSekilOruntu:'🔶 Şekil Örüntüsü',
+    evSiralama:'📊 Sıralama Bulmacası', evZincir:'🔗 Mantık Zincirleri',
     ogrenciler:'👤 Öğrenci Profilleri', studentProfile:'👤 Öğrenci Profili',
     yetkiKapisi:'🔒 Yetkili Girişi', yonetici:'🔐 Yönetici Paneli', arsiv:'🗂 Arşivlenmiş Sonuçlar',
     grup:'🤝 Grup Oyunları', kelime:'💥 Kelime Oyunu', kutu:'📦 Gizemli Kutu',
@@ -1021,6 +1242,10 @@
     evMatematik:'ev', evTurkce:'ev', evMantik:'ev',
     evSayi:'evMatematik', ev24:'evMatematik', evOruntu:'evMatematik',
     evYuksekAlcak:'evMatematik', evSaatPara:'evMatematik',
+    evAnagram:'evTurkce', evEsZit:'evTurkce', evCumle:'evTurkce',
+    evHece:'evTurkce', evNoktalama:'evTurkce',
+    evFarkli:'evMantik', evSekilOruntu:'evMantik',
+    evSiralama:'evMantik', evZincir:'evMantik',
     ogrenciler:'home', studentProfile:'ogrenciler', yetkiKapisi:'ogrenciler',
     yonetici:'ogrenciler', arsiv:'ogrenciler',
     grup:'sinif', kelime:'grup', kutu:'grup', sayi:'grup',
@@ -1132,6 +1357,15 @@
     if(ep.saatPara && ep.saatPara.correct) rows.push('🕒 Saat ve Para Problemleri: '+ep.saatPara.correct+' doğru cevap');
     if(ep.zincirTC && ep.zincirTC.solved) rows.push('🎯 24\'e Ulaş (Toplama-Çıkarma): '+ep.zincirTC.solved+' kez hedefe ulaştı');
     if(ep.zincirTCC && ep.zincirTCC.solved) rows.push('🎯 24\'e Ulaş (Toplama-Çıkarma-Çarpma): '+ep.zincirTCC.solved+' kez hedefe ulaştı');
+    if(ep.anagram && ep.anagram.correct) rows.push('🔤 Anagram: '+ep.anagram.correct+' doğru cevap');
+    if(ep.esZit && ep.esZit.correct) rows.push('🔁 Eş - Zıt Anlam: '+ep.esZit.correct+' doğru cevap');
+    if(ep.cumle && ep.cumle.correct) rows.push('✏️ Cümle Tamamlama: '+ep.cumle.correct+' doğru cevap');
+    if(ep.hece && ep.hece.correct) rows.push('🔠 Hecelere Ayırma: '+ep.hece.correct+' doğru cevap');
+    if(ep.noktalama && ep.noktalama.correct) rows.push('❓ Noktalama: '+ep.noktalama.correct+' doğru cevap');
+    if(ep.farkli && ep.farkli.correct) rows.push('🔍 Tek Farklı Olanı Bulma: '+ep.farkli.correct+' doğru cevap');
+    if(ep.sekilOruntu && ep.sekilOruntu.correct) rows.push('🔶 Şekil Örüntüsü: '+ep.sekilOruntu.correct+' doğru cevap');
+    if(ep.siralama && ep.siralama.correct) rows.push('📊 Sıralama Bulmacası: '+ep.siralama.correct+' kez doğru sıraladı');
+    if(ep.mantikZincir && ep.mantikZincir.correct) rows.push('🔗 Mantık Zincirleri: '+ep.mantikZincir.correct+' doğru cevap');
     el.innerHTML = rows.length
       ? rows.map(r=>'<div class="log-item">'+esc(r)+'</div>').join('')
       : '<div class="empty-note">Henüz ev etkinliği kaydı yok.</div>';
@@ -2313,11 +2547,497 @@
   evSpInput.addEventListener('keydown', e=>{ if(e.key==='Enter') evSpCheck(); });
   evSpNewBtn.addEventListener('click', evSpNext);
 
+  /* =========================================================
+     EV ETKİNLİKLERİ — TÜRKÇE (bireysel, sınırsız pratik)
+     ========================================================= */
+
+  const ANAGRAM_WORDS = [
+    "kedi","köpek","kuş","balık","tavşan","aslan","kaplan","fil","zürafa","maymun",
+    "ayı","kurt","tilki","geyik","koyun","keçi","inek","tavuk","horoz","ördek",
+    "kaz","arı","kelebek","karınca","örümcek","böcek","yılan","penguen","yunus","yengeç",
+    "elma","muz","çilek","karpuz","üzüm","kiraz","ananas","mango","armut","şeftali",
+    "domates","patates","havuç","biber","lahana","patlıcan","ıspanak","mısır","ekmek","peynir",
+    "yumurta","süt","bal","reçel","çikolata","dondurma","pasta","kek","simit","pilav",
+    "çorba","makarna","okul","kalem","defter","silgi","çanta","sıra","tahta","kitap",
+    "harita","cetvel","top","bebek","uçurtma","bisiklet","araba","otobüs","tren","gemi",
+    "uçak","roket","balon","güneş","bulut","yağmur","rüzgar","deniz","orman","çiçek",
+    "ağaç","yaprak","papatya","lale","oda","kapı","pencere","masa","sandalye","koltuk",
+    "yatak","dolap","ayna","saat","anne","baba","kardeş","dede","nine","arkadaş",
+    "öğretmen","doktor","polis","aşçı","gitar","piyano","davul","futbol","kaplumbağa","timsah"
+  ];
+  let evAnaWord = '';
+  let evAnaRecent = [];
+  const evAnaText = document.getElementById('evAnaText');
+  const evAnaInput = document.getElementById('evAnaInput');
+  const evAnaCheckBtn = document.getElementById('evAnaCheckBtn');
+  const evAnaFlash = document.getElementById('evAnaFlash');
+  const evAnaNewBtn = document.getElementById('evAnaNewBtn');
+  const evAnaScoreEl = document.getElementById('evAnaScore');
+  let evAnaScore = 0;
+  function scrambleWord(word){
+    const chars = Array.from(word);
+    let tries = 0, out;
+    do { out = shuffle(chars).join(''); tries++; } while(out === word && tries < 10 && chars.length > 1);
+    return out;
+  }
+  function evAnaNext(){
+    let w, tries = 0;
+    do { w = ANAGRAM_WORDS[randInt(0, ANAGRAM_WORDS.length-1)]; tries++; } while(evAnaRecent.includes(w) && tries < 25);
+    evAnaRecent.push(w);
+    if(evAnaRecent.length > 15) evAnaRecent.shift();
+    evAnaWord = w;
+    evAnaText.textContent = scrambleWord(w).toLocaleUpperCase('tr-TR');
+    evAnaInput.value=''; evAnaFlash.textContent='';
+    evAnaInput.focus();
+  }
+  function evAnaCheck(){
+    const raw = evAnaInput.value.trim();
+    if(!raw) return;
+    if(trLower(raw) === trLower(evAnaWord)){
+      evAnaScore++; evAnaScoreEl.textContent = evAnaScore;
+      evAnaFlash.style.color='var(--grass-dark)'; evAnaFlash.textContent='Doğru! ✔️';
+      evRecordProgress('anagram','correct');
+    } else {
+      evAnaFlash.style.color='var(--coral-dark)'; evAnaFlash.textContent='Yanlış! Doğru cevap: '+evAnaWord;
+    }
+    setTimeout(evAnaNext, 900);
+  }
+  evAnaCheckBtn.addEventListener('click', evAnaCheck);
+  evAnaInput.addEventListener('keydown', e=>{ if(e.key==='Enter') evAnaCheck(); });
+  evAnaNewBtn.addEventListener('click', evAnaNext);
+
+  /* ---- Eş - Zıt Anlam ---- */
+  const ESANLAM_PAIRS = [
+    ["mutlu","sevinçli"],["üzgün","kederli"],["hızlı","çabuk"],["güzel","hoş"],["akıllı","zeki"],
+    ["büyük","iri"],["küçük","ufak"],["cesur","yürekli"],["temiz","pak"],["kolay","basit"],
+    ["yardımsever","cömert"],["korkak","ürkek"],["yorgun","bitkin"],["sessiz","sakin"],["kirli","pis"],
+    ["parlak","ışıltılı"],["soğuk","serin"],["şen","neşeli"],["kısa","ufak"],["zor","güç"]
+  ];
+  const ZITANLAM_PAIRS = [
+    ["büyük","küçük"],["uzun","kısa"],["sıcak","soğuk"],["hızlı","yavaş"],["gece","gündüz"],
+    ["yukarı","aşağı"],["açık","kapalı"],["ağır","hafif"],["temiz","kirli"],["kolay","zor"],
+    ["mutlu","üzgün"],["genç","yaşlı"],["ucuz","pahalı"],["dolu","boş"],["ileri","geri"],
+    ["iyi","kötü"],["güzel","çirkin"],["kalın","ince"],["sert","yumuşak"],["erken","geç"]
+  ];
+  let evEzRecent = [];
+  const evEzMode = document.getElementById('evEzMode');
+  const evEzWord = document.getElementById('evEzWord');
+  const evEzOptions = document.getElementById('evEzOptions');
+  const evEzFlash = document.getElementById('evEzFlash');
+  const evEzNewBtn = document.getElementById('evEzNewBtn');
+  const evEzScoreEl = document.getElementById('evEzScore');
+  let evEzScore = 0;
+  let evEzCorrect = '';
+  function evEzNext(){
+    let isEs, pair, tries = 0;
+    do {
+      isEs = Math.random() < 0.5;
+      const list = isEs ? ESANLAM_PAIRS : ZITANLAM_PAIRS;
+      pair = list[randInt(0, list.length-1)];
+      tries++;
+    } while(evEzRecent.includes(pair[0]) && tries < 25);
+    evEzRecent.push(pair[0]);
+    if(evEzRecent.length > 15) evEzRecent.shift();
+    evEzMode.textContent = isEs ? 'Eş anlamlısı hangisi?' : 'Zıt anlamlısı hangisi?';
+    evEzWord.textContent = pair[0];
+    evEzCorrect = pair[1];
+    const allWords = ESANLAM_PAIRS.concat(ZITANLAM_PAIRS).flat().filter(w=>w!==pair[0] && w!==pair[1]);
+    const distractors = shuffle([...new Set(allWords)]).slice(0,3);
+    const options = shuffle([pair[1], ...distractors]);
+    evEzOptions.innerHTML = options.map(w=>'<button type="button" class="num-tile" data-w="'+esc(w)+'">'+esc(w)+'</button>').join('');
+    evEzFlash.textContent='';
+  }
+  evEzOptions.addEventListener('click', e=>{
+    const btn = e.target.closest('.num-tile');
+    if(!btn) return;
+    const chosen = btn.dataset.w;
+    if(chosen === evEzCorrect){
+      evEzScore++; evEzScoreEl.textContent = evEzScore;
+      evEzFlash.style.color='var(--grass-dark)'; evEzFlash.textContent='Doğru! ✔️';
+      evRecordProgress('esZit','correct');
+    } else {
+      evEzFlash.style.color='var(--coral-dark)'; evEzFlash.textContent='Yanlış! Doğru cevap: '+evEzCorrect;
+    }
+    setTimeout(evEzNext, 900);
+  });
+  evEzNewBtn.addEventListener('click', evEzNext);
+
+  /* ---- Cümle Tamamlama ---- */
+  const CUMLE_BANK = [
+    {text:"Kedi ____ içmeyi çok sever.", answer:"süt", distractors:["kitap","top","ayakkabı"]},
+    {text:"Sabah kalkınca dişlerimi ____.", answer:"fırçalarım", distractors:["yıkarım","giyerim","yerim"]},
+    {text:"Kış geldi, hava çok ____.", answer:"soğudu", distractors:["ısındı","kurudu","aydınlandı"]},
+    {text:"Okula ____ ile gidiyorum.", answer:"servis", distractors:["gemi","uçak","tekne"]},
+    {text:"Bahçedeki ____ çok güzel açtı.", answer:"çiçekler", distractors:["taşlar","arabalar","kitaplar"]},
+    {text:"Annem akşam yemeğinde ____ pişirdi.", answer:"çorba", distractors:["saat","masa","kalem"]},
+    {text:"Yağmur yağınca ____ açtım.", answer:"şemsiyemi", distractors:["gözlüğümü","defterimi","çantamı"]},
+    {text:"Kütüphanede sessizce ____ okuruz.", answer:"kitap", distractors:["top","müzik","yemek"]},
+    {text:"Uçurtmamı ____ günü uçurdum.", answer:"rüzgarlı", distractors:["karanlık","yorgun","kalabalık"]},
+    {text:"Öğretmenim tahtaya ____ ile yazdı.", answer:"tebeşir", distractors:["makas","silgi","cetvel"]},
+    {text:"Balık ____ içinde yüzer.", answer:"suyun", distractors:["havanın","toprağın","ateşin"]},
+    {text:"Kar yağınca ____ yaptık.", answer:"kardan adam", distractors:["kum kalesi","uçurtma","resim"]},
+    {text:"Doğum günümde arkadaşlarım bana ____ getirdi.", answer:"hediye", distractors:["fatura","ödev","gazete"]},
+    {text:"Sınıfımızda ____ tane sıra var.", answer:"on", distractors:["mavi","büyük","hızlı"]},
+    {text:"Akşam olunca gökyüzünde ____ görünür.", answer:"yıldızlar", distractors:["çiçekler","balıklar","taşlar"]},
+    {text:"Ağaçtan düşen ____ topladık.", answer:"yaprakları", distractors:["bulutları","yıldızları","denizleri"]},
+    {text:"Köpeğim topu getirince ____ verdim.", answer:"ödül", distractors:["ceza","borç","masraf"]},
+    {text:"Yüzme havuzunda ____ öğrendim.", answer:"yüzmeyi", distractors:["uçmayı","koşmayı","zıplamayı"]},
+    {text:"Markette annemle ____ aldık.", answer:"meyve", distractors:["gökyüzü","rüzgar","gölge"]},
+    {text:"Uzun bir yolculuktan sonra çok ____.", answer:"yorulduk", distractors:["sevindik","şaşırdık","kızdık"]},
+    {text:"Kitabın sayfalarını yavaşça ____.", answer:"çevirdim", distractors:["yıktım","yaktım","attım"]},
+    {text:"Bahçede ____ ile oynadık.", answer:"top", distractors:["fatura","makale","rapor"]},
+    {text:"Sabah güneş doğunca kuşlar ____ başlar.", answer:"ötmeye", distractors:["ağlamaya","koşmaya","yazmaya"]},
+    {text:"Dişçiye gidince ____ korktum biraz.", answer:"başta", distractors:["hiç","asla","sonsuza"]},
+    {text:"Yeni ayakkabılarım biraz ____.", answer:"dar geldi", distractors:["gökyüzü kadar maviydi","çok tatlıydı","çok hızlıydı"]},
+    {text:"Tatilde denize girip ____ topladık.", answer:"deniz kabuğu", distractors:["kar tanesi","kitap sayfası","kalem ucu"]},
+    {text:"Sınavdan önce iyi ____ çalıştım.", answer:"ders", distractors:["yemek","uyku","oyun"]},
+    {text:"Parkta salıncakta ____ sallandım.", answer:"keyifle", distractors:["üzülerek","kızarak","korkarak"]},
+    {text:"Kışın kalın ____ giyerim.", answer:"mont", distractors:["mayo","şort","terlik"]},
+    {text:"Doğum günü pastasındaki mumları ____.", answer:"üfledim", distractors:["yıkadım","kestim","attım"]}
+  ];
+  let evCumRecent = [];
+  const evCumText = document.getElementById('evCumText');
+  const evCumOptions = document.getElementById('evCumOptions');
+  const evCumFlash = document.getElementById('evCumFlash');
+  const evCumNewBtn = document.getElementById('evCumNewBtn');
+  const evCumScoreEl = document.getElementById('evCumScore');
+  let evCumScore = 0;
+  let evCumCorrect = '';
+  function evCumNext(){
+    let item, tries = 0;
+    do { item = CUMLE_BANK[randInt(0, CUMLE_BANK.length-1)]; tries++; } while(evCumRecent.includes(item.text) && tries < 25);
+    evCumRecent.push(item.text);
+    if(evCumRecent.length > 15) evCumRecent.shift();
+    evCumText.textContent = item.text;
+    evCumCorrect = item.answer;
+    const options = shuffle([item.answer, ...item.distractors]);
+    evCumOptions.innerHTML = options.map(w=>'<button type="button" class="num-tile" data-w="'+esc(w)+'">'+esc(w)+'</button>').join('');
+    evCumFlash.textContent='';
+  }
+  evCumOptions.addEventListener('click', e=>{
+    const btn = e.target.closest('.num-tile');
+    if(!btn) return;
+    if(btn.dataset.w === evCumCorrect){
+      evCumScore++; evCumScoreEl.textContent = evCumScore;
+      evCumFlash.style.color='var(--grass-dark)'; evCumFlash.textContent='Doğru! ✔️';
+      evRecordProgress('cumle','correct');
+    } else {
+      evCumFlash.style.color='var(--coral-dark)'; evCumFlash.textContent='Yanlış! Doğru cevap: '+evCumCorrect;
+    }
+    setTimeout(evCumNext, 900);
+  });
+  evCumNewBtn.addEventListener('click', evCumNext);
+
+  /* ---- Hecelere Ayırma (hece sayısını bulma) ---- */
+  let evHeceRecent = [];
+  const evHeceText = document.getElementById('evHeceText');
+  const evHeceInput = document.getElementById('evHeceInput');
+  const evHeceCheckBtn = document.getElementById('evHeceCheckBtn');
+  const evHeceFlash = document.getElementById('evHeceFlash');
+  const evHeceNewBtn = document.getElementById('evHeceNewBtn');
+  const evHeceScoreEl = document.getElementById('evHeceScore');
+  let evHeceScore = 0;
+  let evHeceAnswer = 0;
+  function countHece(word){
+    const vowels = 'aeıioöuü';
+    let c = 0;
+    for(const ch of word.toLocaleLowerCase('tr-TR')){ if(vowels.includes(ch)) c++; }
+    return Math.max(1, c);
+  }
+  function evHeceNext(){
+    let w, tries = 0;
+    do { w = ANAGRAM_WORDS[randInt(0, ANAGRAM_WORDS.length-1)]; tries++; } while(evHeceRecent.includes(w) && tries < 25);
+    evHeceRecent.push(w);
+    if(evHeceRecent.length > 15) evHeceRecent.shift();
+    evHeceText.textContent = w;
+    evHeceAnswer = countHece(w);
+    evHeceInput.value=''; evHeceFlash.textContent='';
+    evHeceInput.focus();
+  }
+  function evHeceCheck(){
+    const raw = evHeceInput.value.trim();
+    if(raw==='') return;
+    const val = parseInt(raw,10);
+    if(isNaN(val)) return;
+    if(val === evHeceAnswer){
+      evHeceScore++; evHeceScoreEl.textContent = evHeceScore;
+      evHeceFlash.style.color='var(--grass-dark)'; evHeceFlash.textContent='Doğru! ✔️';
+      evRecordProgress('hece','correct');
+    } else {
+      evHeceFlash.style.color='var(--coral-dark)'; evHeceFlash.textContent='Yanlış! Doğru cevap: '+evHeceAnswer;
+    }
+    setTimeout(evHeceNext, 900);
+  }
+  evHeceCheckBtn.addEventListener('click', evHeceCheck);
+  evHeceInput.addEventListener('keydown', e=>{ if(e.key==='Enter') evHeceCheck(); });
+  evHeceNewBtn.addEventListener('click', evHeceNext);
+
+  /* ---- Noktalama ---- */
+  const NOKTALAMA_BANK = [
+    {text:"Bugün hava çok güzel", type:"nokta"},
+    {text:"Yarın okula gidiyoruz", type:"nokta"},
+    {text:"Kedim çok tatlı bir hayvan", type:"nokta"},
+    {text:"Bahçede çiçekler açtı", type:"nokta"},
+    {text:"Kardeşimle top oynadık", type:"nokta"},
+    {text:"Bu kitabı çok sevdim", type:"nokta"},
+    {text:"Annem akşam yemeği hazırladı", type:"nokta"},
+    {text:"Okulun bahçesinde ağaçlar var", type:"nokta"},
+    {text:"Saat kaçta okula gidiyorsun", type:"soru"},
+    {text:"Bugün hava nasıl", type:"soru"},
+    {text:"En sevdiğin renk hangisi", type:"soru"},
+    {text:"Yarın pikniğe gidecek misin", type:"soru"},
+    {text:"Bu oyunu nasıl oynayacağız", type:"soru"},
+    {text:"Adın ne senin", type:"soru"},
+    {text:"Kaç yaşındasın", type:"soru"},
+    {text:"Hangi hayvanı beslemek istersin", type:"soru"},
+    {text:"Ne kadar güzel bir gün", type:"unlem"},
+    {text:"Aman dikkat et", type:"unlem"},
+    {text:"Vay canına, harika bir resim", type:"unlem"},
+    {text:"Bravo, çok güzel yaptın", type:"unlem"},
+    {text:"Yaşasın, tatil başladı", type:"unlem"},
+    {text:"Aferin sana, çok çalışkansın", type:"unlem"},
+    {text:"Yardım edin, kediciğim ağaca çıktı", type:"unlem"},
+    {text:"Aman ne kadar korkutucuydu", type:"unlem"}
+  ];
+  let evNoktaRecent = [];
+  const evNoktaText = document.getElementById('evNoktaText');
+  const evNoktaFlash = document.getElementById('evNoktaFlash');
+  const evNoktaNewBtn = document.getElementById('evNoktaNewBtn');
+  const evNoktaScoreEl = document.getElementById('evNoktaScore');
+  let evNoktaScore = 0;
+  let evNoktaAnswer = '';
+  function evNoktaNext(){
+    let item, tries = 0;
+    do { item = NOKTALAMA_BANK[randInt(0, NOKTALAMA_BANK.length-1)]; tries++; } while(evNoktaRecent.includes(item.text) && tries < 25);
+    evNoktaRecent.push(item.text);
+    if(evNoktaRecent.length > 15) evNoktaRecent.shift();
+    evNoktaText.textContent = item.text;
+    evNoktaAnswer = item.type;
+    evNoktaFlash.textContent='';
+  }
+  function evNoktaAnswerFn(chosen){
+    if(chosen === evNoktaAnswer){
+      evNoktaScore++; evNoktaScoreEl.textContent = evNoktaScore;
+      evNoktaFlash.style.color='var(--grass-dark)'; evNoktaFlash.textContent='Doğru! ✔️';
+      evRecordProgress('noktalama','correct');
+    } else {
+      const map = {nokta:'.', soru:'?', unlem:'!'};
+      evNoktaFlash.style.color='var(--coral-dark)'; evNoktaFlash.textContent='Yanlış! Doğru işaret: '+map[evNoktaAnswer];
+    }
+    setTimeout(evNoktaNext, 900);
+  }
+  document.getElementById('evNoktaNokta').addEventListener('click', ()=> evNoktaAnswerFn('nokta'));
+  document.getElementById('evNoktaSoru').addEventListener('click', ()=> evNoktaAnswerFn('soru'));
+  document.getElementById('evNoktaUnlem').addEventListener('click', ()=> evNoktaAnswerFn('unlem'));
+  evNoktaNewBtn.addEventListener('click', evNoktaNext);
+
+  /* =========================================================
+     EV ETKİNLİKLERİ — MANTIK (bireysel, sınırsız pratik)
+     ========================================================= */
+
+  /* ---- Tek Farklı Olanı Bulma ---- */
+  const FARKLI_EMOJIS = ['🐶','🐱','🐰','🐻','🦊','🐸','🐵','🐷','🦁','🐯','⚽','🏀','🎈','🍎','🍌','🍇','⭐','🌙','☀️','🌈','🚗','🚌','✈️','🚀','🎸','🥁','🎨','📚'];
+  let evFarkRecent = [];
+  const evFarkGrid = document.getElementById('evFarkGrid');
+  const evFarkFlash = document.getElementById('evFarkFlash');
+  const evFarkNewBtn = document.getElementById('evFarkNewBtn');
+  const evFarkScoreEl = document.getElementById('evFarkScore');
+  let evFarkScore = 0;
+  let evFarkDiffIdx = 0;
+  function evFarkNext(){
+    let same, diff, tries = 0;
+    do {
+      const pick = shuffle(FARKLI_EMOJIS).slice(0,2);
+      same = pick[0]; diff = pick[1];
+      tries++;
+    } while(evFarkRecent.includes(same+diff) && tries < 25);
+    evFarkRecent.push(same+diff);
+    if(evFarkRecent.length > 15) evFarkRecent.shift();
+    const gridSize = 6;
+    evFarkDiffIdx = randInt(0, gridSize-1);
+    let html = '';
+    for(let i=0;i<gridSize;i++){
+      const e = (i===evFarkDiffIdx) ? diff : same;
+      html += '<button type="button" class="num-tile" style="font-size:32px;" data-idx="'+i+'">'+e+'</button>';
+    }
+    evFarkGrid.innerHTML = html;
+    evFarkFlash.textContent='';
+  }
+  evFarkGrid.addEventListener('click', e=>{
+    const btn = e.target.closest('.num-tile');
+    if(!btn) return;
+    if(+btn.dataset.idx === evFarkDiffIdx){
+      evFarkScore++; evFarkScoreEl.textContent = evFarkScore;
+      evFarkFlash.style.color='var(--grass-dark)'; evFarkFlash.textContent='Doğru! ✔️';
+      evRecordProgress('farkli','correct');
+    } else {
+      evFarkFlash.style.color='var(--coral-dark)'; evFarkFlash.textContent='Yanlış, tekrar dene!';
+      return;
+    }
+    setTimeout(evFarkNext, 800);
+  });
+  evFarkNewBtn.addEventListener('click', evFarkNext);
+
+  /* ---- Şekil Örüntüsü ---- */
+  const SEKIL_RENKLER = ['🔴','🔵','🟢','🟡','🟣','🟠'];
+  const evSekPattern = document.getElementById('evSekPattern');
+  const evSekOptions = document.getElementById('evSekOptions');
+  const evSekFlash = document.getElementById('evSekFlash');
+  const evSekNewBtn = document.getElementById('evSekNewBtn');
+  const evSekScoreEl = document.getElementById('evSekScore');
+  let evSekScore = 0;
+  let evSekCorrect = '';
+  function evSekNext(){
+    const patLen = randInt(2,3);
+    const patternColors = shuffle(SEKIL_RENKLER).slice(0, patLen);
+    const seqLen = 6;
+    const seq = [];
+    for(let i=0;i<seqLen;i++) seq.push(patternColors[i % patLen]);
+    evSekCorrect = seq[seqLen-1];
+    const display = seq.slice(0, seqLen-1).concat('❓');
+    evSekPattern.innerHTML = display.map(c=>'<span>'+c+'</span>').join('');
+    const others = SEKIL_RENKLER.filter(c=>c!==evSekCorrect);
+    const options = shuffle([evSekCorrect, ...shuffle(others).slice(0,2)]);
+    evSekOptions.innerHTML = options.map(c=>'<button type="button" class="num-tile" style="font-size:30px;" data-c="'+c+'">'+c+'</button>').join('');
+    evSekFlash.textContent='';
+  }
+  evSekOptions.addEventListener('click', e=>{
+    const btn = e.target.closest('.num-tile');
+    if(!btn) return;
+    if(btn.dataset.c === evSekCorrect){
+      evSekScore++; evSekScoreEl.textContent = evSekScore;
+      evSekFlash.style.color='var(--grass-dark)'; evSekFlash.textContent='Doğru! ✔️';
+      evRecordProgress('sekilOruntu','correct');
+    } else {
+      evSekFlash.style.color='var(--coral-dark)'; evSekFlash.textContent='Yanlış! Doğru renk: '+evSekCorrect;
+    }
+    setTimeout(evSekNext, 900);
+  });
+  evSekNewBtn.addEventListener('click', evSekNext);
+
+  /* ---- Sıralama Bulmacası ---- */
+  const SIRA_ISIMLER = ['Ali','Ayşe','Can','Deniz','Ela','Mert','Zeynep','Buse','Kerem','Sude'];
+  const evSiraText = document.getElementById('evSiraText');
+  const evSiraOptions = document.getElementById('evSiraOptions');
+  const evSiraProgress = document.getElementById('evSiraProgress');
+  const evSiraFlash = document.getElementById('evSiraFlash');
+  const evSiraNewBtn = document.getElementById('evSiraNewBtn');
+  const evSiraScoreEl = document.getElementById('evSiraScore');
+  let evSiraScore = 0;
+  let evSiraOrder = [];
+  let evSiraClickIdx = 0;
+  let evSiraLocked = false;
+  const SIRA_NESNELER = ['elma','bilye','şeker','çıkartma','boncuk'];
+  function evSiraNext(){
+    const n = randInt(3,4);
+    const names = shuffle(SIRA_ISIMLER).slice(0, n);
+    const nesne = SIRA_NESNELER[randInt(0, SIRA_NESNELER.length-1)];
+    const values = shuffle(Array.from({length:20}, (_,i)=>i+1)).slice(0, n);
+    const people = names.map((name,i)=>({name, value: values[i]}));
+    const descending = Math.random() < 0.5;
+    evSiraOrder = [...people].sort((a,b)=> descending ? b.value-a.value : a.value-b.value).map(p=>p.name);
+    evSiraClickIdx = 0;
+    evSiraLocked = false;
+    const clueLines = people.map(p=>p.name+"'nin "+p.value+' tane '+nesne+' var.').join(' ');
+    evSiraText.textContent = clueLines + ' — İsimlere '+(descending ? 'en çoktan en aza' : 'en azdan en çoğa')+' doğru sırayla dokun.';
+    evSiraOptions.innerHTML = shuffle(people).map(p=>'<button type="button" class="num-tile" data-name="'+esc(p.name)+'">'+esc(p.name)+'</button>').join('');
+    evSiraProgress.textContent = 'Sıra: 0/'+n;
+    evSiraFlash.textContent='';
+  }
+  evSiraOptions.addEventListener('click', e=>{
+    if(evSiraLocked) return;
+    const btn = e.target.closest('.num-tile');
+    if(!btn || btn.disabled) return;
+    const name = btn.dataset.name;
+    if(name === evSiraOrder[evSiraClickIdx]){
+      btn.disabled = true;
+      btn.style.opacity = '0.35';
+      evSiraClickIdx++;
+      evSiraProgress.textContent = 'Sıra: '+evSiraClickIdx+'/'+evSiraOrder.length;
+      if(evSiraClickIdx === evSiraOrder.length){
+        evSiraScore++; evSiraScoreEl.textContent = evSiraScore;
+        evSiraFlash.style.color='var(--grass-dark)'; evSiraFlash.textContent='Doğru sıraladın! 🎉';
+        evRecordProgress('siralama','correct');
+        evSiraLocked = true;
+        setTimeout(evSiraNext, 1100);
+      }
+    } else {
+      evSiraLocked = true;
+      evSiraFlash.style.color='var(--coral-dark)'; evSiraFlash.textContent='Yanlış sıra! Doğru sıralama: '+evSiraOrder.join(' → ');
+      setTimeout(evSiraNext, 1600);
+    }
+  });
+  evSiraNewBtn.addEventListener('click', evSiraNext);
+
+  /* ---- Mantık Zincirleri ---- */
+  const ZINCIR_BANK = [
+    {text:"Eğer bugün Pazartesi ise, yarın hangi gün olur?", options:["Salı","Çarşamba","Pazar","Cuma"], answer:"Salı"},
+    {text:"Eğer hava çok soğuksa, dışarı çıkarken ne giymelisin?", options:["Mont","Mayo","Şort","Terlik"], answer:"Mont"},
+    {text:"Eğer bir hayvanın tüyü var ve 'hav hav' diyorsa, o hayvan hangisidir?", options:["Kedi","Köpek","Balık","Kuş"], answer:"Köpek"},
+    {text:"Eğer saat 3 sıralarında okuldan çıkıyorsan, saat 3'ten önce ne yapıyorsundur?", options:["Uyuyorsun","Ders işliyorsun","Akşam yemeği yiyorsun","Yıldızlara bakıyorsun"], answer:"Ders işliyorsun"},
+    {text:"Eğer bir meyve sarı, uzun ve kabuklu ise, muhtemelen hangisidir?", options:["Muz","Karpuz","Elma","Çilek"], answer:"Muz"},
+    {text:"Eğer bugün son ders günüyse (Cuma) yarın ne olur?", options:["Cumartesi","Pazartesi","Salı","Çarşamba"], answer:"Cumartesi"},
+    {text:"Eğer gökyüzü kararmaya başladıysa, hangi vakit yaklaşıyordur?", options:["Akşam","Öğlen","Sabah erkeni","Kahvaltı"], answer:"Akşam"},
+    {text:"Eğer bir hayvan suda yaşıyor ve solungaçları varsa, o hayvan hangisidir?", options:["Balık","Kedi","Tavşan","Kartal"], answer:"Balık"},
+    {text:"Eğer dışarıda yağmur yağıyorsa, yanına ne almalısın?", options:["Şemsiye","Güneş gözlüğü","Deniz topu","Kar topu"], answer:"Şemsiye"},
+    {text:"Eğer bir sayı 10'dan büyük ve 20'den küçükse, aşağıdakilerden hangisi olabilir?", options:["15","5","25","100"], answer:"15"},
+    {text:"Eğer bugün ayın 1'i ise ve bir hafta sonra hangi tarih olur?", options:["8'i","2'si","15'i","30'u"], answer:"8'i"},
+    {text:"Eğer bir kuş uçamıyor ve yüzüyorsa, hangisi olabilir?", options:["Penguen","Serçe","Kartal","Güvercin"], answer:"Penguen"},
+    {text:"Eğer bir çocuk sabah kahvaltı yapmadan okula gitti, öğlen ne hisseder?", options:["Aç","Uykulu değil","Susamamış","Çok enerjik"], answer:"Aç"},
+    {text:"Eğer termometre çok yüksek bir sayı gösteriyorsa hava nasıldır?", options:["Sıcak","Soğuk","Karlı","Buzlu"], answer:"Sıcak"},
+    {text:"Eğer bir hayvanın uzun boynu varsa ve ağaçların en üst yapraklarını yiyorsa, hangisidir?", options:["Zürafa","Fil","Kedi","Köpek"], answer:"Zürafa"},
+    {text:"Eğer bir sayının yarısı 6 ise, o sayı kaçtır?", options:["12","6","3","18"], answer:"12"},
+    {text:"Eğer gece olduysa gökyüzünde neyi görebilirsin?", options:["Yıldızları","Güneşi tam tepede","Gökkuşağını","Bulutsuz öğle güneşini"], answer:"Yıldızları"},
+    {text:"Eğer bir hayvan 8 bacaklıysa, hangisi olabilir?", options:["Örümcek","Kedi","Kuş","Balık"], answer:"Örümcek"},
+    {text:"Eğer okul tatile girdiyse, çocuklar ne yapar?", options:["Evde/gezide vakit geçirir","Her gün sınava girer","Her gün ödev teslim eder","Okulda kalır"], answer:"Evde/gezide vakit geçirir"},
+    {text:"Eğer bir kelimede hiç sesli harf yoksa, o kelime nasıl okunabilir?", options:["Zor okunur/eksiktir","Çok kolay okunur","Hiç harf yok demektir","Sadece rakamdır"], answer:"Zor okunur/eksiktir"}
+  ];
+  let evZinRecent = [];
+  const evZinText = document.getElementById('evZinText');
+  const evZinOptions = document.getElementById('evZinOptions');
+  const evZinFlash = document.getElementById('evZinFlash');
+  const evZinNewBtn = document.getElementById('evZinNewBtn');
+  const evZinScoreEl = document.getElementById('evZinScore');
+  let evZinScore = 0;
+  let evZinCorrect = '';
+  function evZinNext(){
+    let item, tries = 0;
+    do { item = ZINCIR_BANK[randInt(0, ZINCIR_BANK.length-1)]; tries++; } while(evZinRecent.includes(item.text) && tries < 25);
+    evZinRecent.push(item.text);
+    if(evZinRecent.length > 15) evZinRecent.shift();
+    evZinText.textContent = item.text;
+    evZinCorrect = item.answer;
+    evZinOptions.innerHTML = shuffle(item.options).map(w=>'<button type="button" class="num-tile" data-w="'+esc(w)+'">'+esc(w)+'</button>').join('');
+    evZinFlash.textContent='';
+  }
+  evZinOptions.addEventListener('click', e=>{
+    const btn = e.target.closest('.num-tile');
+    if(!btn) return;
+    if(btn.dataset.w === evZinCorrect){
+      evZinScore++; evZinScoreEl.textContent = evZinScore;
+      evZinFlash.style.color='var(--grass-dark)'; evZinFlash.textContent='Doğru! ✔️';
+      evRecordProgress('mantikZincir','correct');
+    } else {
+      evZinFlash.style.color='var(--coral-dark)'; evZinFlash.textContent='Yanlış! Doğru cevap: '+evZinCorrect;
+    }
+    setTimeout(evZinNext, 1100);
+  });
+  evZinNewBtn.addEventListener('click', evZinNext);
+
   /* Initialize ev games' first screens/data when their screens are first shown */
   ev24Generate();
   evOruntuGenerate();
   evYaNewGame();
   evSpNext();
+  evAnaNext();
+  evEzNext();
+  evCumNext();
+  evHeceNext();
+  evNoktaNext();
+  evFarkNext();
+  evSekNext();
+  evSiraNext();
+  evZinNext();
 
   /* ---------------- Tıklamalı sayı klavyelerini ilgili alanlara bağla ---------------- */
   renderNumKeypad(document.getElementById('sayKeypad'), sayAnswerInput, { onEnter: sayAnswer });
@@ -2325,6 +3045,7 @@
   renderNumKeypad(document.getElementById('evOruntuKeypad'), evOruntuInput, { onEnter: evOruntuCheck });
   renderNumKeypad(document.getElementById('evYaKeypad'), evYaInput, { onEnter: evYaGuess });
   renderNumKeypad(document.getElementById('evSpKeypad'), evSpInput, { colon: true, onEnter: evSpCheck });
+  renderNumKeypad(document.getElementById('evHeceKeypad'), evHeceInput, { onEnter: evHeceCheck });
 
   /* ---------------- Initial render ---------------- */
   renderStudentList();
