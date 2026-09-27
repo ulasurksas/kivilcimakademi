@@ -1924,6 +1924,7 @@
   let evSayiDiff = 'kolay';
   let evSayiScore = 0;
   let evSayiProblem = null;
+  let evSayiRecent = [];
 
   evSayiDiffOptions.addEventListener('click', e=>{
     const btn = e.target.closest('.count-opt');
@@ -1955,7 +1956,11 @@
     return {text:a+' ÷ '+b+' = ?', answer:q};
   }
   function evSayiNext(){
-    evSayiProblem = evSayiGenerate();
+    let p, tries = 0;
+    do { p = evSayiGenerate(); tries++; } while(evSayiRecent.includes(p.text) && tries < 25);
+    evSayiRecent.push(p.text);
+    if(evSayiRecent.length > 15) evSayiRecent.shift();
+    evSayiProblem = p;
     evSayiProblemText.textContent = evSayiProblem.text;
     evSayiAnswerInput.value=''; evSayiFlash.textContent='';
     evSayiAnswerInput.focus();
@@ -2003,6 +2008,7 @@
   let ev24Running = null;   // o anki sonuç (henüz sayı seçilmediyse null)
   let ev24PendingOp = null; // seçilmiş ama henüz uygulanmamış işlem
   let ev24UndoStack = [];
+  let ev24RecentSigs = [];
 
   /* Hedefi (24) geriye doğru çözerek HER ZAMAN en az bir çözümü olan 4 sayı üretir. */
   function ev24TryGenerate(allowMul){
@@ -2032,7 +2038,17 @@
     return [10, 10, 2, 2]; // garanti yedek: 10+10+2+2=24
   }
   function ev24Generate(){
-    ev24Nums = ev24TryGenerate(ev24Mode==='tcc').map(v=>({ value:v, used:false }));
+    let nums, sig, tries = 0;
+    do {
+      nums = ev24TryGenerate(ev24Mode==='tcc');
+      sig = nums.slice().sort((a,b)=>a-b).join(',');
+      tries++;
+    } while(ev24RecentSigs.includes(sig) && tries < 25);
+    ev24RecentSigs.push(sig);
+    if(ev24RecentSigs.length > 15) ev24RecentSigs.shift();
+    // Sayıları karışık (rastgele) sırada göster ki çözüm sırası ekrandaki
+    // soldan-sağa diziliş sırasıyla aynı olmasın — "karma sayılarla işlem".
+    ev24Nums = shuffle(nums).map(v=>({ value:v, used:false }));
     ev24Running = null;
     ev24PendingOp = null;
     ev24UndoStack = [];
@@ -2144,17 +2160,24 @@
   const evOruntuScoreEl = document.getElementById('evOruntuScore');
   let evOruntuScore = 0;
   let evOruntuAnswer = null;
+  let evOruntuRecent = [];
   function evOruntuGenerate(){
-    let terms, answer;
-    if(Math.random() < 0.7){
-      const start = randInt(1,15), step = randInt(2,8);
-      terms = [0,1,2,3].map(i=>start+i*step);
-      answer = start+4*step;
-    } else {
-      const start = randInt(1,4), ratio = randInt(2,3);
-      terms = [0,1,2,3].map(i=>start*Math.pow(ratio,i));
-      answer = start*Math.pow(ratio,4);
-    }
+    let terms, answer, sig, tries = 0;
+    do {
+      if(Math.random() < 0.7){
+        const start = randInt(1,15), step = randInt(2,8);
+        terms = [0,1,2,3].map(i=>start+i*step);
+        answer = start+4*step;
+      } else {
+        const start = randInt(1,4), ratio = randInt(2,3);
+        terms = [0,1,2,3].map(i=>start*Math.pow(ratio,i));
+        answer = start*Math.pow(ratio,4);
+      }
+      sig = terms.join(',');
+      tries++;
+    } while(evOruntuRecent.includes(sig) && tries < 25);
+    evOruntuRecent.push(sig);
+    if(evOruntuRecent.length > 15) evOruntuRecent.shift();
     evOruntuAnswer = answer;
     evOruntuText.textContent = terms.join(', ')+', ?';
     evOruntuInput.value=''; evOruntuFlash.textContent='';
@@ -2231,6 +2254,7 @@
   const evSpScoreEl = document.getElementById('evSpScore');
   let evSpScore = 0;
   let evSpProblem = null;
+  let evSpRecent = [];
   function evSpGenerateSaat(){
     const startH = randInt(1,12);
     const startM = randInt(0,11)*5;
@@ -2252,7 +2276,11 @@
     };
   }
   function evSpNext(){
-    evSpProblem = Math.random()<0.5 ? evSpGenerateSaat() : evSpGeneratePara();
+    let p, tries = 0;
+    do { p = Math.random()<0.5 ? evSpGenerateSaat() : evSpGeneratePara(); tries++; } while(evSpRecent.includes(p.text) && tries < 25);
+    evSpRecent.push(p.text);
+    if(evSpRecent.length > 15) evSpRecent.shift();
+    evSpProblem = p;
     evSpText.textContent = evSpProblem.text;
     evSpInput.value=''; evSpFlash.textContent='';
     evSpInput.focus();
