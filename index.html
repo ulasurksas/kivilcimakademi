@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kıvılcım Atölye Sınıfı</title>
-<meta name="description" content="Kıvılcım Atölye Sınıfı: öğrenci profilleri ve puan tablosu, grup oyunları (Kelime Oyunu, Gizemli Kutu, Sayı Şimşeği), ev etkinlikleri (Matematik, Türkçe, Mantık) ve sınıf içi bireysel oyunlar.">
+<meta name="description" content="Kıvılcım Atölye Sınıfı: öğrenci profilleri ve puan tablosu, grup oyunları (Kelime Oyunu, Gizemli Kutu, Sayı Şimşeği), ev etkinlikleri (Matematik, Türkçe, Mantık) ve yakında bireysel oyunlar.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -229,7 +229,6 @@
 
   .topbar .soundBtn{ border:2px solid rgba(242,239,228,0.4); background:rgba(242,239,228,0.08); color:#F2EFE4; border-radius:999px; padding:8px 14px; font-size:16px; cursor:pointer; }
   .topbar .soundBtn:active{ transform: scale(0.96); }
-  body.parent-mode .backBtn, body.parent-mode .soundBtn{ display:none !important; }
   .badge-list{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:0 0 18px; }
   .badge-chip{ background:var(--sun); color:var(--ink); font-weight:800; font-size:13px; padding:6px 12px; border-radius:999px; box-shadow:0 2px 0 var(--sun-dark); }
   .student-badges{ font-size:15px; letter-spacing:1px; }
@@ -296,8 +295,8 @@
       <button class="game-card" data-target="bireysel">
         <span class="emoji">🧍</span>
         <h3>Bireysel Oyunlar</h3>
-        <p>Ev etkinliklerindeki tüm oyunları sınıfta oynat, doğru cevaplar puana doğrudan işlensin.</p>
-        <span class="tag" style="background:var(--sky-dark)">13 oyun</span>
+        <p>Öğrencilerin tek başına oynayacağı oyunlar yakında burada olacak.</p>
+        <span class="tag" style="background:var(--sky-dark)">Yakında</span>
       </button>
     </div>
   </section>
@@ -730,9 +729,17 @@
     </div>
   </section>
 
-  <!-- ================= VELİ GÖRÜNÜMÜ (salt-okunur) ================= -->
+  <!-- ================= VELİ GİRİŞİ (şifresiz, salt-okunur) ================= -->
   <section class="screen" id="screen-veli">
-    <div id="veliContent"><div class="panel"><p class="empty-note">Yükleniyor...</p></div></div>
+    <h2 class="game-title">👪 Veli Girişi</h2>
+    <p class="game-desc">Çocuğunuzun adını seçerek puanını, rozetlerini ve ev çalışmasını görüntüleyebilirsiniz. Bu sayfada değişiklik yapılamaz.</p>
+    <div class="panel">
+      <div class="field-label">Çocuğunuzun adı</div>
+      <div class="row">
+        <select class="field" id="veliStudentSelect"><option value="">Çocuğunuzun adını seçin...</option></select>
+      </div>
+    </div>
+    <div id="veliContent"></div>
   </section>
 
   <!-- ================= YETKİLİ GİRİŞİ ================= -->
@@ -757,6 +764,7 @@
     <p class="game-desc">Bir öğrenciye dokunarak profiline girin, puan ekleyip silin. Liste her zaman puana göre sıralı.</p>
     <div class="row" style="margin-bottom:16px;">
       <button class="btn grape" id="openAdminBtn">🔐 Yönetici Paneli</button>
+      <button class="btn sky" id="openVeliBtn">👪 Veli Girişi</button>
       <button class="btn ghost" id="openArsivBtn">🗂 Arşivlenmiş Sonuçlar</button>
     </div>
     <div class="panel">
@@ -782,6 +790,18 @@
       <div class="row">
         <button class="btn sun" id="archiveResetBtn">📦 Sıralamayı Arşivle ve Sıfırla</button>
       </div>
+    </div>
+    <div class="panel">
+      <h3 style="font-size:17px; margin-bottom:8px;">Ev Etkinliği Geçmişini Temizle</h3>
+      <p class="hint" style="margin-top:0;">Öğrenci profilindeki "Ev İlerlemesi" listesini sadeleştirir. Öğrencinin puanı, rozetleri ve gerçek ev ilerlemesi <strong>silinmez</strong>; yalnızca bu liste sıfırdan görünmeye başlar, sonraki oyunlar yeniden listelenir.</p>
+      <div class="row">
+        <select class="field" id="clearEvStudentSelect"><option value="">Öğrenci seç...</option></select>
+        <button class="btn ghost" id="clearEvOneBtn" type="button">Bu öğrencinin listesini temizle</button>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <button class="btn ghost" id="clearEvAllBtn" type="button">Tüm öğrencilerin listesini temizle</button>
+      </div>
+      <div class="flash-msg" id="clearEvFlash"></div>
     </div>
   </section>
 
@@ -817,15 +837,6 @@
       <div class="row" style="justify-content:center; margin-top:20px;">
         <button class="btn ghost" id="profDeleteBtn">Bu öğrenciyi sil</button>
       </div>
-    </div>
-    <div class="panel">
-      <h3 style="font-size:17px; margin-bottom:10px; color:var(--grape-dark);">👪 Veli Bağlantısı</h3>
-      <p class="hint" style="margin-top:0;">Bu bağlantıyı yalnızca bu öğrencinin velisiyle paylaş. Şifre gerekmez; veli sadece kendi çocuğunun puanını, rozetlerini ve ev çalışmasını görür, hiçbir şeyi değiştiremez.</p>
-      <div class="row">
-        <input class="field" id="profParentLink" readonly>
-        <button class="btn sky" id="profCopyLinkBtn" type="button">Kopyala</button>
-      </div>
-      <div class="flash-msg" id="profCopyFlash"></div>
     </div>
     <div class="panel">
       <h3 style="font-size:17px; margin-bottom:10px; color:var(--coral-dark);">🏠 Ev İlerlemesi</h3>
@@ -1073,39 +1084,12 @@
 
   </section>
 
-  <!-- ================= BİREYSEL OYUNLAR (SINIF İÇİ) ================= -->
+  <!-- ================= BİREYSEL OYUNLAR ================= -->
   <section class="screen" id="screen-bireysel">
-    <h2 class="game-title">🧍 Bireysel Oyunlar (Sınıf İçi)</h2>
-    <p class="game-desc">Bir öğrenci seç, sırayla kendi ekranında oynasın — bu modda doğru cevaplar puanı doğrudan Öğrenci Profilleri'ne işler.</p>
-    <div class="panel">
-      <div class="field-label">Kim oynuyor?</div>
-      <div class="row">
-        <select class="field" id="bireyselStudentSelect">
-          <option value="">Adını seç...</option>
-        </select>
-      </div>
-      <p class="hint" id="bireyselStudentHint">Oyuna başlamadan önce öğrencinin adını seç.</p>
-      <p class="hint" id="bireyselStudentActiveNote" style="display:none; color:var(--grass-dark); font-weight:800;"></p>
-    </div>
-    <div class="card-grid" id="bireyselCardGrid">
-      <button class="game-card" data-target="evMatematik">
-        <span class="emoji">🔢</span>
-        <h3>Matematik</h3>
-        <p>Sayı Şimşeği, 24'e Ulaş, Sayı Örüntüsü Avcısı, Yüksek mi Alçak mı ve Saat/Para Problemleri.</p>
-        <span class="tag" style="background:var(--sun-dark)">5 oyun</span>
-      </button>
-      <button class="game-card" data-target="evTurkce">
-        <span class="emoji">📖</span>
-        <h3>Türkçe</h3>
-        <p>Anagram, eş/zıt anlam, cümle tamamlama, hecelere ayırma ve noktalama oyunları.</p>
-        <span class="tag" style="background:var(--sky-dark)">5 oyun</span>
-      </button>
-      <button class="game-card" data-target="evMantik">
-        <span class="emoji">🧠</span>
-        <h3>Mantık</h3>
-        <p>Şekil örüntüsü, sıralama bulmacası ve mantık zincirleri.</p>
-        <span class="tag" style="background:var(--grape-dark)">3 oyun</span>
-      </button>
+    <h2 class="game-title">🧍 Bireysel Oyunlar</h2>
+    <p class="game-desc">Öğrencilerin tek başına, kendi sırasında oynayacağı oyunlar.</p>
+    <div class="panel" style="text-align:center;">
+      <p class="empty-note">Burası hazırlanıyor 👀<br>Yakında bireysel oyunlar eklenecek ve öğrenci puanları doğrudan <strong>Öğrenci Profilleri</strong> ile aynı tabloya işlenecek.</p>
     </div>
   </section>
 
@@ -1138,8 +1122,6 @@
 
   /* ---------------- Firebase (Firestore) persistence ---------------- */
   const db = window.__kivilcimDb || null;
-  const VELI_TOKEN = (new URLSearchParams(location.search).get('veli') || '').trim();
-  const PARENT_MODE = !!VELI_TOKEN; // veli görünümü: salt-okunur, hiçbir şey kaydetmez
   const cloudStatus = document.getElementById('cloudStatus');
   const STATE_DOC = () => db.collection('kivilcim').doc('state');
   let saveTimer = null;
@@ -1149,12 +1131,12 @@
     cloudStatus.style.color = color || 'var(--ink-soft)';
   }
   function scheduleSave(){
-    if(!db || PARENT_MODE) return;
+    if(!db) return;
     clearTimeout(saveTimer);
     saveTimer = setTimeout(saveStateNow, 600);
   }
   function saveStateNow(){
-    if(!db || PARENT_MODE) return;
+    if(!db) return;
     setCloudStatus('☁️ Kaydediliyor...', 'var(--ink-soft)');
     STATE_DOC().set({
       students: appStudents,
@@ -1171,7 +1153,6 @@
   function loadStateFromCloud(){
     if(!db){
       setCloudStatus('⚠️ Bulut bağlantısı yok, veriler bu cihazda kalacak', 'var(--coral-dark)');
-      if(PARENT_MODE) renderParentView();
       return;
     }
     setCloudStatus('☁️ Buluta bağlanılıyor...', 'var(--ink-soft)');
@@ -1179,7 +1160,7 @@
       if(doc.exists){
         const data = doc.data();
         if(Array.isArray(data.students) && data.students.length){
-          appStudents = data.students.map(s=>({ id: s.id, name: s.name, score: s.score||0, log: Array.isArray(s.log)?s.log:[], evProgress: (s.evProgress && typeof s.evProgress==='object') ? s.evProgress : {}, evDays: Array.isArray(s.evDays)?s.evDays:[], badges: Array.isArray(s.badges)?s.badges:[], token: s.token||'' }));
+          appStudents = data.students.map(s=>({ id: s.id, name: s.name, score: s.score||0, log: Array.isArray(s.log)?s.log:[], evProgress: (s.evProgress && typeof s.evProgress==='object') ? s.evProgress : {}, evDays: Array.isArray(s.evDays)?s.evDays:[], badges: Array.isArray(s.badges)?s.badges:[], evHiddenBase: (s.evHiddenBase && typeof s.evHiddenBase==='object') ? s.evHiddenBase : {} }));
           studentIdCounter = Math.max(0, ...appStudents.map(s=>s.id)) + 1;
         }
         if(Array.isArray(data.groups)){
@@ -1189,21 +1170,21 @@
           appArchives = data.archives;
         }
         setCloudStatus('☁️ Kayıtlı verilere bağlanıldı', 'var(--grass-dark)');
-        if(!PARENT_MODE && ensureAllTokens()) scheduleSave();
+        if(ensureAllFields()) scheduleSave();
       } else {
         setCloudStatus('☁️ İlk kayıt oluşturuluyor...', 'var(--ink-soft)');
-        if(!PARENT_MODE){ ensureAllTokens(); saveStateNow(); }
+        ensureAllFields(); saveStateNow();
       }
-      if(PARENT_MODE){ renderParentView(); return; }
       renderStudentList();
       renderGroupSection();
       if(currentScreenId==='studentProfile') renderStudentProfile();
       if(currentScreenId==='ev') renderEvStudentSelect();
       if(currentScreenId==='arsiv') renderArsivList();
+      if(currentScreenId==='veli') renderVeliSelect();
+      if(currentScreenId==='yonetici') renderClearEvSelect();
     }).catch(err=>{
       console.error('Firebase okuma hatası:', err);
       setCloudStatus('⚠️ Bulut verisi okunamadı, bu cihazdaki veriler kullanılıyor', 'var(--coral-dark)');
-      if(PARENT_MODE) renderParentView();
     });
   }
 
@@ -1231,19 +1212,12 @@
   }
   function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 
-  /* Veli bağlantısı için tahmin edilmesi zor rastgele anahtar */
-  function makeToken(){
-    const a = new Uint8Array(14);
-    if(window.crypto && crypto.getRandomValues) crypto.getRandomValues(a);
-    else for(let i=0;i<a.length;i++) a[i] = Math.floor(Math.random()*256);
-    return Array.from(a, b=>b.toString(16).padStart(2,'0')).join('');
-  }
-  function ensureAllTokens(){
+  function ensureAllFields(){
     let changed = false;
     appStudents.forEach(s=>{
-      if(!s.token){ s.token = makeToken(); changed = true; }
-      if(!Array.isArray(s.evDays)) s.evDays = [];
-      if(!Array.isArray(s.badges)) s.badges = [];
+      if(!Array.isArray(s.evDays)){ s.evDays = []; changed = true; }
+      if(!Array.isArray(s.badges)){ s.badges = []; changed = true; }
+      if(!s.evHiddenBase || typeof s.evHiddenBase !== 'object'){ s.evHiddenBase = {}; changed = true; }
     });
     return changed;
   }
@@ -1366,13 +1340,13 @@
     evSekilOruntu:'🔶 Şekil Örüntüsü',
     evSiralama:'📊 Sıralama Bulmacası', evZincir:'🔗 Mantık Zincirleri',
     ogrenciler:'👤 Öğrenci Profilleri', studentProfile:'👤 Öğrenci Profili',
-    veli:'👪 Veli Görünümü', yetkiKapisi:'🔒 Yetkili Girişi', yonetici:'🔐 Yönetici Paneli', arsiv:'🗂 Arşivlenmiş Sonuçlar',
+    veli:'👪 Veli Girişi', yetkiKapisi:'🔒 Yetkili Girişi', yonetici:'🔐 Yönetici Paneli', arsiv:'🗂 Arşivlenmiş Sonuçlar',
     grup:'🤝 Grup Oyunları', kelime:'💥 Kelime Oyunu', kutu:'📦 Gizemli Kutu',
     sayi:'🔢 Sayı Şimşeği', bireysel:'🧍 Bireysel Oyunlar'
   };
   const PARENT = {
     sinif:'home', ev:'home',
-    evMatematik:'__evhub__', evTurkce:'__evhub__', evMantik:'__evhub__',
+    evMatematik:'ev', evTurkce:'ev', evMantik:'ev',
     evSayi:'evMatematik', ev24:'evMatematik', evOruntu:'evMatematik',
     evYuksekAlcak:'evMatematik', evSaatPara:'evMatematik',
     evAnagram:'evTurkce', evEsZit:'evTurkce', evCumle:'evTurkce',
@@ -1380,24 +1354,14 @@
     evSekilOruntu:'evMantik',
     evSiralama:'evMantik', evZincir:'evMantik',
     ogrenciler:'home', studentProfile:'ogrenciler', yetkiKapisi:'ogrenciler',
-    yonetici:'ogrenciler', arsiv:'ogrenciler', veli:'home',
+    yonetici:'ogrenciler', arsiv:'ogrenciler', veli:'ogrenciler',
     grup:'sinif', kelime:'grup', kutu:'grup', sayi:'grup',
     bireysel:'sinif'
   };
   let currentScreenId = 'home';
-  // Ev Etkinlikleri ve Bireysel Oyunlar aynı oyun ekranlarını paylaşır; hangi
-  // hub'dan girildiğini hatırlayarak geri butonu doğru yere dönsün ve
-  // "sınıf modu" (puanların doğrudan işlendiği mod) doğru tespit edilsin.
-  let lastEvHub = 'ev';
-  function resolveParent(id){
-    const p = PARENT[id];
-    return p === '__evhub__' ? lastEvHub : p;
-  }
-  function isClassMode(){ return lastEvHub === 'bireysel'; }
   function showScreen(id){
     currentScreenId = id;
     screens.forEach(s => s.classList.toggle('active', s.id === 'screen-'+id));
-    if(id === 'ev' || id === 'bireysel') lastEvHub = id;
     if(id === 'home'){
       document.body.classList.remove('in-game');
       headerTitle.style.display='none';
@@ -1408,11 +1372,13 @@
     }
     if(id === 'ogrenciler') renderStudentList();
     if(id === 'grup') renderGroupSection();
-    if(id === 'ev' || id === 'bireysel') renderEvStudentSelect();
+    if(id === 'ev') renderEvStudentSelect();
     if(id === 'arsiv') renderArsivList();
+    if(id === 'veli') renderVeliSelect();
+    if(id === 'yonetici') renderClearEvSelect();
     window.scrollTo({top:0, behavior:'instant'});
   }
-  backBtn.addEventListener('click', ()=> showScreen(resolveParent(currentScreenId) || 'home'));
+  backBtn.addEventListener('click', ()=> showScreen(PARENT[currentScreenId] || 'home'));
   /* Event delegation: sonradan eklenecek yeni oyun kartları (ör. bireysel oyunlar) için
      tek tek addEventListener bağlamaya gerek kalmaz, hepsi otomatik çalışır. */
   document.addEventListener('click', (e)=>{
@@ -1463,7 +1429,7 @@
     "Yağız Köksaldı","Yunus Doğan","Amine Yılmaz","Elif Arslan","Ömer Halis Demir",
     "Yavuz Tunahan Özdemir","Zeynep İsra Geçal","Muhammed Emin Eren","Ravzanur Açıkgöz",
     "Ayaz Eymen Çelik"
-  ].map(name => ({ id: studentIdCounter++, name, score:0, log:[], evProgress:{}, evDays:[], badges:[], token:'' }));
+  ].map(name => ({ id: studentIdCounter++, name, score:0, log:[], evProgress:{}, evDays:[], badges:[], evHiddenBase:{} }));
 
   let appArchives = []; // [{label, savedAt, entries:[{name,score}]}]
 
@@ -1528,7 +1494,6 @@
     return list.map(b=>'<span class="badge-chip" title="'+esc(b.desc)+'">'+b.icon+' '+esc(b.name)+'</span>').join('');
   }
 
-  const SINIF_MODU_PUAN = 2;
   const EV_GAME_LABELS = {
     sayiEv:'Sayı Şimşeği (Ev)', oruntu:'Sayı Örüntüsü Avcısı', yuksekAlcak:'Yüksek mi Alçak mı',
     saatPara:'Saat ve Para Problemleri', zincirTC:"24'e Ulaş (Toplama-Çıkarma)", zincirTCC:"24'e Ulaş (Toplama-Çıkarma-Çarpma)",
@@ -1547,17 +1512,9 @@
     const bucket = evEnsureProgress(student, key);
     bucket[field] = (bucket[field]||0) + 1;
     if(currentStudentIndex !== null && appStudents[currentStudentIndex] === student) renderEvProgress(student);
-    if(!isClassMode()){
-      if(!Array.isArray(student.evDays)) student.evDays = [];
-      const today = todayStr();
-      if(!student.evDays.includes(today)){ student.evDays.push(today); student.evDays = student.evDays.slice(-120); }
-    }
-    if(isClassMode()){
-      student.score += SINIF_MODU_PUAN;
-      student.log.unshift({ label: 'Sınıf Modu — '+(EV_GAME_LABELS[key]||key), delta: SINIF_MODU_PUAN, total: student.score });
-      if(currentStudentIndex !== null && appStudents[currentStudentIndex] === student) renderStudentProfile();
-      renderStudentList();
-    }
+    if(!Array.isArray(student.evDays)) student.evDays = [];
+    const today = todayStr();
+    if(!student.evDays.includes(today)){ student.evDays.push(today); student.evDays = student.evDays.slice(-120); }
     if(checkBadges(student, false)){
       if(currentStudentIndex !== null && appStudents[currentStudentIndex] === student) renderStudentProfile();
       renderStudentList();
@@ -1581,14 +1538,16 @@
     ['mantikZincir','correct','🔗 Mantık Zincirleri','doğru cevap']
   ];
   const EV_ONERI_ESIK = 5; // her 5 yeni doğru/başarıda 1 puan önerilir
-  function evProgressRow(ep, key, field, label, suffix){
+  function evProgressRow(ep, key, field, label, suffix, base){
     const bucket = ep[key];
     if(!bucket || !bucket[field]) return null;
     const count = bucket[field];
+    const shown = count - (((base||{})[key]||{})[field] || 0);
+    if(shown <= 0) return null; // "geçmişi temizle" ile gizlenmiş; veri silinmez
     const converted = bucket.converted || 0;
     const newCount = Math.max(0, count - converted);
     const suggested = Math.floor(newCount / EV_ONERI_ESIK);
-    let html = '<div class="log-item" style="align-items:center;"><span>'+esc(label)+': '+count+' '+esc(suffix)+'</span>';
+    let html = '<div class="log-item" style="align-items:center;"><span>'+esc(label)+': '+shown+' '+esc(suffix)+'</span>';
     if(suggested >= 1){
       html += '<span class="delta" style="display:flex; gap:6px; align-items:center;">'+
         '<button type="button" class="btn sun" style="padding:4px 10px; font-size:12px; box-shadow:none;" data-approve="'+key+'" data-points="'+suggested+'" data-count="'+count+'">+'+suggested+' puan öner</button>'+
@@ -1604,10 +1563,17 @@
     const el = document.getElementById('evProgressList');
     if(!el) return;
     const ep = student.evProgress || {};
-    const rows = EV_PROGRESS_DEFS.map(d => evProgressRow(ep, d[0], d[1], d[2], d[3])).filter(Boolean);
+    const rows = EV_PROGRESS_DEFS.map(d => evProgressRow(ep, d[0], d[1], d[2], d[3], student.evHiddenBase)).filter(Boolean);
     el.innerHTML = rows.length
       ? rows.join('')
-      : '<div class="empty-note">Henüz ev etkinliği kaydı yok.</div>';
+      : '<div class="empty-note">Gösterilecek ev etkinliği kaydı yok.</div>';
+  }
+
+  /* ---- Ev ilerlemesi görünümünü temizle (yalnızca yönetici panelinden) ---- */
+  function evSnapshotBase(s){
+    const base = {};
+    Object.entries(s.evProgress || {}).forEach(([k,b])=>{ base[k] = { correct:b.correct||0, wins:b.wins||0, solved:b.solved||0 }; });
+    return base;
   }
 
   /* ---- Ev Etkinlikleri: "Kim oynuyor?" seçimi ---- */
@@ -1616,10 +1582,6 @@
   const evStudentHint = document.getElementById('evStudentHint');
   const evStudentActiveNote = document.getElementById('evStudentActiveNote');
   const evCardGridCards = document.querySelectorAll('#evCardGrid .game-card');
-  const bireyselStudentSelect = document.getElementById('bireyselStudentSelect');
-  const bireyselStudentHint = document.getElementById('bireyselStudentHint');
-  const bireyselStudentActiveNote = document.getElementById('bireyselStudentActiveNote');
-  const bireyselCardGridCards = document.querySelectorAll('#bireyselCardGrid .game-card');
   function renderStudentSelectInto(selectEl){
     const prevVal = currentEvStudentId;
     selectEl.innerHTML = '<option value="">Adını seç...</option>' +
@@ -1630,7 +1592,6 @@
   }
   function renderEvStudentSelect(){
     renderStudentSelectInto(evStudentSelect);
-    renderStudentSelectInto(bireyselStudentSelect);
     if(!(currentEvStudentId != null && appStudents.some(s=>s.id===currentEvStudentId))){
       currentEvStudentId = null;
     }
@@ -1640,14 +1601,10 @@
     const student = (currentEvStudentId != null) ? findStudentById(currentEvStudentId) : null;
     const unlocked = !!student;
     evCardGridCards.forEach(c => { c.classList.toggle('disabled', !unlocked); c.disabled = !unlocked; });
-    bireyselCardGridCards.forEach(c => { c.classList.toggle('disabled', !unlocked); c.disabled = !unlocked; });
     evStudentHint.style.display = unlocked ? 'none' : 'block';
-    bireyselStudentHint.style.display = unlocked ? 'none' : 'block';
-    const noteText = unlocked ? ('✔️ Şu an oynayan: '+student.name+(isClassMode() ? ' (Sınıf Modu — puanlar doğrudan işlenir)' : '')) : '';
+    const noteText = unlocked ? ('✔️ Şu an oynayan: '+student.name) : '';
     evStudentActiveNote.style.display = unlocked ? 'block' : 'none';
     evStudentActiveNote.textContent = noteText;
-    bireyselStudentActiveNote.style.display = unlocked ? 'block' : 'none';
-    bireyselStudentActiveNote.textContent = noteText;
   }
   function onStudentSelectChange(selectEl){
     const val = selectEl.value;
@@ -1655,7 +1612,6 @@
     updateEvLock();
   }
   evStudentSelect.addEventListener('change', ()=> onStudentSelectChange(evStudentSelect));
-  bireyselStudentSelect.addEventListener('change', ()=> onStudentSelectChange(bireyselStudentSelect));
 
   function renderStudentList(){
     const sorted = [...appStudents].sort((a,b)=>b.score-a.score);
@@ -1680,10 +1636,11 @@
   function doAddStudent(){
     const val = studentNameInput.value.trim();
     if(!val) return;
-    appStudents.push({id: studentIdCounter++, name:val, score:0, log:[], evProgress:{}, evDays:[], badges:[], token: makeToken()});
+    appStudents.push({id: studentIdCounter++, name:val, score:0, log:[], evProgress:{}, evDays:[], badges:[], evHiddenBase:{}});
     studentNameInput.value='';
     renderStudentList();
     renderEvStudentSelect();
+    renderClearEvSelect();
     scheduleSave();
     const msg = document.getElementById('addStudentFlash');
     if(msg){ msg.style.color='var(--grass-dark)'; msg.textContent = val+' başarıyla eklendi. ✔️'; }
@@ -1712,11 +1669,8 @@
     profAvatar.textContent = initialOf(s.name);
     profName.textContent = s.name;
     profScore.textContent = s.score;
-    if(!s.token){ s.token = makeToken(); scheduleSave(); }
     if(checkBadges(s, true)) scheduleSave();
     document.getElementById('profBadges').innerHTML = badgesHtml(s) || '<span class="hint" style="margin:0;">Henüz rozet yok — oynadıkça kazanılır 🏅</span>';
-    document.getElementById('profParentLink').value = location.href.split('#')[0].split('?')[0] + '?veli=' + s.token;
-    document.getElementById('profCopyFlash').textContent = '';
     profAmountInput.value='';
     if(s.log.length === 0){
       profLog.innerHTML = '<div class="empty-note">Henüz puan işlemi yok.</div>';
@@ -1751,28 +1705,20 @@
     scheduleSave();
   });
 
-  document.getElementById('profCopyLinkBtn').addEventListener('click', ()=>{
-    const input = document.getElementById('profParentLink');
-    const flash = document.getElementById('profCopyFlash');
-    const done = ok=>{ flash.style.color = ok ? 'var(--grass-dark)' : 'var(--coral-dark)'; flash.textContent = ok ? 'Bağlantı kopyalandı ✔️' : 'Kopyalanamadı, bağlantıyı elle seçip kopyalayın.'; };
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(input.value).then(()=>done(true)).catch(()=>{ input.select(); done(false); });
-    } else {
-      input.select();
-      let ok = false; try{ ok = document.execCommand('copy'); }catch(e){}
-      done(ok);
-    }
-  });
-
-  /* ---- Veli görünümü (salt-okunur) ---- */
-  function renderParentView(){
-    showScreen('veli');
+  /* ---- Veli girişi (şifresiz, salt-okunur): veli çocuğunun adını seçer ---- */
+  const veliStudentSelect = document.getElementById('veliStudentSelect');
+  function renderVeliSelect(){
+    const prev = veliStudentSelect.value;
+    veliStudentSelect.innerHTML = '<option value="">Çocuğunuzun adını seçin...</option>' +
+      appStudents.map(s=>'<option value="'+s.id+'">'+esc(s.name)+'</option>').join('');
+    if(prev !== '' && appStudents.some(s=>String(s.id)===prev)) veliStudentSelect.value = prev;
+    renderVeliView();
+  }
+  function renderVeliView(){
     const box = document.getElementById('veliContent');
-    const s = appStudents.find(x=> x.token && x.token === VELI_TOKEN);
-    if(!s){
-      box.innerHTML = '<div class="panel"><p class="empty-note">Bu bağlantı geçersiz ya da eski. Lütfen öğretmeninizden güncel bağlantıyı isteyin.</p></div>';
-      return;
-    }
+    if(veliStudentSelect.value === ''){ box.innerHTML = ''; return; }
+    const s = findStudentById(parseInt(veliStudentSelect.value,10));
+    if(!s){ box.innerHTML = ''; return; }
     const progressRows = EV_PROGRESS_DEFS.map(d=>{
       const b = (s.evProgress||{})[d[0]];
       return (b && b[d[1]]) ? '<div class="log-item"><span>'+esc(d[2])+': '+b[d[1]]+' '+esc(d[3])+'</span></div>' : '';
@@ -1791,6 +1737,8 @@
       (logRows || '<div class="empty-note">Henüz puan işlemi yok.</div>')+'</div></div>'+
       '<p class="hint" style="text-align:center;">Bu sayfa yalnızca görüntüleme içindir.</p>';
   }
+  veliStudentSelect.addEventListener('change', renderVeliView);
+  document.getElementById('openVeliBtn').addEventListener('click', ()=> showScreen('veli'));
 
   /* ---- Ev ilerlemesi öneri puanları: öğretmen onaylarsa puana işlenir ---- */
   document.getElementById('evProgressList').addEventListener('click', e=>{
@@ -1890,6 +1838,31 @@
     scheduleSave();
     alert(label+' olarak kaydedildi ve genel sıralama sıfırlandı.');
   }
+  function renderClearEvSelect(){
+    const sel = document.getElementById('clearEvStudentSelect');
+    if(!sel) return;
+    const prev = sel.value;
+    sel.innerHTML = '<option value="">Öğrenci seç...</option>' + appStudents.map(s=>'<option value="'+s.id+'">'+esc(s.name)+'</option>').join('');
+    if(prev !== '' && appStudents.some(s=>String(s.id)===prev)) sel.value = prev;
+  }
+  function clearEvFlashMsg(t){ const f = document.getElementById('clearEvFlash'); f.style.color = 'var(--grass-dark)'; f.textContent = t; }
+  document.getElementById('clearEvOneBtn').addEventListener('click', ()=> requireAuth(()=>{
+    const sel = document.getElementById('clearEvStudentSelect');
+    if(sel.value === ''){ const f = document.getElementById('clearEvFlash'); f.style.color='var(--coral-dark)'; f.textContent = 'Önce bir öğrenci seçin.'; return; }
+    const s = findStudentById(parseInt(sel.value,10));
+    if(!s) return;
+    if(!confirm(s.name+' için Ev İlerlemesi listesi temizlensin mi? Puan, rozet ve gerçek ilerleme silinmez.')) return;
+    s.evHiddenBase = evSnapshotBase(s);
+    scheduleSave();
+    clearEvFlashMsg(s.name+' için liste temizlendi.');
+  }));
+  document.getElementById('clearEvAllBtn').addEventListener('click', ()=> requireAuth(()=>{
+    if(!appStudents.length) return;
+    if(!confirm('Tüm öğrencilerin Ev İlerlemesi listesi temizlensin mi? Puan, rozet ve gerçek ilerleme silinmez.')) return;
+    appStudents.forEach(s=>{ s.evHiddenBase = evSnapshotBase(s); });
+    scheduleSave();
+    clearEvFlashMsg('Tüm öğrencilerin listesi temizlendi.');
+  }));
   document.getElementById('openAdminBtn').addEventListener('click', ()=> requireAuth(()=> showScreen('yonetici')));
   document.getElementById('openArsivBtn').addEventListener('click', ()=> showScreen('arsiv'));
   document.getElementById('archiveResetBtn').addEventListener('click', ()=> requireAuth(doArchiveReset));
@@ -3397,13 +3370,8 @@
   renderNumKeypad(document.getElementById('evHeceKeypad'), evHeceInput, { onEnter: evHeceCheck });
 
   /* ---------------- Initial render ---------------- */
-  if(PARENT_MODE){
-    document.body.classList.add('parent-mode');
-    showScreen('veli');
-  } else {
-    renderStudentList();
-    renderGroupSection();
-  }
+  renderStudentList();
+  renderGroupSection();
   loadStateFromCloud();
 
 })();
