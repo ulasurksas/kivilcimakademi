@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kıvılcım Atölye Sınıfı</title>
-<meta name="description" content="Kıvılcım Atölye Sınıfı: öğrenci profilleri ve puan tablosu, rastgele oluşturulan gruplarla oynanan grup oyunları (Kelime Oyunu, Gizemli Kutu, Sayı Şimşeği) ve yakında bireysel oyunlar.">
+<meta name="description" content="Kıvılcım Atölye Sınıfı: öğrenci profilleri ve puan tablosu, grup oyunları (Kelime Oyunu, Gizemli Kutu, Sayı Şimşeği), ev etkinlikleri (Matematik, Türkçe, Mantık) ve sınıf içi bireysel oyunlar.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -227,6 +227,15 @@
   .tip strong{ color:var(--ink); }
   footer{ text-align:center; padding:26px 16px calc(26px + env(safe-area-inset-bottom,0px)); color:var(--ink-soft); font-weight:700; font-size:13px; }
 
+  .topbar .soundBtn{ border:2px solid rgba(242,239,228,0.4); background:rgba(242,239,228,0.08); color:#F2EFE4; border-radius:999px; padding:8px 14px; font-size:16px; cursor:pointer; }
+  .topbar .soundBtn:active{ transform: scale(0.96); }
+  body.parent-mode .backBtn, body.parent-mode .soundBtn{ display:none !important; }
+  .badge-list{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:0 0 18px; }
+  .badge-chip{ background:var(--sun); color:var(--ink); font-weight:800; font-size:13px; padding:6px 12px; border-radius:999px; box-shadow:0 2px 0 var(--sun-dark); }
+  .student-badges{ font-size:15px; letter-spacing:1px; }
+  #toast{ position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%) translateY(30px); background:var(--board); color:#F2EFE4; font-weight:800; padding:12px 20px; border-radius:999px; box-shadow:0 6px 18px var(--shadow); opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; z-index:100; max-width:90vw; text-align:center; }
+  #toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  .chart-wrap{ overflow-x:auto; }
   @media (max-width: 640px){ .card-grid{ grid-template-columns:1fr; } }
   @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; } }
   :focus-visible{ outline:3px solid var(--sky); outline-offset:2px; }
@@ -238,7 +247,9 @@
   <button class="backBtn" id="backBtn">⟵ Geri</button>
   <h1 class="homeTitle">✦ Kıvılcım Atölye Sınıfı ✦</h1>
   <h1 id="gameHeaderTitle" style="display:none;"></h1>
+  <button class="soundBtn" id="soundBtn" type="button" aria-label="Sesi aç/kapat">🔊</button>
 </div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <main>
 
@@ -285,8 +296,8 @@
       <button class="game-card" data-target="bireysel">
         <span class="emoji">🧍</span>
         <h3>Bireysel Oyunlar</h3>
-        <p>Öğrencilerin tek başına oynayacağı oyunlar yakında burada olacak.</p>
-        <span class="tag" style="background:var(--sky-dark)">Yakında</span>
+        <p>Ev etkinliklerindeki tüm oyunları sınıfta oynat, doğru cevaplar puana doğrudan işlensin.</p>
+        <span class="tag" style="background:var(--sky-dark)">13 oyun</span>
       </button>
     </div>
   </section>
@@ -316,13 +327,13 @@
         <span class="emoji">📖</span>
         <h3>Türkçe</h3>
         <p>Anagram, eş/zıt anlam eşleştirme, cümle tamamlama, hecelere ayırma ve noktalama oyunları.</p>
-        <span class="tag" style="background:var(--sky-dark)">Yakında</span>
+        <span class="tag" style="background:var(--sky-dark)">5 oyun</span>
       </button>
       <button class="game-card" data-target="evMantik">
         <span class="emoji">🧠</span>
         <h3>Mantık</h3>
-        <p>Tek farklı olanı bulma, şekil örüntüsü, sıralama bulmacası ve mantık zincirleri.</p>
-        <span class="tag" style="background:var(--grape-dark)">Yakında</span>
+        <p>Şekil örüntüsü, sıralama bulmacası ve mantık zincirleri.</p>
+        <span class="tag" style="background:var(--grape-dark)">3 oyun</span>
       </button>
     </div>
   </section>
@@ -408,12 +419,6 @@
     <h2 class="game-title">🧠 Mantık</h2>
     <p class="game-desc">İstediğin oyunu seç, sonu gelmeyen yeni sorularla pratik yap.</p>
     <div class="card-grid">
-      <button class="game-card" data-target="evFarkli">
-        <span class="emoji">🔍</span>
-        <h3>Tek Farklı Olanı Bulma</h3>
-        <p>Aralarından farklı olan simgeye dokun.</p>
-        <span class="tag" style="background:var(--sun-dark)">Bireysel</span>
-      </button>
       <button class="game-card" data-target="evSekilOruntu">
         <span class="emoji">🔶</span>
         <h3>Şekil Örüntüsü</h3>
@@ -465,6 +470,13 @@
         </div>
         <div class="keypad" id="evSayiKeypad"></div>
         <div class="flash-msg" id="evSayiFlash"></div>
+        <div class="tip" id="evSayiSuggest" style="display:none; margin-top:12px; text-align:center;">
+          <span id="evSayiSuggestText"></span>
+          <div class="row" style="justify-content:center; margin-top:8px;">
+            <button class="btn sun" id="evSayiSuggestYes" style="padding:8px 16px; font-size:14px;">Üst seviyeye geç</button>
+            <button class="btn ghost" id="evSayiSuggestNo">Şimdi değil</button>
+          </div>
+        </div>
         <div class="row" style="justify-content:center; margin-top:16px;">
           <button class="btn ghost" id="evSayiBitirBtn">Bitir</button>
         </div>
@@ -666,22 +678,6 @@
     </div>
   </section>
 
-  <!-- ================= EV: TEK FARKLI OLANI BULMA ================= -->
-  <section class="screen" id="screen-evFarkli">
-    <h2 class="game-title">🔍 Tek Farklı Olanı Bulma</h2>
-    <p class="game-desc">Aralarından farklı olan simgeye dokun.</p>
-    <div class="panel" style="text-align:center;">
-      <div class="timer-count">
-        <div class="stat"><div class="num" id="evFarkScore">0</div><div class="lbl">DOĞRU</div></div>
-      </div>
-      <div class="chip-list" id="evFarkGrid" style="justify-content:center;"></div>
-      <div class="flash-msg" id="evFarkFlash"></div>
-      <div class="row" style="justify-content:center; margin-top:14px;">
-        <button class="btn ghost" id="evFarkNewBtn">Yeni Soru</button>
-      </div>
-    </div>
-  </section>
-
   <!-- ================= EV: ŞEKİL ÖRÜNTÜSÜ ================= -->
   <section class="screen" id="screen-evSekilOruntu">
     <h2 class="game-title">🔶 Şekil Örüntüsü</h2>
@@ -732,6 +728,11 @@
         <button class="btn ghost" id="evZinNewBtn">Yeni Soru</button>
       </div>
     </div>
+  </section>
+
+  <!-- ================= VELİ GÖRÜNÜMÜ (salt-okunur) ================= -->
+  <section class="screen" id="screen-veli">
+    <div id="veliContent"><div class="panel"><p class="empty-note">Yükleniyor...</p></div></div>
   </section>
 
   <!-- ================= YETKİLİ GİRİŞİ ================= -->
@@ -788,6 +789,13 @@
   <section class="screen" id="screen-arsiv">
     <h2 class="game-title">🗂 Arşivlenmiş Sonuçlar</h2>
     <p class="game-desc">Daha önce arşivlenen genel sıralama kayıtları.</p>
+    <div class="panel">
+      <h3 style="font-size:17px; margin-bottom:10px;">📈 Öğrenci Puan Değişimi</h3>
+      <div class="row">
+        <select class="field" id="arsivStudentSelect"><option value="">Öğrenci seç...</option></select>
+      </div>
+      <div class="chart-wrap" id="arsivChart"></div>
+    </div>
     <div id="arsivList"></div>
   </section>
 
@@ -799,6 +807,7 @@
         <h2 class="profile-name" id="profName">-</h2>
       </div>
       <div class="profile-score" id="profScore">0</div>
+      <div class="badge-list" id="profBadges"></div>
       <div class="row" style="max-width:420px; margin:0 auto;">
         <input class="field" id="profAmountInput" placeholder="Miktar (örn. 5)" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
         <button class="btn grass" id="profAddBtn">➕ Ekle</button>
@@ -810,8 +819,17 @@
       </div>
     </div>
     <div class="panel">
+      <h3 style="font-size:17px; margin-bottom:10px; color:var(--grape-dark);">👪 Veli Bağlantısı</h3>
+      <p class="hint" style="margin-top:0;">Bu bağlantıyı yalnızca bu öğrencinin velisiyle paylaş. Şifre gerekmez; veli sadece kendi çocuğunun puanını, rozetlerini ve ev çalışmasını görür, hiçbir şeyi değiştiremez.</p>
+      <div class="row">
+        <input class="field" id="profParentLink" readonly>
+        <button class="btn sky" id="profCopyLinkBtn" type="button">Kopyala</button>
+      </div>
+      <div class="flash-msg" id="profCopyFlash"></div>
+    </div>
+    <div class="panel">
       <h3 style="font-size:17px; margin-bottom:10px; color:var(--coral-dark);">🏠 Ev İlerlemesi</h3>
-      <p class="hint" style="margin-top:0;">Bu öğrencinin evde oynadığı oyunlardan otomatik toplanan sayılar — puan değil, sadece bilgi. İstersen buna bakarak yukarıdan puan ekleyebilirsin.</p>
+      <p class="hint" style="margin-top:0;">Bu öğrencinin evde oynadığı oyunlardan otomatik toplanan sayılar. Her 5 yeni doğru cevapta 1 puan önerilir; "öner" butonuna basarsan puan tabloya işlenir, "Yoksay" dersen öneri puan verilmeden temizlenir.</p>
       <div id="evProgressList"></div>
     </div>
   </section>
@@ -1085,8 +1103,8 @@
       <button class="game-card" data-target="evMantik">
         <span class="emoji">🧠</span>
         <h3>Mantık</h3>
-        <p>Tek farklı olanı bulma, şekil örüntüsü, sıralama bulmacası ve mantık zincirleri.</p>
-        <span class="tag" style="background:var(--grape-dark)">4 oyun</span>
+        <p>Şekil örüntüsü, sıralama bulmacası ve mantık zincirleri.</p>
+        <span class="tag" style="background:var(--grape-dark)">3 oyun</span>
       </button>
     </div>
   </section>
@@ -1120,6 +1138,8 @@
 
   /* ---------------- Firebase (Firestore) persistence ---------------- */
   const db = window.__kivilcimDb || null;
+  const VELI_TOKEN = (new URLSearchParams(location.search).get('veli') || '').trim();
+  const PARENT_MODE = !!VELI_TOKEN; // veli görünümü: salt-okunur, hiçbir şey kaydetmez
   const cloudStatus = document.getElementById('cloudStatus');
   const STATE_DOC = () => db.collection('kivilcim').doc('state');
   let saveTimer = null;
@@ -1129,12 +1149,12 @@
     cloudStatus.style.color = color || 'var(--ink-soft)';
   }
   function scheduleSave(){
-    if(!db) return;
+    if(!db || PARENT_MODE) return;
     clearTimeout(saveTimer);
     saveTimer = setTimeout(saveStateNow, 600);
   }
   function saveStateNow(){
-    if(!db) return;
+    if(!db || PARENT_MODE) return;
     setCloudStatus('☁️ Kaydediliyor...', 'var(--ink-soft)');
     STATE_DOC().set({
       students: appStudents,
@@ -1151,6 +1171,7 @@
   function loadStateFromCloud(){
     if(!db){
       setCloudStatus('⚠️ Bulut bağlantısı yok, veriler bu cihazda kalacak', 'var(--coral-dark)');
+      if(PARENT_MODE) renderParentView();
       return;
     }
     setCloudStatus('☁️ Buluta bağlanılıyor...', 'var(--ink-soft)');
@@ -1158,7 +1179,7 @@
       if(doc.exists){
         const data = doc.data();
         if(Array.isArray(data.students) && data.students.length){
-          appStudents = data.students.map(s=>({ id: s.id, name: s.name, score: s.score||0, log: Array.isArray(s.log)?s.log:[], evProgress: (s.evProgress && typeof s.evProgress==='object') ? s.evProgress : {} }));
+          appStudents = data.students.map(s=>({ id: s.id, name: s.name, score: s.score||0, log: Array.isArray(s.log)?s.log:[], evProgress: (s.evProgress && typeof s.evProgress==='object') ? s.evProgress : {}, evDays: Array.isArray(s.evDays)?s.evDays:[], badges: Array.isArray(s.badges)?s.badges:[], token: s.token||'' }));
           studentIdCounter = Math.max(0, ...appStudents.map(s=>s.id)) + 1;
         }
         if(Array.isArray(data.groups)){
@@ -1168,10 +1189,12 @@
           appArchives = data.archives;
         }
         setCloudStatus('☁️ Kayıtlı verilere bağlanıldı', 'var(--grass-dark)');
+        if(!PARENT_MODE && ensureAllTokens()) scheduleSave();
       } else {
         setCloudStatus('☁️ İlk kayıt oluşturuluyor...', 'var(--ink-soft)');
-        saveStateNow();
+        if(!PARENT_MODE){ ensureAllTokens(); saveStateNow(); }
       }
+      if(PARENT_MODE){ renderParentView(); return; }
       renderStudentList();
       renderGroupSection();
       if(currentScreenId==='studentProfile') renderStudentProfile();
@@ -1180,6 +1203,7 @@
     }).catch(err=>{
       console.error('Firebase okuma hatası:', err);
       setCloudStatus('⚠️ Bulut verisi okunamadı, bu cihazdaki veriler kullanılıyor', 'var(--coral-dark)');
+      if(PARENT_MODE) renderParentView();
     });
   }
 
@@ -1206,6 +1230,88 @@
     ).join('');
   }
   function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+  /* Veli bağlantısı için tahmin edilmesi zor rastgele anahtar */
+  function makeToken(){
+    const a = new Uint8Array(14);
+    if(window.crypto && crypto.getRandomValues) crypto.getRandomValues(a);
+    else for(let i=0;i<a.length;i++) a[i] = Math.floor(Math.random()*256);
+    return Array.from(a, b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  function ensureAllTokens(){
+    let changed = false;
+    appStudents.forEach(s=>{
+      if(!s.token){ s.token = makeToken(); changed = true; }
+      if(!Array.isArray(s.evDays)) s.evDays = [];
+      if(!Array.isArray(s.badges)) s.badges = [];
+    });
+    return changed;
+  }
+
+  /* Küçük bildirim (rozet kazanımı vb.) */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function showToast(msg){
+    if(!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 3500);
+  }
+
+  /* ---------------- Ses efektleri (Web Audio, dosya gerekmez) ---------------- */
+  let soundOn = true;
+  try{ soundOn = localStorage.getItem('kivilcimSes') !== '0'; }catch(e){}
+  let audioCtx = null;
+  function tone(freq, start, dur, type, vol){
+    const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    g.gain.setValueAtTime(vol, start);
+    g.gain.exponentialRampToValueAtTime(0.001, start + dur);
+    osc.connect(g); g.connect(audioCtx.destination);
+    osc.start(start); osc.stop(start + dur + 0.02);
+  }
+  function playSound(kind){
+    if(!soundOn) return;
+    try{
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+      const t = audioCtx.currentTime;
+      if(kind === 'ok'){ tone(660, t, 0.12, 'sine', 0.18); tone(880, t+0.12, 0.18, 'sine', 0.18); }
+      else { tone(220, t, 0.2, 'triangle', 0.2); tone(165, t+0.2, 0.28, 'triangle', 0.2); }
+    }catch(e){}
+  }
+  const soundBtn = document.getElementById('soundBtn');
+  function updateSoundBtn(){ soundBtn.textContent = soundOn ? '🔊' : '🔇'; soundBtn.title = soundOn ? 'Sesi kapat' : 'Sesi aç'; }
+  updateSoundBtn();
+  soundBtn.addEventListener('click', ()=>{
+    soundOn = !soundOn;
+    try{ localStorage.setItem('kivilcimSes', soundOn ? '1' : '0'); }catch(e){}
+    updateSoundBtn();
+    if(soundOn) playSound('ok');
+  });
+  /* Doğru/yanlış mesajlarını izleyip ses çalar (tüm oyunlarda ortak) */
+  function classifyFeedback(el){
+    const t = (el.textContent || '').trim();
+    if(!t) return null;
+    if(el.id === 'kutRecapTitle') return t.includes('doğru bildi') ? 'ok' : (t.includes('bilemedi') ? 'bad' : null);
+    if(el.id === 'addStudentFlash' || el.id === 'profCopyFlash' || el.id === 'authError') return null;
+    if(/^Yanlış/.test(t) || t.includes('zaten söylendi') || t.includes('görünmüyor') || t.includes('24 değil')) return 'bad';
+    if(/^(Doğru|Bildin|\+\d)/.test(t) || t.includes('✔️') || t.includes('🎉')) return 'ok';
+    return null;
+  }
+  const feedbackObserver = new MutationObserver(muts=>{
+    const seen = new Set();
+    muts.forEach(m=>{
+      const node = m.target.nodeType === 3 ? m.target.parentElement : m.target;
+      const el = node && node.closest ? node.closest('.flash-msg, .guess-status, #kutRecapTitle') : null;
+      if(el) seen.add(el);
+    });
+    seen.forEach(el=>{ const k = classifyFeedback(el); if(k) playSound(k); });
+  });
+  document.querySelectorAll('.flash-msg, .guess-status, #kutRecapTitle').forEach(el=>
+    feedbackObserver.observe(el, { childList:true, characterData:true, subtree:true })
+  );
 
   /* ---------------- Tıklamalı sayı klavyesi (matematik oyunları için) ----------------
      Sadece rakam (ve isteğe bağlı ':' saat ayracı) girişi olan alanlar için.
@@ -1257,10 +1363,10 @@
     evYuksekAlcak:'🔼 Yüksek mi Alçak mı', evSaatPara:'🕒 Saat ve Para Problemleri',
     evAnagram:'🔤 Anagram', evEsZit:'🔁 Eş - Zıt Anlam', evCumle:'✏️ Cümle Tamamlama',
     evHece:'🔠 Hecelere Ayırma', evNoktalama:'❓ Noktalama',
-    evFarkli:'🔍 Tek Farklı Olanı Bulma', evSekilOruntu:'🔶 Şekil Örüntüsü',
+    evSekilOruntu:'🔶 Şekil Örüntüsü',
     evSiralama:'📊 Sıralama Bulmacası', evZincir:'🔗 Mantık Zincirleri',
     ogrenciler:'👤 Öğrenci Profilleri', studentProfile:'👤 Öğrenci Profili',
-    yetkiKapisi:'🔒 Yetkili Girişi', yonetici:'🔐 Yönetici Paneli', arsiv:'🗂 Arşivlenmiş Sonuçlar',
+    veli:'👪 Veli Görünümü', yetkiKapisi:'🔒 Yetkili Girişi', yonetici:'🔐 Yönetici Paneli', arsiv:'🗂 Arşivlenmiş Sonuçlar',
     grup:'🤝 Grup Oyunları', kelime:'💥 Kelime Oyunu', kutu:'📦 Gizemli Kutu',
     sayi:'🔢 Sayı Şimşeği', bireysel:'🧍 Bireysel Oyunlar'
   };
@@ -1271,10 +1377,10 @@
     evYuksekAlcak:'evMatematik', evSaatPara:'evMatematik',
     evAnagram:'evTurkce', evEsZit:'evTurkce', evCumle:'evTurkce',
     evHece:'evTurkce', evNoktalama:'evTurkce',
-    evFarkli:'evMantik', evSekilOruntu:'evMantik',
+    evSekilOruntu:'evMantik',
     evSiralama:'evMantik', evZincir:'evMantik',
     ogrenciler:'home', studentProfile:'ogrenciler', yetkiKapisi:'ogrenciler',
-    yonetici:'ogrenciler', arsiv:'ogrenciler',
+    yonetici:'ogrenciler', arsiv:'ogrenciler', veli:'home',
     grup:'sinif', kelime:'grup', kutu:'grup', sayi:'grup',
     bireysel:'sinif'
   };
@@ -1357,7 +1463,7 @@
     "Yağız Köksaldı","Yunus Doğan","Amine Yılmaz","Elif Arslan","Ömer Halis Demir",
     "Yavuz Tunahan Özdemir","Zeynep İsra Geçal","Muhammed Emin Eren","Ravzanur Açıkgöz",
     "Ayaz Eymen Çelik"
-  ].map(name => ({ id: studentIdCounter++, name, score:0, log:[], evProgress:{} }));
+  ].map(name => ({ id: studentIdCounter++, name, score:0, log:[], evProgress:{}, evDays:[], badges:[], token:'' }));
 
   let appArchives = []; // [{label, savedAt, entries:[{name,score}]}]
 
@@ -1370,12 +1476,64 @@
 
   /* ---- Ev etkinlikleri ilerleme takibi (Ev modunda puan değil, sadece bilgi amaçlı sayaç;
      Bireysel Oyunlar/Sınıf modunda ise doğrudan puana da işlenir) ---- */
+  /* ---- Rozetler ---- */
+  function todayStr(){
+    const d = new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function evMaxStreak(s){
+    const days = [...new Set(s.evDays || [])].sort();
+    let best = 0, cur = 0, prev = null;
+    days.forEach(d=>{
+      const t = Date.UTC(+d.slice(0,4), +d.slice(5,7)-1, +d.slice(8,10));
+      cur = (prev !== null && t - prev === 86400000) ? cur + 1 : 1;
+      prev = t;
+      if(cur > best) best = cur;
+    });
+    return best;
+  }
+  function evTotalCorrect(s){
+    let total = 0;
+    Object.values(s.evProgress || {}).forEach(b=>{ total += (b.correct||0) + (b.wins||0) + (b.solved||0); });
+    return total;
+  }
+  const BADGES = [
+    { id:'gun3',  icon:'🔥', name:'3 Gün Üst Üste',  desc:'3 gün üst üste ev oyunu oynadı', test: s=> evMaxStreak(s) >= 3 },
+    { id:'gun5',  icon:'📅', name:'5 Gün Üst Üste',  desc:'5 gün üst üste ev oyunu oynadı', test: s=> evMaxStreak(s) >= 5 },
+    { id:'gun10', icon:'🚀', name:'10 Gün Üst Üste', desc:'10 gün üst üste ev oyunu oynadı', test: s=> evMaxStreak(s) >= 10 },
+    { id:'ust24', icon:'🎯', name:'24 Ustası', desc:"24'e Ulaş'ta toplam 10 kez hedefe ulaştı", test: s=>{
+        const e = s.evProgress || {};
+        return ((e.zincirTC && e.zincirTC.solved)||0) + ((e.zincirTCC && e.zincirTCC.solved)||0) >= 10; } },
+    { id:'dogru50',  icon:'⭐', name:'50 Doğru',  desc:'Ev oyunlarında toplam 50 doğru', test: s=> evTotalCorrect(s) >= 50 },
+    { id:'dogru200', icon:'🌟', name:'200 Doğru', desc:'Ev oyunlarında toplam 200 doğru', test: s=> evTotalCorrect(s) >= 200 },
+    { id:'cok',   icon:'🧩', name:'Çok Yönlü', desc:'5 farklı ev oyununu denedi', test: s=>
+        Object.values(s.evProgress || {}).filter(b=> (b.correct||0)+(b.wins||0)+(b.solved||0) > 0).length >= 5 },
+    { id:'puan100', icon:'🏆', name:'100 Puan', desc:'Toplam puanı 100\'e ulaştı', test: s=> s.score >= 100 }
+  ];
+  function badgeById(id){ return BADGES.find(b=>b.id===id); }
+  function checkBadges(student, silent){
+    if(!Array.isArray(student.badges)) student.badges = [];
+    let changed = false;
+    BADGES.forEach(b=>{
+      if(!student.badges.includes(b.id) && b.test(student)){
+        student.badges.push(b.id);
+        changed = true;
+        if(!silent) showToast('🏅 Yeni rozet: '+b.icon+' '+b.name+' — '+student.name);
+      }
+    });
+    return changed;
+  }
+  function badgesHtml(student){
+    const list = (student.badges || []).map(badgeById).filter(Boolean);
+    return list.map(b=>'<span class="badge-chip" title="'+esc(b.desc)+'">'+b.icon+' '+esc(b.name)+'</span>').join('');
+  }
+
   const SINIF_MODU_PUAN = 2;
   const EV_GAME_LABELS = {
     sayiEv:'Sayı Şimşeği (Ev)', oruntu:'Sayı Örüntüsü Avcısı', yuksekAlcak:'Yüksek mi Alçak mı',
     saatPara:'Saat ve Para Problemleri', zincirTC:"24'e Ulaş (Toplama-Çıkarma)", zincirTCC:"24'e Ulaş (Toplama-Çıkarma-Çarpma)",
     anagram:'Anagram', esZit:'Eş - Zıt Anlam', cumle:'Cümle Tamamlama', hece:'Hecelere Ayırma', noktalama:'Noktalama',
-    farkli:'Tek Farklı Olanı Bulma', sekilOruntu:'Şekil Örüntüsü', siralama:'Sıralama Bulmacası', mantikZincir:'Mantık Zincirleri'
+    sekilOruntu:'Şekil Örüntüsü', siralama:'Sıralama Bulmacası', mantikZincir:'Mantık Zincirleri'
   };
   function evEnsureProgress(student, key){
     if(!student.evProgress) student.evProgress = {};
@@ -1389,36 +1547,66 @@
     const bucket = evEnsureProgress(student, key);
     bucket[field] = (bucket[field]||0) + 1;
     if(currentStudentIndex !== null && appStudents[currentStudentIndex] === student) renderEvProgress(student);
+    if(!isClassMode()){
+      if(!Array.isArray(student.evDays)) student.evDays = [];
+      const today = todayStr();
+      if(!student.evDays.includes(today)){ student.evDays.push(today); student.evDays = student.evDays.slice(-120); }
+    }
     if(isClassMode()){
       student.score += SINIF_MODU_PUAN;
       student.log.unshift({ label: 'Sınıf Modu — '+(EV_GAME_LABELS[key]||key), delta: SINIF_MODU_PUAN, total: student.score });
       if(currentStudentIndex !== null && appStudents[currentStudentIndex] === student) renderStudentProfile();
       renderStudentList();
     }
+    if(checkBadges(student, false)){
+      if(currentStudentIndex !== null && appStudents[currentStudentIndex] === student) renderStudentProfile();
+      renderStudentList();
+    }
     scheduleSave();
+  }
+  const EV_PROGRESS_DEFS = [
+    ['sayiEv','correct','⚡ Sayı Şimşeği (Ev)','doğru cevap'],
+    ['oruntu','correct','🧩 Sayı Örüntüsü Avcısı','doğru cevap'],
+    ['yuksekAlcak','wins','🔼 Yüksek mi Alçak mı','kez bildi'],
+    ['saatPara','correct','🕒 Saat ve Para Problemleri','doğru cevap'],
+    ['zincirTC','solved',"🎯 24'e Ulaş (Toplama-Çıkarma)","kez hedefe ulaştı"],
+    ['zincirTCC','solved',"🎯 24'e Ulaş (Toplama-Çıkarma-Çarpma)","kez hedefe ulaştı"],
+    ['anagram','correct','🔤 Anagram','doğru cevap'],
+    ['esZit','correct','🔁 Eş - Zıt Anlam','doğru cevap'],
+    ['cumle','correct','✏️ Cümle Tamamlama','doğru cevap'],
+    ['hece','correct','🔠 Hecelere Ayırma','doğru cevap'],
+    ['noktalama','correct','❓ Noktalama','doğru cevap'],
+    ['sekilOruntu','correct','🔶 Şekil Örüntüsü','doğru cevap'],
+    ['siralama','correct','📊 Sıralama Bulmacası','kez doğru sıraladı'],
+    ['mantikZincir','correct','🔗 Mantık Zincirleri','doğru cevap']
+  ];
+  const EV_ONERI_ESIK = 5; // her 5 yeni doğru/başarıda 1 puan önerilir
+  function evProgressRow(ep, key, field, label, suffix){
+    const bucket = ep[key];
+    if(!bucket || !bucket[field]) return null;
+    const count = bucket[field];
+    const converted = bucket.converted || 0;
+    const newCount = Math.max(0, count - converted);
+    const suggested = Math.floor(newCount / EV_ONERI_ESIK);
+    let html = '<div class="log-item" style="align-items:center;"><span>'+esc(label)+': '+count+' '+esc(suffix)+'</span>';
+    if(suggested >= 1){
+      html += '<span class="delta" style="display:flex; gap:6px; align-items:center;">'+
+        '<button type="button" class="btn sun" style="padding:4px 10px; font-size:12px; box-shadow:none;" data-approve="'+key+'" data-points="'+suggested+'" data-count="'+count+'">+'+suggested+' puan öner</button>'+
+        '<button type="button" class="btn ghost" style="padding:4px 10px; font-size:12px;" data-dismiss="'+key+'" data-count="'+count+'">Yoksay</button>'+
+      '</span>';
+    } else {
+      html += '<span class="delta"></span>';
+    }
+    html += '</div>';
+    return html;
   }
   function renderEvProgress(student){
     const el = document.getElementById('evProgressList');
     if(!el) return;
     const ep = student.evProgress || {};
-    const rows = [];
-    if(ep.sayiEv && ep.sayiEv.correct) rows.push('⚡ Sayı Şimşeği (Ev): '+ep.sayiEv.correct+' doğru cevap');
-    if(ep.oruntu && ep.oruntu.correct) rows.push('🧩 Sayı Örüntüsü Avcısı: '+ep.oruntu.correct+' doğru cevap');
-    if(ep.yuksekAlcak && ep.yuksekAlcak.wins) rows.push('🔼 Yüksek mi Alçak mı: '+ep.yuksekAlcak.wins+' kez bildi');
-    if(ep.saatPara && ep.saatPara.correct) rows.push('🕒 Saat ve Para Problemleri: '+ep.saatPara.correct+' doğru cevap');
-    if(ep.zincirTC && ep.zincirTC.solved) rows.push('🎯 24\'e Ulaş (Toplama-Çıkarma): '+ep.zincirTC.solved+' kez hedefe ulaştı');
-    if(ep.zincirTCC && ep.zincirTCC.solved) rows.push('🎯 24\'e Ulaş (Toplama-Çıkarma-Çarpma): '+ep.zincirTCC.solved+' kez hedefe ulaştı');
-    if(ep.anagram && ep.anagram.correct) rows.push('🔤 Anagram: '+ep.anagram.correct+' doğru cevap');
-    if(ep.esZit && ep.esZit.correct) rows.push('🔁 Eş - Zıt Anlam: '+ep.esZit.correct+' doğru cevap');
-    if(ep.cumle && ep.cumle.correct) rows.push('✏️ Cümle Tamamlama: '+ep.cumle.correct+' doğru cevap');
-    if(ep.hece && ep.hece.correct) rows.push('🔠 Hecelere Ayırma: '+ep.hece.correct+' doğru cevap');
-    if(ep.noktalama && ep.noktalama.correct) rows.push('❓ Noktalama: '+ep.noktalama.correct+' doğru cevap');
-    if(ep.farkli && ep.farkli.correct) rows.push('🔍 Tek Farklı Olanı Bulma: '+ep.farkli.correct+' doğru cevap');
-    if(ep.sekilOruntu && ep.sekilOruntu.correct) rows.push('🔶 Şekil Örüntüsü: '+ep.sekilOruntu.correct+' doğru cevap');
-    if(ep.siralama && ep.siralama.correct) rows.push('📊 Sıralama Bulmacası: '+ep.siralama.correct+' kez doğru sıraladı');
-    if(ep.mantikZincir && ep.mantikZincir.correct) rows.push('🔗 Mantık Zincirleri: '+ep.mantikZincir.correct+' doğru cevap');
+    const rows = EV_PROGRESS_DEFS.map(d => evProgressRow(ep, d[0], d[1], d[2], d[3])).filter(Boolean);
     el.innerHTML = rows.length
-      ? rows.map(r=>'<div class="log-item">'+esc(r)+'</div>').join('')
+      ? rows.join('')
       : '<div class="empty-note">Henüz ev etkinliği kaydı yok.</div>';
   }
 
@@ -1477,6 +1665,7 @@
         '<span class="student-rank">'+medalFor(i)+'</span>'+
         '<span class="student-avatar">'+esc(initialOf(s.name))+'</span>'+
         '<span class="student-name">'+esc(s.name)+'</span>'+
+        '<span class="student-badges">'+(s.badges||[]).map(id=>{ const b=badgeById(id); return b?b.icon:''; }).join('')+'</span>'+
         '<span class="student-score">'+s.score+'</span>'+
         '<span class="student-chevron">›</span>'+
       '</button>';
@@ -1491,7 +1680,7 @@
   function doAddStudent(){
     const val = studentNameInput.value.trim();
     if(!val) return;
-    appStudents.push({id: studentIdCounter++, name:val, score:0, log:[], evProgress:{}});
+    appStudents.push({id: studentIdCounter++, name:val, score:0, log:[], evProgress:{}, evDays:[], badges:[], token: makeToken()});
     studentNameInput.value='';
     renderStudentList();
     renderEvStudentSelect();
@@ -1523,6 +1712,11 @@
     profAvatar.textContent = initialOf(s.name);
     profName.textContent = s.name;
     profScore.textContent = s.score;
+    if(!s.token){ s.token = makeToken(); scheduleSave(); }
+    if(checkBadges(s, true)) scheduleSave();
+    document.getElementById('profBadges').innerHTML = badgesHtml(s) || '<span class="hint" style="margin:0;">Henüz rozet yok — oynadıkça kazanılır 🏅</span>';
+    document.getElementById('profParentLink').value = location.href.split('#')[0].split('?')[0] + '?veli=' + s.token;
+    document.getElementById('profCopyFlash').textContent = '';
     profAmountInput.value='';
     if(s.log.length === 0){
       profLog.innerHTML = '<div class="empty-note">Henüz puan işlemi yok.</div>';
@@ -1557,8 +1751,117 @@
     scheduleSave();
   });
 
+  document.getElementById('profCopyLinkBtn').addEventListener('click', ()=>{
+    const input = document.getElementById('profParentLink');
+    const flash = document.getElementById('profCopyFlash');
+    const done = ok=>{ flash.style.color = ok ? 'var(--grass-dark)' : 'var(--coral-dark)'; flash.textContent = ok ? 'Bağlantı kopyalandı ✔️' : 'Kopyalanamadı, bağlantıyı elle seçip kopyalayın.'; };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(input.value).then(()=>done(true)).catch(()=>{ input.select(); done(false); });
+    } else {
+      input.select();
+      let ok = false; try{ ok = document.execCommand('copy'); }catch(e){}
+      done(ok);
+    }
+  });
+
+  /* ---- Veli görünümü (salt-okunur) ---- */
+  function renderParentView(){
+    showScreen('veli');
+    const box = document.getElementById('veliContent');
+    const s = appStudents.find(x=> x.token && x.token === VELI_TOKEN);
+    if(!s){
+      box.innerHTML = '<div class="panel"><p class="empty-note">Bu bağlantı geçersiz ya da eski. Lütfen öğretmeninizden güncel bağlantıyı isteyin.</p></div>';
+      return;
+    }
+    const progressRows = EV_PROGRESS_DEFS.map(d=>{
+      const b = (s.evProgress||{})[d[0]];
+      return (b && b[d[1]]) ? '<div class="log-item"><span>'+esc(d[2])+': '+b[d[1]]+' '+esc(d[3])+'</span></div>' : '';
+    }).join('');
+    const logRows = (s.log||[]).slice(0,10).map(entry=>
+      '<div class="log-item'+(entry.delta<0?' neg':'')+'"><span>'+esc(entry.label)+'</span><span class="delta">'+(entry.delta>0?'+':'')+entry.delta+'</span></div>'
+    ).join('');
+    box.innerHTML =
+      '<div class="panel"><div class="profile-head"><div class="profile-avatar">'+esc(initialOf(s.name))+'</div>'+
+      '<h2 class="profile-name">'+esc(s.name)+'</h2></div>'+
+      '<div class="profile-score">'+s.score+'</div><p class="hint" style="text-align:center; margin-top:-10px;">Toplam puan</p>'+
+      '<div class="badge-list">'+(badgesHtml(s) || '<span class="hint" style="margin:0;">Henüz rozet yok — oynadıkça kazanılır 🏅</span>')+'</div></div>'+
+      '<div class="panel"><h3 style="font-size:17px; margin-bottom:10px; color:var(--coral-dark);">🏠 Ev Çalışması</h3>'+
+      (progressRows || '<div class="empty-note">Henüz ev etkinliği kaydı yok.</div>')+'</div>'+
+      '<div class="panel"><h3 style="font-size:17px; margin-bottom:10px;">Son Puan Hareketleri</h3><div class="point-log" style="max-height:none;">'+
+      (logRows || '<div class="empty-note">Henüz puan işlemi yok.</div>')+'</div></div>'+
+      '<p class="hint" style="text-align:center;">Bu sayfa yalnızca görüntüleme içindir.</p>';
+  }
+
+  /* ---- Ev ilerlemesi öneri puanları: öğretmen onaylarsa puana işlenir ---- */
+  document.getElementById('evProgressList').addEventListener('click', e=>{
+    const approveBtn = e.target.closest('[data-approve]');
+    const dismissBtn = e.target.closest('[data-dismiss]');
+    if(!approveBtn && !dismissBtn) return;
+    const s = appStudents[currentStudentIndex];
+    if(!s || !s.evProgress) return;
+    if(approveBtn){
+      const key = approveBtn.dataset.approve;
+      const points = parseInt(approveBtn.dataset.points, 10);
+      const count = parseInt(approveBtn.dataset.count, 10);
+      const bucket = s.evProgress[key];
+      if(!bucket || isNaN(points) || points < 1) return;
+      bucket.converted = count;
+      s.score += points;
+      s.log.unshift({ label: 'Ev ilerlemesi onaylandı — '+(EV_GAME_LABELS[key]||key), delta: points, total: s.score });
+      checkBadges(s, false);
+    } else {
+      const key = dismissBtn.dataset.dismiss;
+      const count = parseInt(dismissBtn.dataset.count, 10);
+      const bucket = s.evProgress[key];
+      if(!bucket) return;
+      bucket.converted = count;
+    }
+    renderStudentProfile();
+    renderStudentList();
+    scheduleSave();
+  });
+
   /* ---- Yönetici Paneli + Arşivlenmiş Sonuçlar ---- */
+  function renderArsivChart(){
+    const sel = document.getElementById('arsivStudentSelect');
+    const box = document.getElementById('arsivChart');
+    if(!sel || !box) return;
+    const name = sel.value;
+    if(!name){ box.innerHTML = '<div class="empty-note">Grafik için bir öğrenci seçin.</div>'; return; }
+    const pts = appArchives.map(a=>{
+      const en = a.entries.find(x=>x.name===name);
+      return en ? { label: a.label.replace('Sonuçlar','Sonuç'), score: en.score } : null;
+    }).filter(Boolean);
+    if(pts.length < 2){ box.innerHTML = '<div class="empty-note">Grafik için bu öğrencinin en az 2 arşiv kaydı olmalı.</div>'; return; }
+    const W = Math.max(420, pts.length*90), H = 250, L = 44, R = 24, T = 22, B = 52;
+    const max = Math.max(10, ...pts.map(p=>p.score));
+    const x = i => L + i*(W-L-R)/(pts.length-1);
+    const y = v => H-B - v/max*(H-T-B);
+    let svg = '<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Puan değişimi grafiği">';
+    for(let g=0; g<=4; g++){
+      const v = Math.round(max*g/4), yy = y(v);
+      svg += '<line x1="'+L+'" x2="'+(W-R)+'" y1="'+yy+'" y2="'+yy+'" stroke="var(--line)" stroke-width="1"/>'+
+             '<text x="'+(L-6)+'" y="'+(yy+4)+'" text-anchor="end" font-size="11" fill="var(--ink-soft)">'+v+'</text>';
+    }
+    svg += '<polyline fill="none" stroke="var(--coral-dark)" stroke-width="3" stroke-linejoin="round" points="'+pts.map((p,i)=>x(i)+','+y(p.score)).join(' ')+'"/>';
+    pts.forEach((p,i)=>{
+      svg += '<circle cx="'+x(i)+'" cy="'+y(p.score)+'" r="5" fill="var(--sun)" stroke="var(--coral-dark)" stroke-width="2"/>'+
+             '<text x="'+x(i)+'" y="'+(y(p.score)-10)+'" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">'+p.score+'</text>'+
+             '<text x="'+x(i)+'" y="'+(H-B+20)+'" text-anchor="middle" font-size="11" fill="var(--ink-soft)">'+esc(p.label)+'</text>';
+    });
+    svg += '</svg>';
+    box.innerHTML = svg;
+  }
+  document.getElementById('arsivStudentSelect').addEventListener('change', renderArsivChart);
   function renderArsivList(){
+    const sel = document.getElementById('arsivStudentSelect');
+    if(sel){
+      const prev = sel.value;
+      const names = [...new Set([...appStudents.map(s=>s.name), ...appArchives.flatMap(a=>a.entries.map(e=>e.name))])];
+      sel.innerHTML = '<option value="">Öğrenci seç...</option>' + names.map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join('');
+      if(names.includes(prev)) sel.value = prev;
+      renderArsivChart();
+    }
     const el = document.getElementById('arsivList');
     if(!el) return;
     if(!appArchives.length){
@@ -2222,6 +2525,25 @@
   let evSayiScore = 0;
   let evSayiProblem = null;
   let evSayiRecent = [];
+  let evSayiStreak = 0;
+  const EV_SAYI_ONERI_SERI = 8; // üst üste bu kadar doğruda üst seviye önerilir
+  const EV_SAYI_NEXT = { kolay:'orta', orta:'zor' };
+  const EV_SAYI_NAME = { kolay:'Kolay', orta:'Orta', zor:'Zor' };
+  const evSayiSuggest = document.getElementById('evSayiSuggest');
+  const evSayiSuggestText = document.getElementById('evSayiSuggestText');
+  function evSayiHideSuggest(){ evSayiSuggest.style.display = 'none'; }
+  document.getElementById('evSayiSuggestYes').addEventListener('click', ()=>{
+    const next = EV_SAYI_NEXT[evSayiDiff];
+    if(!next) return;
+    evSayiDiff = next;
+    evSayiDiffOptions.querySelectorAll('.count-opt').forEach(b=>b.classList.toggle('active', b.dataset.diff === next));
+    evSayiStreak = 0; evSayiRecent = [];
+    evSayiHideSuggest();
+    evSayiNext();
+    evSayiFlash.style.color = 'var(--grass-dark)';
+    evSayiFlash.textContent = 'Yeni seviye: '+EV_SAYI_NAME[next]+' 💪';
+  });
+  document.getElementById('evSayiSuggestNo').addEventListener('click', ()=>{ evSayiStreak = 0; evSayiHideSuggest(); });
 
   evSayiDiffOptions.addEventListener('click', e=>{
     const btn = e.target.closest('.count-opt');
@@ -2264,6 +2586,7 @@
   }
   evSayiStartBtn.addEventListener('click', ()=>{
     evSayiScore = 0; evSayiScoreEl.textContent='0';
+    evSayiStreak = 0; evSayiHideSuggest();
     document.getElementById('evSayiConfig').classList.remove('active');
     document.getElementById('evSayiPlay').classList.add('active');
     evSayiNext();
@@ -2277,14 +2600,21 @@
       evSayiScore++; evSayiScoreEl.textContent = evSayiScore;
       evSayiFlash.style.color='var(--grass-dark)'; evSayiFlash.textContent='Doğru! ✔️';
       evRecordProgress('sayiEv','correct');
+      evSayiStreak++;
+      if(evSayiStreak >= EV_SAYI_ONERI_SERI && EV_SAYI_NEXT[evSayiDiff] && evSayiSuggest.style.display === 'none'){
+        evSayiSuggestText.textContent = '🎉 Üst üste '+evSayiStreak+' doğru! İstersen '+EV_SAYI_NAME[EV_SAYI_NEXT[evSayiDiff]]+' seviyeyi deneyebilirsin.';
+        evSayiSuggest.style.display = 'block';
+      }
     } else {
       evSayiFlash.style.color='var(--coral-dark)'; evSayiFlash.textContent='Yanlış! Doğru cevap: '+evSayiProblem.answer;
+      evSayiStreak = 0;
     }
     setTimeout(evSayiNext, 600);
   }
   evSayiAnswerBtn.addEventListener('click', evSayiCheck);
   evSayiAnswerInput.addEventListener('keydown', e=>{ if(e.key==='Enter') evSayiCheck(); });
   evSayiBitirBtn.addEventListener('click', ()=>{
+    evSayiStreak = 0; evSayiHideSuggest();
     document.getElementById('evSayiPlay').classList.remove('active');
     document.getElementById('evSayiConfig').classList.add('active');
   });
@@ -2898,57 +3228,6 @@
      EV ETKİNLİKLERİ — MANTIK (bireysel, sınırsız pratik)
      ========================================================= */
 
-  /* ---- Tek Farklı Olanı Bulma ---- */
-  const FARKLI_KATEGORILER = [
-    ['🐶','🐱','🐰','🐻','🦊','🐸','🐵','🐷'],
-    ['🍎','🍌','🍇','🍉','🍓','🍒','🍍','🍑'],
-    ['⭐','🌙','☀️','🌈','☁️','⚡','❄️','🔥'],
-    ['🚗','🚌','✈️','🚀','🚲','🚂','⛵','🚁'],
-    ['⚽','🏀','🎾','🏈','🎱','🏐','🎳','🥎'],
-    ['🎸','🥁','🎹','🎺','🎻','🪘','🎷','🪗']
-  ];
-  let evFarkRecent = [];
-  const evFarkGrid = document.getElementById('evFarkGrid');
-  const evFarkFlash = document.getElementById('evFarkFlash');
-  const evFarkNewBtn = document.getElementById('evFarkNewBtn');
-  const evFarkScoreEl = document.getElementById('evFarkScore');
-  let evFarkScore = 0;
-  let evFarkDiffIdx = 0;
-  function evFarkNext(){
-    let same, diff, tries = 0;
-    do {
-      const cat = FARKLI_KATEGORILER[randInt(0, FARKLI_KATEGORILER.length-1)];
-      const pick = shuffle(cat).slice(0,2);
-      same = pick[0]; diff = pick[1];
-      tries++;
-    } while(evFarkRecent.includes(same+diff) && tries < 25);
-    evFarkRecent.push(same+diff);
-    if(evFarkRecent.length > 15) evFarkRecent.shift();
-    const gridSize = 8;
-    evFarkDiffIdx = randInt(0, gridSize-1);
-    let html = '';
-    for(let i=0;i<gridSize;i++){
-      const e = (i===evFarkDiffIdx) ? diff : same;
-      html += '<button type="button" class="num-tile" style="font-size:32px;" data-idx="'+i+'">'+e+'</button>';
-    }
-    evFarkGrid.innerHTML = html;
-    evFarkFlash.textContent='';
-  }
-  evFarkGrid.addEventListener('click', e=>{
-    const btn = e.target.closest('.num-tile');
-    if(!btn) return;
-    if(+btn.dataset.idx === evFarkDiffIdx){
-      evFarkScore++; evFarkScoreEl.textContent = evFarkScore;
-      evFarkFlash.style.color='var(--grass-dark)'; evFarkFlash.textContent='Doğru! ✔️';
-      evRecordProgress('farkli','correct');
-    } else {
-      evFarkFlash.style.color='var(--coral-dark)'; evFarkFlash.textContent='Yanlış, tekrar dene!';
-      return;
-    }
-    setTimeout(evFarkNext, 800);
-  });
-  evFarkNewBtn.addEventListener('click', evFarkNext);
-
   /* ---- Şekil Örüntüsü ---- */
   const SEKIL_RENKLER = ['🔴','🔵','🟢','🟡','🟣','🟠'];
   const evSekPattern = document.getElementById('evSekPattern');
@@ -3105,7 +3384,6 @@
   evCumNext();
   evHeceNext();
   evNoktaNext();
-  evFarkNext();
   evSekNext();
   evSiraNext();
   evZinNext();
@@ -3119,8 +3397,13 @@
   renderNumKeypad(document.getElementById('evHeceKeypad'), evHeceInput, { onEnter: evHeceCheck });
 
   /* ---------------- Initial render ---------------- */
-  renderStudentList();
-  renderGroupSection();
+  if(PARENT_MODE){
+    document.body.classList.add('parent-mode');
+    showScreen('veli');
+  } else {
+    renderStudentList();
+    renderGroupSection();
+  }
   loadStateFromCloud();
 
 })();
