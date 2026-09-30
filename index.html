@@ -1130,26 +1130,71 @@
     cloudStatus.textContent = text;
     cloudStatus.style.color = color || 'var(--ink-soft)';
   }
+  let cloudLoaded = false;   // bulut verisi okunmadan kayıt yapılmaz
+let dirty = { students: new Map(), groups:false, archives:false, deleted:new Set() };
+const GROUP_FIELDS = {
+  score: ['score','log'],
+  ev:    ['evProgress','evDays','badges','evHiddenBase'],
+  info:  ['name']
+};
+function touch(id, ...groups){
+  let set = dirty.students.get(id);
+  if(!set){ set = new Set(); dirty.students.set(id, set); }
+  groups.forEach(g=>set.add(g));
+  scheduleSave();
+}
+function touchGroups(){ dirty.groups = true; scheduleSave(); }
+function touchArchives(){ dirty.archives = true; scheduleSave(); }
+function restoreDirty(b){
+  b.students.forEach((gs,id)=>{
+    const cur = dirty.students.get(id) || new Set();
+    gs.forEach(g=>cur.add(g));
+    dirty.students.set(id, cur);
+  });
+  if(b.groups) dirty.groups = true;
+  if(b.archives) dirty.archives = true;
+  b.deleted.forEach(id=>dirty.deleted.add(id));
+}
   function scheduleSave(){
     if(!db) return;
     clearTimeout(saveTimer);
     saveTimer = setTimeout(saveStateNow, 600);
   }
-  function saveStateNow(){
-    if(!db) return;
-    setCloudStatus('☁️ Kaydediliyor...', 'var(--ink-soft)');
-    STATE_DOC().set({
-      students: appStudents,
-      groups: appGroups,
-      archives: appArchives,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(()=>{
-      setCloudStatus('☁️ Kaydedildi', 'var(--grass-dark)');
-    }).catch(err=>{
-      console.error('Firebase kayıt hatası:', err);
-      setCloudStatus('⚠️ Kaydedilemedi, internet bağlantınızı kontrol edin', 'var(--coral-dark)');
+ function saveStateNow(){
+  if(!db || !cloudLoaded) return;
+  const batch = dirty;
+  dirty = { students: new Map(), groups:false, archives:false, deleted:new Set() };
+  setCloudStatus('☁️ Kaydediliyor...', 'var(--ink-soft)');
+  db.runTransaction(async tx=>{
+    const ref = STATE_DOC();
+    const snap = await tx.get(ref);
+    const cloud = snap.exists ? snap.data() : {};
+    const byId = new Map((Array.isArray(cloud.students) ? cloud.students : []).map(s=>[s.id, s]));
+    batch.deleted.forEach(id=>byId.delete(id));
+    batch.students.forEach((groups, id)=>{
+      const local = findStudentById(id);
+      if(!local) return;
+      const target = byId.get(id);
+      if(!target){
+        if(groups.has('new')) byId.set(id, JSON.parse(JSON.stringify(local)));
+        return; // başka cihazda silinmiş öğrenciyi geri getirme
+      }
+      groups.forEach(g=> (GROUP_FIELDS[g]||[]).forEach(f=>{ target[f] = local[f]; }));
     });
-  }
+    tx.set(ref, {
+      students: [...byId.values()].sort((a,b)=>a.id-b.id),
+      groups:   batch.groups   ? appGroups   : (cloud.groups   || []),
+      archives: batch.archives ? appArchives : (cloud.archives || []),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }).then(()=>{
+    setCloudStatus('☁️ Kaydedildi', 'var(--grass-dark)');
+  }).catch(err=>{
+    console.error('Firebase kayıt hatası:', err);
+    restoreDirty(batch); // değişiklikler kaybolmasın, bir sonraki denemeye kalsın
+    setCloudStatus('⚠️ Kaydedilemedi, internet bağlantınızı kontrol edin', 'var(--coral-dark)');
+  });
+}
   function loadStateFromCloud(){
     if(!db){
       setCloudStatus('⚠️ Bulut bağlantısı yok, veriler bu cihazda kalacak', 'var(--coral-dark)');
@@ -1159,6 +1204,7 @@
     STATE_DOC().get().then(doc=>{
       if(doc.exists){
         const data = doc.data();
+        cloudLoaded = true;
         if(Array.isArray(data.students) && data.students.length){
           appStudents = data.students.map(s=>({ id: s.id, name: s.name, score: s.score||0, log: Array.isArray(s.log)?s.log:[], evProgress: (s.evProgress && typeof s.evProgress==='object') ? s.evProgress : {}, evDays: Array.isArray(s.evDays)?s.evDays:[], badges: Array.isArray(s.badges)?s.badges:[], evHiddenBase: (s.evHiddenBase && typeof s.evHiddenBase==='object') ? s.evHiddenBase : {} }));
           studentIdCounter = Math.max(0, ...appStudents.map(s=>s.id)) + 1;
@@ -1170,10 +1216,13 @@
           appArchives = data.archives;
         }
         setCloudStatus('☁️ Kayıtlı verilere bağlanıldı', 'var(--grass-dark)');
-        if(ensureAllFields()) scheduleSave();
+          if(ensureAllFields()) appStudents.forEach(s=>touch(s.id,'ev'));
       } else {
         setCloudStatus('☁️ İlk kayıt oluşturuluyor...', 'var(--ink-soft)');
-        ensureAllFields(); saveStateNow();
+          cloudLoaded = true;
+  ensureAllFields();
+  appStudents.forEach(s=>touch(s.id,'new','score','ev','info'));
+  touchGroups(); touchArchives();;
       }
       renderStudentList();
       renderGroupSection();
@@ -1505,7 +1554,7 @@
     if(!student.evProgress[key]) student.evProgress[key] = {};
     return student.evProgress[key];
   }
-  function evRecordProgress(key, field){
+    function evRecordProgress(key, field){
     if(currentEvStudentId == null) return;
     const student = findStudentById(currentEvStudentId);
     if(!student) return;
@@ -1519,7 +1568,7 @@
       if(currentStudentIndex !== null && appStudents[currentStudentIndex] === student) renderStudentProfile();
       renderStudentList();
     }
-    scheduleSave();
+    touch(student.id, 'ev');
   }
   const EV_PROGRESS_DEFS = [
     ['sayiEv','correct','⚡ Sayı Şimşeği (Ev)','doğru cevap'],
@@ -1633,15 +1682,16 @@
     const i = +row.dataset.i;
     requireAuth(()=> openStudentProfile(i));
   });
-  function doAddStudent(){
+    function doAddStudent(){
     const val = studentNameInput.value.trim();
     if(!val) return;
-    appStudents.push({id: studentIdCounter++, name:val, score:0, log:[], evProgress:{}, evDays:[], badges:[], evHiddenBase:{}});
+    const ns = {id: studentIdCounter++, name:val, score:0, log:[], evProgress:{}, evDays:[], badges:[], evHiddenBase:{}};
+    appStudents.push(ns);
     studentNameInput.value='';
     renderStudentList();
     renderEvStudentSelect();
     renderClearEvSelect();
-    scheduleSave();
+    touch(ns.id, 'new', 'score', 'ev', 'info');
     const msg = document.getElementById('addStudentFlash');
     if(msg){ msg.style.color='var(--grass-dark)'; msg.textContent = val+' başarıyla eklendi. ✔️'; }
   }
@@ -1663,13 +1713,13 @@
     renderStudentProfile();
     showScreen('studentProfile');
   }
-  function renderStudentProfile(){
+    function renderStudentProfile(){
     const s = appStudents[currentStudentIndex];
     if(!s) return;
     profAvatar.textContent = initialOf(s.name);
     profName.textContent = s.name;
     profScore.textContent = s.score;
-    if(checkBadges(s, true)) scheduleSave();
+    if(checkBadges(s, true)) touch(s.id, 'ev');
     document.getElementById('profBadges').innerHTML = badgesHtml(s) || '<span class="hint" style="margin:0;">Henüz rozet yok — oynadıkça kazanılır 🏅</span>';
     profAmountInput.value='';
     if(s.log.length === 0){
@@ -1682,7 +1732,7 @@
     renderEvProgress(s);
     profAmountInput.focus();
   }
-  function applyPointChange(sign){
+    function applyPointChange(sign){
     const s = appStudents[currentStudentIndex];
     if(!s) return;
     const raw = profAmountInput.value.trim();
@@ -1692,15 +1742,17 @@
     s.score = Math.max(0, s.score + delta);
     s.log.unshift({ label: sign>0 ? 'Puan eklendi' : 'Puan silindi', delta: sign>0 ? amount : -amount, total: s.score });
     renderStudentProfile();
-    scheduleSave();
+    touch(s.id, 'score', 'ev');
   }
   profAddBtn.addEventListener('click', ()=> applyPointChange(1));
   profSubBtn.addEventListener('click', ()=> applyPointChange(-1));
   profAmountInput.addEventListener('keydown', e=>{ if(e.key==='Enter') applyPointChange(1); });
-  profDeleteBtn.addEventListener('click', ()=>{
+    profDeleteBtn.addEventListener('click', ()=>{
     if(currentStudentIndex===null) return;
+    const delId = appStudents[currentStudentIndex].id;
     appStudents.splice(currentStudentIndex,1);
     currentStudentIndex = null;
+    dirty.deleted.add(delId);
     showScreen('ogrenciler');
     scheduleSave();
   });
@@ -1741,7 +1793,7 @@
   document.getElementById('openVeliBtn').addEventListener('click', ()=> showScreen('veli'));
 
   /* ---- Ev ilerlemesi öneri puanları: öğretmen onaylarsa puana işlenir ---- */
-  document.getElementById('evProgressList').addEventListener('click', e=>{
+    document.getElementById('evProgressList').addEventListener('click', e=>{
     const approveBtn = e.target.closest('[data-approve]');
     const dismissBtn = e.target.closest('[data-dismiss]');
     if(!approveBtn && !dismissBtn) return;
@@ -1766,7 +1818,7 @@
     }
     renderStudentProfile();
     renderStudentList();
-    scheduleSave();
+    touch(s.id, 'score', 'ev');
   });
 
   /* ---- Yönetici Paneli + Arşivlenmiş Sonuçlar ---- */
@@ -1825,17 +1877,17 @@
         '<div class="ranking-list">'+rankingHtml+'</div></div>';
     }).reverse().join('');
   }
-  function doArchiveReset(){
+    function doArchiveReset(){
     if(!appStudents.length) return;
     if(!confirm('Genel sıralamayı arşivleyip tüm öğrenci puanlarını sıfırlamak istediğinize emin misiniz? Bu işlem geri alınamaz.')) return;
     const label = (appArchives.length+1)+'. Sonuçlar';
     const sorted = [...appStudents].sort((a,b)=>b.score-a.score).map(s=>({name:s.name, score:s.score}));
     appArchives.push({ label, savedAt: new Date().toLocaleDateString('tr-TR'), entries: sorted });
-    appStudents.forEach(s=>{ s.score = 0; s.log = []; });
+    appStudents.forEach(s=>{ s.score = 0; s.log = []; touch(s.id, 'score'); });
     renderStudentList();
     if(currentStudentIndex!==null) renderStudentProfile();
     renderArsivList();
-    scheduleSave();
+    touchArchives();
     alert(label+' olarak kaydedildi ve genel sıralama sıfırlandı.');
   }
   function renderClearEvSelect(){
@@ -1853,14 +1905,13 @@
     if(!s) return;
     if(!confirm(s.name+' için Ev İlerlemesi listesi temizlensin mi? Puan, rozet ve gerçek ilerleme silinmez.')) return;
     s.evHiddenBase = evSnapshotBase(s);
-    scheduleSave();
+    touch(s.id, 'ev');
     clearEvFlashMsg(s.name+' için liste temizlendi.');
   }));
   document.getElementById('clearEvAllBtn').addEventListener('click', ()=> requireAuth(()=>{
     if(!appStudents.length) return;
     if(!confirm('Tüm öğrencilerin Ev İlerlemesi listesi temizlensin mi? Puan, rozet ve gerçek ilerleme silinmez.')) return;
-    appStudents.forEach(s=>{ s.evHiddenBase = evSnapshotBase(s); });
-    scheduleSave();
+    appStudents.forEach(s=>{ s.evHiddenBase = evSnapshotBase(s); touch(s.id, 'ev'); });
     clearEvFlashMsg('Tüm öğrencilerin listesi temizlendi.');
   }));
   document.getElementById('openAdminBtn').addEventListener('click', ()=> requireAuth(()=> showScreen('yonetici')));
@@ -1907,13 +1958,13 @@
       '</div>';
     }).join('');
   }
-  groupCardsWrap.addEventListener('input', e=>{
+    groupCardsWrap.addEventListener('input', e=>{
     if(e.target.classList.contains('gname')){
       const i = +e.target.dataset.i;
       if(appGroups[i]){
         appGroups[i].name = e.target.value;
         renderScoreboardInto(homeScoreboard, appGroups, -1);
-        scheduleSave();
+        touchGroups();
       }
     }
   });
@@ -1925,7 +1976,7 @@
     groupsHint.style.display = enough ? 'none' : 'block';
     gameCardsGroup.forEach(c => { c.classList.toggle('disabled', !enough); c.disabled = !enough; });
   }
-  autoGroupBtn.addEventListener('click', ()=>{
+    autoGroupBtn.addEventListener('click', ()=>{
     if(appStudents.length < 2) return;
     const n = Math.min(selectedGroupCount, appStudents.length);
     const shuffledIds = shuffle(appStudents.map(s=>s.id));
@@ -1934,13 +1985,13 @@
     appGroups = groups;
     renderGroupCards();
     renderGroupSection();
-    scheduleSave();
+    touchGroups();
   });
-  resetGroupsBtn.addEventListener('click', ()=>{
+    resetGroupsBtn.addEventListener('click', ()=>{
     appGroups = [];
     groupCardsWrap.innerHTML='';
     renderGroupSection();
-    scheduleSave();
+    touchGroups();
   });
 
   /* Award points to students based on their group's final rank in a game */
@@ -1958,11 +2009,12 @@
         if(!student) return;
         student.score += p;
         student.log.unshift({ label: gameLabel+' — '+g.name+' ('+(i+1)+'. sıra)', delta:p, total: student.score });
+        touch(student.id, 'score', 'ev');
       });
       lines.push((medals[i]||(i+1)+'.')+' '+esc(g.name)+' — her öğrenciye +'+p+' puan');
     });
     noteEl.innerHTML = lines.length ? ('Puanlar öğrenci profillerine işlendi:<br>'+lines.join('<br>')) : '';
-    scheduleSave();
+    touchGroups();
   }
 
   /* =========================================================
@@ -2174,7 +2226,7 @@
   });
 
   /* =========================================================
-     2. GİZEMLİ KUTU (60 saniyelik geri sayım + 3 tahmin hakkı)
+     2. GİZEMLİ KUTU (30 saniyelik geri sayım + 3 tahmin hakkı)
      ========================================================= */
   const SECRETS = [
     {e:'🐘', n:'Fil'}, {e:'🍕', n:'Pizza'}, {e:'🦋', n:'Kelebek'}, {e:'🚀', n:'Roket'},
@@ -3261,7 +3313,7 @@
     evSiraOrder = [...people].sort((a,b)=> descending ? b.value-a.value : a.value-b.value).map(p=>p.name);
     evSiraClickIdx = 0;
     evSiraLocked = false;
-    const clueLines = people.map(p=>p.name+"'nin "+p.value+' tane '+nesne+' var.').join(' ');
+    const clueLines = people.map(p=>p.name+': '+p.value+' '+nesne+'.').join(' ');
     evSiraText.textContent = clueLines + ' — İsimlere '+(descending ? 'en çoktan en aza' : 'en azdan en çoğa')+' doğru sırayla dokun.';
     evSiraOptions.innerHTML = shuffle(people).map(p=>'<button type="button" class="num-tile" data-name="'+esc(p.name)+'">'+esc(p.name)+'</button>').join('');
     evSiraProgress.textContent = 'Sıra: 0/'+n;
@@ -3297,23 +3349,23 @@
     {text:"Eğer bugün Pazartesi ise, yarın hangi gün olur?", options:["Salı","Çarşamba","Pazar","Cuma"], answer:"Salı"},
     {text:"Eğer hava çok soğuksa, dışarı çıkarken ne giymelisin?", options:["Mont","Mayo","Şort","Terlik"], answer:"Mont"},
     {text:"Eğer bir hayvanın tüyü var ve 'hav hav' diyorsa, o hayvan hangisidir?", options:["Kedi","Köpek","Balık","Kuş"], answer:"Köpek"},
-    {text:"Eğer saat 3 sıralarında okuldan çıkıyorsan, saat 3'ten önce ne yapıyorsundur?", options:["Uyuyorsun","Ders işliyorsun","Akşam yemeği yiyorsun","Yıldızlara bakıyorsun"], answer:"Ders işliyorsun"},
+    {text:"Eğer bugün Çarşamba ise, dün hangi gündü?", options:["Salı","Perşembe","Pazartesi","Cuma"], answer:"Salı"},
     {text:"Eğer bir meyve sarı, uzun ve kabuklu ise, muhtemelen hangisidir?", options:["Muz","Karpuz","Elma","Çilek"], answer:"Muz"},
-    {text:"Eğer bugün son ders günüyse (Cuma) yarın ne olur?", options:["Cumartesi","Pazartesi","Salı","Çarşamba"], answer:"Cumartesi"},
+    {text:"Eğer bugün Cuma ise, yarın hangi gün olur?", options:["Cumartesi","Pazartesi","Salı","Çarşamba"], answer:"Cumartesi"},
     {text:"Eğer gökyüzü kararmaya başladıysa, hangi vakit yaklaşıyordur?", options:["Akşam","Öğlen","Sabah erkeni","Kahvaltı"], answer:"Akşam"},
     {text:"Eğer bir hayvan suda yaşıyor ve solungaçları varsa, o hayvan hangisidir?", options:["Balık","Kedi","Tavşan","Kartal"], answer:"Balık"},
     {text:"Eğer dışarıda yağmur yağıyorsa, yanına ne almalısın?", options:["Şemsiye","Güneş gözlüğü","Deniz topu","Kar topu"], answer:"Şemsiye"},
     {text:"Eğer bir sayı 10'dan büyük ve 20'den küçükse, aşağıdakilerden hangisi olabilir?", options:["15","5","25","100"], answer:"15"},
-    {text:"Eğer bugün ayın 1'i ise ve bir hafta sonra hangi tarih olur?", options:["8'i","2'si","15'i","30'u"], answer:"8'i"},
+    {text:"Eğer bugün ayın 1'i ise, bir hafta sonra ayın kaçı olur?", options:["8'i","2'si","15'i","30'u"], answer:"8'i"},
     {text:"Eğer bir kuş uçamıyor ve yüzüyorsa, hangisi olabilir?", options:["Penguen","Serçe","Kartal","Güvercin"], answer:"Penguen"},
-    {text:"Eğer bir çocuk sabah kahvaltı yapmadan okula gitti, öğlen ne hisseder?", options:["Aç","Uykulu değil","Susamamış","Çok enerjik"], answer:"Aç"},
+    {text:"Eğer bir çocuk sabah kahvaltı yapmadan okula gitti, öğlen ne hisseder?", options:["Aç","Tok","Hasta","Şaşkın"], answer:"Aç"},
     {text:"Eğer termometre çok yüksek bir sayı gösteriyorsa hava nasıldır?", options:["Sıcak","Soğuk","Karlı","Buzlu"], answer:"Sıcak"},
     {text:"Eğer bir hayvanın uzun boynu varsa ve ağaçların en üst yapraklarını yiyorsa, hangisidir?", options:["Zürafa","Fil","Kedi","Köpek"], answer:"Zürafa"},
     {text:"Eğer bir sayının yarısı 6 ise, o sayı kaçtır?", options:["12","6","3","18"], answer:"12"},
     {text:"Eğer gece olduysa gökyüzünde neyi görebilirsin?", options:["Yıldızları","Güneşi tam tepede","Gökkuşağını","Bulutsuz öğle güneşini"], answer:"Yıldızları"},
     {text:"Eğer bir hayvan 8 bacaklıysa, hangisi olabilir?", options:["Örümcek","Kedi","Kuş","Balık"], answer:"Örümcek"},
     {text:"Eğer okul tatile girdiyse, çocuklar ne yapar?", options:["Evde/gezide vakit geçirir","Her gün sınava girer","Her gün ödev teslim eder","Okulda kalır"], answer:"Evde/gezide vakit geçirir"},
-    {text:"Eğer bir kelimede hiç sesli harf yoksa, o kelime nasıl okunabilir?", options:["Zor okunur/eksiktir","Çok kolay okunur","Hiç harf yok demektir","Sadece rakamdır"], answer:"Zor okunur/eksiktir"}
+    {text:"Eğer bir şeklin 3 kenarı ve 3 köşesi varsa, o şekil hangisidir?", options:["Üçgen","Kare","Daire","Dikdörtgen"], answer:"Üçgen"},
   ];
   let evZinRecent = [];
   const evZinText = document.getElementById('evZinText');
