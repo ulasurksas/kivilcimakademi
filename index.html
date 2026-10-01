@@ -1467,6 +1467,7 @@ function restoreDirty(b){
           appArchives = data.archives;
         }
         setCloudStatus('☁️ Kayıtlı verilere bağlanıldı', 'var(--grass-dark)');
+          evBadgeMigrate();
           if(ensureAllFields()) appStudents.forEach(s=>touch(s.id,'ev'));
       } else {
         setCloudStatus('☁️ İlk kayıt oluşturuluyor...', 'var(--ink-soft)');
@@ -2379,7 +2380,13 @@ function restoreDirty(b){
     { name:"Evcil hayvanlar", words:{ "kedi":2, "köpek":2, "kuş":2, "balık":2, "tavşan":2, "hamster":4, "kaplumbağa":3, "papağan":3, "kanarya":4, "kobay":5 } },
     { name:"Doğa olayları", words:{ "yağmur":2, "kar":2, "rüzgar":2, "fırtına":3, "gökkuşağı":3, "şimşek":3, "gökgürültüsü":5, "dolu":4, "sis":3, "güneş":2 } },
     { name:"Vücut bölümleri", words:{ "kafa":2, "kol":2, "bacak":2, "el":2, "ayak":2, "göz":2, "kulak":2, "burun":2, "ağız":3, "parmak":3 } },
-    { name:"Uzay", words:{ "güneş":2, "ay":2, "yıldız":2, "gezegen":3, "dünya":2, "roket":3, "astronot":4, "uydu":4, "kuyruklu yıldız":5, "galaksi":5 } }
+    { name:"Uzay", words:{ "güneş":2, "ay":2, "yıldız":2, "gezegen":3, "dünya":2, "roket":3, "astronot":4, "uydu":4, "kuyruklu yıldız":5, "galaksi":5 } },
+  { name:"Banyoda bulunanlar", words:{ "sabun":2, "havlu":2, "şampuan":3, "lavabo":3, "musluk":2, "küvet":3, "diş fırçası":2, "diş macunu":3, "duş":3 } },
+  { name:"Parkta yapılanlar", words:{ "salıncak":2, "kaydırak":2, "tahterevalli":3, "bisiklet":2, "top oynamak":2, "ip atlama":3, "kum havuzu":4, "piknik":3, "kuşları izlemek":5 } },
+  { name:"Yeşil renkli şeyler", words:{ "çimen":2, "yaprak":2, "kurbağa":3, "salatalık":2, "brokoli":3, "nane":4, "zeytin":3, "kaktüs":4, "marul":3 } },
+  { name:"Mavi renkli şeyler", words:{ "gökyüzü":2, "deniz":2, "okyanus":3, "göl":3, "mavi balina":4, "yaban mersini":5, "kot pantolon":4 } },
+  { name:"Haftanın günleri", words:{ "pazartesi":2, "salı":2, "çarşamba":2, "perşembe":3, "cuma":2, "cumartesi":2, "pazar":2 } },
+  { name:"Ağaçlar", words:{ "çam":2, "meşe":3, "çınar":3, "zeytin":3, "kavak":4, "söğüt":4, "elma ağacı":2, "ceviz":3, "kayın":5 } }
   ];
 
   const kelRoundCount = document.getElementById('kelRoundCount');
@@ -3260,9 +3267,24 @@ function restoreDirty(b){
       type:'para', answer: total-spend
     };
   }
+  function evSpGenerateToplam(){
+    const it = [['defter','kalem'],['simit','ayran'],['silgi','cetvel'],['balon','dondurma']][randInt(0,3)];
+    const a = randInt(2,15), b = randInt(2,15);
+    return { text:'Bir '+it[0]+' '+a+' TL, bir '+it[1]+' '+b+' TL. İkisini birlikte almak için kaç TL gerekir?', type:'para', answer:a+b };
+  }
+  function evSpGenerateParaUstu(){
+    const it = ['dondurma','simit','defter','oyuncak araba'][randInt(0,3)];
+    const price = randInt(3,18), pay = Math.random() < 0.5 ? 20 : 50;
+    return { text:'Bir '+it+' '+price+' TL. Kasiyere '+pay+' TL verdin. Kaç TL para üstü alırsın?', type:'para', answer:pay-price };
+  }
+  function evSpGenerateTamSaat(){
+    const h = randInt(1,12), n = randInt(1,6);
+    let e = (h+n) % 12; if(e === 0) e = 12;
+    return { text:'Saat '+h+':00. '+n+' saat sonra saat kaç olur? (Örn: 4:00 şeklinde yaz)', type:'saat', answerH:e, answerM:0 };
+  }
   function evSpNext(){
     let p, tries = 0;
-    do { p = Math.random()<0.5 ? evSpGenerateSaat() : evSpGeneratePara(); tries++; } while(evSpRecent.includes(p.text) && tries < 25);
+    do { p = [evSpGenerateSaat, evSpGeneratePara, evSpGenerateToplam, evSpGenerateParaUstu, evSpGenerateTamSaat][randInt(0,4)](); tries++; } while(evSpRecent.includes(p.text) && tries < 25);
     evSpRecent.push(p.text);
     if(evSpRecent.length > 15) evSpRecent.shift();
     evSpProblem = p;
@@ -3626,7 +3648,7 @@ function restoreDirty(b){
      ========================================================= */
 
   /* ---- Şekil Örüntüsü ---- */
-  const SEKIL_RENKLER = ['🔴','🔵','🟢','🟡','🟣','🟠'];
+  const SEKIL_RENKLER = ['🔴','🔵','🟢','🟡','🟣','🟠','⭐','🔺','🔷','❤️'];
   const evSekPattern = document.getElementById('evSekPattern');
   const evSekOptions = document.getElementById('evSekOptions');
   const evSekFlash = document.getElementById('evSekFlash');
@@ -3918,7 +3940,39 @@ function restoreDirty(b){
     {t:"Dünya'nın bir uydusu vardır, adı Ay'dır. Ay geceleri gökyüzünde parlar. Ama kendi ışığı yoktur, Güneş'in ışığını yansıtır.", q:[
       ["Ay neyin uydusudur?","Dünya'nın","Güneş'in","Bir yıldızın"],
       ["Ay ne zaman parlar?","Geceleri","Sabahları","Hiç parlamaz"],
-      ["Ay'ın kendi ışığı var mı?","Hayır, Güneş'in ışığını yansıtır","Evet, çok güçlüdür","Sadece yazın vardır"]]}
+      ["Ay'ın kendi ışığı var mı?","Hayır, Güneş'in ışığını yansıtır","Evet, çok güçlüdür","Sadece yazın vardır"]]},
+    {t:"Ağaçlar bize oksijen verir. Ormanlar birçok hayvana ev olur. Bu yüzden ağaçları korumalıyız.", q:[
+      ["Ağaçlar bize ne verir?","Oksijen","Ekmek","Para"],
+      ["Ormanlar kimlere ev olur?","Hayvanlara","Arabalara","Uçaklara"],
+      ["Ağaçlar için ne yapmalıyız?","Onları korumalıyız","Hepsini kesmeliyiz","Üstüne çöp atmalıyız"]]},
+    {t:"Buğday tarlada yetişir. Çiftçi buğdayı toplar ve değirmene götürür. Değirmende un olur, fırıncı da una ekmek yapar.", q:[
+      ["Buğday nerede yetişir?","Tarlada","Denizde","Mağazada"],
+      ["Buğdayı değirmene kim götürür?","Çiftçi","Doktor","Polis"],
+      ["Fırıncı unla ne yapar?","Ekmek","Çorba","Süt"]]},
+    {t:"Zeynep her cumartesi parkta bisiklet sürer. Önce kaskını takar. Sonra yavaşça pedallara basıp yola çıkar.", q:[
+      ["Zeynep ne zaman bisiklet sürer?","Her cumartesi","Her sabah","Hiçbir zaman"],
+      ["Zeynep önce neyi takar?","Kaskını","Eldivenini","Gözlüğünü"],
+      ["Zeynep bisikleti nerede sürer?","Parkta","Okulda","Denizde"]]},
+    {t:"Sincaplar sonbaharda fındık ve ceviz toplar. Topladıklarını ağaç kovuğuna saklarlar. Kışın yiyecek bulamadıklarında bunları yerler.", q:[
+      ["Sincaplar sonbaharda ne toplar?","Fındık ve ceviz","Balık","Çiçek"],
+      ["Topladıklarını nereye saklarlar?","Ağaç kovuğuna","Evin içine","Suya"],
+      ["Sincaplar bunları ne zaman yer?","Kışın","Yazın","Baharda"]]},
+    {t:"Mert'in doğum günüydü. Arkadaşları ona sürpriz yaptı. Pastanın üzerine yedi mum koydular. Mert mumları üfleyip dilek tuttu.", q:[
+      ["Mert'e kimler sürpriz yaptı?","Arkadaşları","Öğretmeni","Komşuları"],
+      ["Pastaya kaç mum koydular?","Yedi","Beş","On"],
+      ["Mert mumları üfleyince ne yaptı?","Dilek tuttu","Uyudu","Koştu"]]},
+    {t:"Kırmızı ışık yanınca arabalar durur. Yeşil ışık yanınca yayalar karşıya geçer. Yaya geçidinden geçerken iki yana bakmak gerekir.", q:[
+      ["Kırmızı ışıkta arabalar ne yapar?","Durur","Hızlanır","Uçar"],
+      ["Yayalar hangi ışıkta karşıya geçer?","Yeşil","Kırmızı","Mavi"],
+      ["Karşıya geçerken ne yapmak gerekir?","İki yana bakmak","Koşmak","Gözleri kapatmak"]]},
+    {t:"Yunuslar denizde yaşar ama balık değildir. Yavrularını süt ile beslerler. Nefes almak için suyun üstüne çıkarlar.", q:[
+      ["Yunuslar nerede yaşar?","Denizde","Çölde","Ormanda"],
+      ["Yunuslar yavrularını neyle besler?","Süt ile","Otla","Böcekle"],
+      ["Yunuslar nefes almak için ne yapar?","Suyun üstüne çıkar","Kuma girer","Ağaca çıkar"]]},
+    {t:"Elif'in yan sıradaki arkadaşı kalemini unutmuştu. Elif kendi kalemlerinden birini ona verdi. Arkadaşı teşekkür etti, ikisi de gülümsedi.", q:[
+      ["Elif'in arkadaşı neyi unutmuştu?","Kalemini","Çantasını","Defterini"],
+      ["Elif ne yaptı?","Kalemlerinden birini verdi","Öğretmene söyledi","Hiçbir şey yapmadı"],
+      ["Arkadaşı ne yaptı?","Teşekkür etti","Kızdı","Ağladı"]]}
   ];
   const evMtText = document.getElementById('evMtText');
   const evMtQ = document.getElementById('evMtQ');
@@ -4254,7 +4308,11 @@ function restoreDirty(b){
     ["Akşam güneş batarken gölgeler nasıl olur?","Uzar","Kısalır","Hep aynı kalır"],
     ["Gölge oluşması için ne gerekir?","Işık ve bir cisim","Sadece rüzgâr","Sadece su"],
     ["Hangisi gölge oluşturur?","Tahta kapı","Temiz cam","Hava"],
-    ["Karanlık bir odada ışık yoksa gölge görebilir miyiz?","Hayır, ışık olmadan gölge olmaz","Evet, hep görürüz","Sadece sabah görürüz"]
+    ["Karanlık bir odada ışık yoksa gölge görebilir miyiz?","Hayır, ışık olmadan gölge olmaz","Evet, hep görürüz","Sadece sabah görürüz"],
+    ["Gece sokak lambasının altında durursan gölgen nerede oluşur?","Lambanın tam karşı tarafında","Lambanın içinde","Gökyüzünde"],
+    ["Gölge ne zaman daha net olur?","Işık güçlü olunca","Hava çok karanlıkken","Işık hiç yokken"],
+    ["Güneş tam tepedeyken gölge nasıl olur?","Çok kısa","Çok uzun","Hiç olmaz"],
+    ["Hangisi ışığı geçirdiği için gölge yapmaz?","Temiz cam","Kalın kitap","Tahta masa"]
   ];
   const glText = document.getElementById('glText'), glOptions = document.getElementById('glOptions');
   const glFlash = document.getElementById('glFlash'), glScoreEl = document.getElementById('glScore');
@@ -4279,6 +4337,17 @@ function restoreDirty(b){
   });
   document.getElementById('glNewBtn').addEventListener('click', glNext);
 
+  /* Seviyeli rozetler kaldırıldı: kayıtlı "rozet:seviye" girişlerini eski sisteme çevir */
+  function evBadgeMigrate(){
+    appStudents.forEach(function(s){
+      if(!Array.isArray(s.badges)) s.badges = [];
+      if(s.badges.some(b=>String(b).indexOf(':') >= 0)){
+        s.badges = s.badges.filter(b=>String(b).indexOf(':') < 0);
+        checkBadges(s, true);
+        touch(s.id, 'ev');
+      }
+    });
+  }
   /* ---- Yanlış cevap: her 2 yanlışta 1 puan düşer (yalnızca ev etkinlikleri, oynayan öğrenci seçiliyken) ---- */
   function evWrongHook(el){
     if(!/^ev/.test(currentScreenId) || currentEvStudentId == null) return;
@@ -4317,12 +4386,12 @@ function restoreDirty(b){
     {id:'puan',  icon:'🏆', name:'Puan Avcısı',     lv:[25,100,250,500], m:s=>s.score || 0}
   ];
   const BADGE_LVN = ['Bronz','Gümüş','Altın','Elmas'], BADGE_LVI = ['🥉','🥈','🥇','💎'];
-  function badgeById(id){
+  function badgeByIdTier(id){
     const p = String(id).split(':'), f = BADGE_FAMS.find(x=>x.id === p[0]), l = parseInt(p[1],10);
     if(!f || !(l >= 1)) return null;
     return { icon: f.icon + BADGE_LVI[l-1], name: f.name + ' · ' + BADGE_LVN[l-1], desc: f.name + ' — seviye ' + l + '/4' + (l < 4 ? ' (sonraki hedef: ' + f.lv[l] + ')' : ' (en üst seviye!)') };
   }
-  function checkBadges(student, silent){
+  function checkBadgesTier(student, silent){
     const old = Array.isArray(student.badges) ? student.badges : [];
     const quiet = silent || old.some(b=>String(b).indexOf(':') < 0);
     const prev = {};
@@ -4338,7 +4407,7 @@ function restoreDirty(b){
     student.badges = next;
     return true;
   }
-  function badgesHtml(student){
+  function badgesHtmlTier(student){
     return (student.badges || []).map(badgeById).filter(Boolean).map(function(b){
       return '<span class="badge-chip" title="'+esc(b.desc)+'">'+b.icon+' '+esc(b.name)+'</span>';
     }).join('');
