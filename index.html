@@ -834,6 +834,24 @@
         <p>Makineye girenlere ve çıkanlara bak, gizli kuralı bul.</p>
         <span class="tag" style="background:var(--grape-dark)">Bireysel</span>
       </button>
+      <button class="game-card" data-target="evKopru">
+        <span class="emoji">🌉</span>
+        <h3>Mühendis Köprüsü</h3>
+        <p>Parçaları seç, boşluğu kapat, aracın geçmesini sağla.</p>
+        <span class="tag" style="background:var(--sun-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evBatar">
+        <span class="emoji">💧</span>
+        <h3>Batar mı Yüzer mi?</h3>
+        <p>Önce tahmin et, sonra nedenini öğren.</p>
+        <span class="tag" style="background:var(--sky-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evGolge">
+        <span class="emoji">🔦</span>
+        <h3>Gölge Avcısı</h3>
+        <p>Işık ve gölge hakkında düşün, doğru cevabı bul.</p>
+        <span class="tag" style="background:var(--grape-dark)">Bireysel</span>
+      </button>
       <button class="game-card" data-target="evSehir">
         <span class="emoji">🏙️</span>
         <h3>Şehir Kurucu</h3>
@@ -897,6 +915,55 @@
         <button class="btn ghost" id="shNewBtn">Yeni Şehir</button>
       </div>
       <p class="hint">Dokunduğun bina seçilir, tekrar dokunursan çıkar. Her binanın bir bedeli (💰) ve halka verdiği mutluluk (😊) var.</p>
+    </div>
+  </section>
+
+  <!-- ================= EV: MÜHENDİS KÖPRÜSÜ ================= -->
+  <section class="screen" id="screen-evKopru">
+    <h2 class="game-title">🌉 Mühendis Köprüsü</h2>
+    <p class="game-desc">Boşluğu kapat. Köprün aracın ağırlığını taşısın, bütçeni de aşma!</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count"><div class="stat"><div class="num" id="kpScore">0</div><div class="lbl">KURULAN KÖPRÜ</div></div></div>
+      <div class="problem-box"><div class="problem-text" id="kpInfo" style="font-size:clamp(16px,2.6vw,22px); line-height:1.7;">-</div></div>
+      <div class="expr-display" id="kpBridge">Aşağıdan parça seç...</div>
+      <div class="chip-list" id="kpParts" style="justify-content:center;"></div>
+      <div class="row" style="justify-content:center;">
+        <button type="button" class="btn ghost" id="kpUndo">⌫ Geri Al</button>
+        <button type="button" class="btn ghost" id="kpClear">Temizle</button>
+        <button type="button" class="btn grass" id="kpTest">🚦 Köprüyü Dene</button>
+      </div>
+      <div class="flash-msg" id="kpFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;"><button class="btn ghost" id="kpNewBtn">🎲 Yeni Köprü</button></div>
+      <p class="hint">Bir köprü, en zayıf parçası kadar güçlüdür. Parçaların uzunluğu boşluğu kapatmalı, dayanımı aracın ağırlığına yetmeli.</p>
+    </div>
+  </section>
+
+  <!-- ================= EV: BATAR MI YÜZER Mİ ================= -->
+  <section class="screen" id="screen-evBatar">
+    <h2 class="game-title">💧 Batar mı Yüzer mi?</h2>
+    <p class="game-desc">Önce tahmin et, sonra nedenini öğren.</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count"><div class="stat"><div class="num" id="btScore">0</div><div class="lbl">DOĞRU</div></div></div>
+      <div class="problem-box"><div class="problem-text" id="btEmoji" style="font-size:clamp(50px,12vw,90px);">-</div></div>
+      <div class="problem-text" id="btName" style="font-size:clamp(17px,2.8vw,24px); margin-bottom:12px;">-</div>
+      <div class="row" style="justify-content:center;">
+        <button type="button" class="btn sky" id="btFloat">🛟 Yüzer</button>
+        <button type="button" class="btn grape" id="btSink">⚓ Batar</button>
+      </div>
+      <div class="flash-msg" id="btFlash"></div>
+    </div>
+  </section>
+
+  <!-- ================= EV: GÖLGE AVCISI ================= -->
+  <section class="screen" id="screen-evGolge">
+    <h2 class="game-title">🔦 Gölge Avcısı</h2>
+    <p class="game-desc">Işık ve gölge hakkında düşün, doğru cevabı bul.</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count"><div class="stat"><div class="num" id="glScore">0</div><div class="lbl">DOĞRU</div></div></div>
+      <div class="problem-box"><div class="problem-text" id="glText" style="font-size:clamp(17px,2.8vw,24px); line-height:1.6;">-</div></div>
+      <div class="chip-list" id="glOptions" style="justify-content:center;"></div>
+      <div class="flash-msg" id="glFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;"><button class="btn ghost" id="glNewBtn">Yeni Soru</button></div>
     </div>
   </section>
 
@@ -1569,7 +1636,7 @@ function restoreDirty(b){
     evSayi:'⚡ Sayı Şimşeği (Ev)', ev24:"🎯 24'e Ulaş", evOruntu:'🧩 Sayı Örüntüsü Avcısı',
     evYuksekAlcak:'🔼 Yüksek mi Alçak mı', evSaatPara:'🕒 Saat ve Para Problemleri',
     evAnagram:'🔤 Anagram', evEsZit:'🔁 Eş - Zıt Anlam', evCumle:'✏️ Cümle Tamamlama',
-    evHece:'🔠 Hecelere Ayırma', evNoktalama:'❓ Noktalama', evDedektif:'🕵️ Sayı Dedektifi', evMetin:'📚 Kısa Metin, 3 Soru', evStem:'🔬 STEM ve Düşünme', evRobot:'🤖 Robot Labirenti', evKural:'🔮 Gizli Kural Makinesi', evSehir:'🏙️ Şehir Kurucu',
+    evHece:'🔠 Hecelere Ayırma', evNoktalama:'❓ Noktalama', evDedektif:'🕵️ Sayı Dedektifi', evMetin:'📚 Kısa Metin, 3 Soru', evStem:'🔬 STEM ve Düşünme', evRobot:'🤖 Robot Labirenti', evKural:'🔮 Gizli Kural Makinesi', evSehir:'🏙️ Şehir Kurucu', evKopru:'🌉 Mühendis Köprüsü', evBatar:'💧 Batar mı Yüzer mi?', evGolge:'🔦 Gölge Avcısı',
     evSekilOruntu:'🔶 Şekil Örüntüsü',
     evSiralama:'📊 Sıralama Bulmacası', evZincir:'🔗 Mantık Zincirleri',
     ogrenciler:'👤 Öğrenci Profilleri', studentProfile:'👤 Öğrenci Profili',
@@ -1583,7 +1650,7 @@ function restoreDirty(b){
     evSayi:'evMatematik', ev24:'evMatematik', evOruntu:'evMatematik',
     evYuksekAlcak:'evMatematik', evSaatPara:'evMatematik',
     evAnagram:'evTurkce', evEsZit:'evTurkce', evCumle:'evTurkce',
-    evHece:'evTurkce', evNoktalama:'evTurkce', evMetin:'evTurkce', evDedektif:'evMatematik', evStem:'ev', evRobot:'evStem', evKural:'evStem', evSehir:'evStem',
+    evHece:'evTurkce', evNoktalama:'evTurkce', evMetin:'evTurkce', evDedektif:'evMatematik', evStem:'ev', evRobot:'evStem', evKural:'evStem', evSehir:'evStem', evKopru:'evStem', evBatar:'evStem', evGolge:'evStem',
     evSekilOruntu:'evMantik',
     evSiralama:'evMantik', evZincir:'evMantik',
     ogrenciler:'home', studentProfile:'ogrenciler', yetkiKapisi:'ogrenciler',
@@ -1758,7 +1825,7 @@ function restoreDirty(b){
     sayiEv:'Sayı Şimşeği (Ev)', oruntu:'Sayı Örüntüsü Avcısı', yuksekAlcak:'Yüksek mi Alçak mı',
     saatPara:'Saat ve Para Problemleri', zincirTC:"24'e Ulaş (Toplama-Çıkarma)", zincirTCC:"24'e Ulaş (Toplama-Çıkarma-Çarpma)",
     anagram:'Anagram', esZit:'Eş - Zıt Anlam', cumle:'Cümle Tamamlama', hece:'Hecelere Ayırma', noktalama:'Noktalama',
-    sekilOruntu:'Şekil Örüntüsü', siralama:'Sıralama Bulmacası', mantikZincir:'Mantık Zincirleri', dedektif:'Sayı Dedektifi', metin:'Kısa Metin, 3 Soru', robot:'Robot Labirenti', kural:'Gizli Kural Makinesi', sehir:'Şehir Kurucu'
+    sekilOruntu:'Şekil Örüntüsü', siralama:'Sıralama Bulmacası', mantikZincir:'Mantık Zincirleri', dedektif:'Sayı Dedektifi', metin:'Kısa Metin, 3 Soru', robot:'Robot Labirenti', kural:'Gizli Kural Makinesi', sehir:'Şehir Kurucu', kopru:'Mühendis Köprüsü', batar:'Batar mı Yüzer mi?', golge:'Gölge Avcısı'
   };
   function evEnsureProgress(student, key){
     if(!student.evProgress) student.evProgress = {};
@@ -1800,7 +1867,10 @@ function restoreDirty(b){
     ['metin','correct','📚 Kısa Metin, 3 Soru','doğru cevap'],
     ['robot','solved','🤖 Robot Labirenti','kez hedefe ulaştı'],
     ['kural','correct','🔮 Gizli Kural Makinesi','doğru cevap'],
-    ['sehir','solved','🏙️ Şehir Kurucu','kez şehri kurdu']
+    ['sehir','solved','🏙️ Şehir Kurucu','kez şehri kurdu'],
+    ['kopru','solved','🌉 Mühendis Köprüsü','kez köprü kurdu'],
+    ['batar','correct','💧 Batar mı Yüzer mi?','doğru cevap'],
+    ['golge','correct','🔦 Gölge Avcısı','doğru cevap']
   ];
   const EV_ONERI_ESIK = 5; // her 5 yeni doğru/başarıda 1 puan önerilir
   function evHasPending(s){
@@ -3772,7 +3842,47 @@ function restoreDirty(b){
     {t:"Hayvanat bahçesinde zürafalar uzun boyunlarıyla yüksek ağaçlardan yaprak yer. Filler hortumlarıyla su içer. Maymunlar dalda sallanır.", q:[
       ["Zürafalar ne yer?","Yaprak","Balık","Et"],
       ["Filler suyu neyle içer?","Hortumlarıyla","Kuyruklarıyla","Kulaklarıyla"],
-      ["Maymunlar nerede sallanır?","Dalda","Suda","Masada"]]}
+      ["Maymunlar nerede sallanır?","Dalda","Suda","Masada"]]},
+    {t:"Yaz mevsiminde hava sıcaktır. İnsanlar denize girer ve dondurma yer. Günler uzun, geceler kısadır.", q:[
+      ["Yazın hava nasıldır?","Sıcak","Soğuk","Karlı"],
+      ["İnsanlar yazın nereye girer?","Denize","Fırına","Buzdolabına"],
+      ["Yazın günler nasıldır?","Uzun","Kısa","Hiç olmaz"]]},
+    {t:"Selin okul kütüphanesine gitti. Raflardan resimli bir hayvan kitabı seçti. Kitabı iki hafta sonra geri verecek.", q:[
+      ["Selin nereye gitti?","Kütüphaneye","Markete","Parka"],
+      ["Selin nasıl bir kitap seçti?","Resimli hayvan kitabı","Yemek kitabı","Boyama defteri"],
+      ["Selin kitabı ne zaman geri verecek?","İki hafta sonra","Yarın","Bir yıl sonra"]]},
+    {t:"Deniz dişlerini fırçalarken musluğu kapatıyor. Böylece su boşa akmıyor. Suyu tasarruflu kullanmak doğaya yardım eder.", q:[
+      ["Deniz dişlerini fırçalarken ne yapıyor?","Musluğu kapatıyor","Müzik dinliyor","Oyun oynuyor"],
+      ["Musluk kapanınca ne boşa akmıyor?","Su","Süt","Ses"],
+      ["Suyu tasarruflu kullanmak neye yardım eder?","Doğaya","Arabalara","Televizyona"]]},
+    {t:"Baykuşlar geceleri uyanık olur. Gündüzleri ağaç kovuklarında uyurlar. Gözleri karanlıkta çok iyi görür.", q:[
+      ["Baykuşlar ne zaman uyanıktır?","Geceleri","Sabahları","Öğle vakti"],
+      ["Baykuşlar gündüz nerede uyur?","Ağaç kovuklarında","Denizde","Mağazada"],
+      ["Baykuşların gözleri nasıldır?","Karanlıkta iyi görür","Hiç göremez","Sadece gündüz görür"]]},
+    {t:"Okul bahçesinde fidan diktik. Önce toprağı kazdık, sonra fidanı yerleştirdik. En son fidanı suladık.", q:[
+      ["Okul bahçesinde ne diktik?","Fidan","Salıncak","Bina"],
+      ["Fidan dikerken önce ne yaptık?","Toprağı kazdık","Fidanı suladık","Eve gittik"],
+      ["En son ne yaptık?","Fidanı suladık","Toprağı kazdık","Fidanı sökmeye başladık"]]},
+    {t:"Ayşe bakkaldan ekmek aldı. Yaşlı komşusuna da bir ekmek götürdü. Komşusu çok sevindi ve Ayşe'ye teşekkür etti.", q:[
+      ["Ayşe ekmeği nereden aldı?","Bakkaldan","Okuldan","Parktan"],
+      ["Ayşe bir ekmeği kime götürdü?","Yaşlı komşusuna","Öğretmenine","Kardeşine"],
+      ["Komşusu ne yaptı?","Teşekkür etti","Kızdı","Uyudu"]]},
+    {t:"Yağmur dinince güneş çıktı. Gökyüzünde güzel bir gökkuşağı belirdi. Gökkuşağında yedi renk vardı.", q:[
+      ["Gökkuşağı ne zaman belirdi?","Yağmur dinince","Gece olunca","Kar yağınca"],
+      ["Gökkuşağı nerede belirdi?","Gökyüzünde","Denizde","Bahçede"],
+      ["Gökkuşağında kaç renk vardı?","Yedi","Üç","On"]]},
+    {t:"Serçe ağaç dalına yuva yaptı. Yuvaya küçük, beyaz yumurtalar bıraktı. Birkaç gün sonra yumurtalardan yavrular çıktı.", q:[
+      ["Serçe yuvayı nereye yaptı?","Ağaç dalına","Yere","Suya"],
+      ["Yumurtalar nasıldı?","Küçük ve beyaz","Büyük ve kırmızı","Mavi ve yuvarlak"],
+      ["Yumurtalardan ne çıktı?","Yavrular","Kelebekler","Balıklar"]]},
+    {t:"Can sabahları yedide kalkar. Elini yüzünü yıkar ve kahvaltı yapar. Sonra çantasını alıp okula yürüyerek gider.", q:[
+      ["Can sabahları saat kaçta kalkar?","Yedide","Dörtte","On birde"],
+      ["Can kalkınca ilk ne yapar?","Elini yüzünü yıkar","Okula gider","Oyun oynar"],
+      ["Can okula nasıl gider?","Yürüyerek","Otobüsle","Bisikletle"]]},
+    {t:"Dünya'nın bir uydusu vardır, adı Ay'dır. Ay geceleri gökyüzünde parlar. Ama kendi ışığı yoktur, Güneş'in ışığını yansıtır.", q:[
+      ["Ay neyin uydusudur?","Dünya'nın","Güneş'in","Bir yıldızın"],
+      ["Ay ne zaman parlar?","Geceleri","Sabahları","Hiç parlamaz"],
+      ["Ay'ın kendi ışığı var mı?","Hayır, Güneş'in ışığını yansıtır","Evet, çok güçlüdür","Sadece yazın vardır"]]}
   ];
   const evMtText = document.getElementById('evMtText');
   const evMtQ = document.getElementById('evMtQ');
@@ -4013,6 +4123,126 @@ function restoreDirty(b){
   });
   document.getElementById('shNewBtn').addEventListener('click', shNew);
 
+  /* ---- 🌉 Mühendis Köprüsü ---- */
+  const KP_P = [['🪵','Tahta',2,2,1],['🧱','Taş',1,4,2],['🔩','Çelik',3,6,4]]; /* emoji, ad, uzunluk, dayanım, bedel */
+  const KP_V = [['🚲','Bisiklet',2],['🚗','Araba',4],['🚚','Kamyon',6]];
+  const kpInfo = document.getElementById('kpInfo'), kpBridge = document.getElementById('kpBridge');
+  const kpParts = document.getElementById('kpParts'), kpFlash = document.getElementById('kpFlash'), kpScoreEl = document.getElementById('kpScore');
+  let kp = null, kpScore = 0;
+  function kpTot(){
+    let len = 0, cost = 0, minD = 99;
+    kp.parts.forEach(function(i){ len += KP_P[i][2]; cost += KP_P[i][4]; minD = Math.min(minD, KP_P[i][3]); });
+    return {len:len, cost:cost, minD:minD};
+  }
+  function kpRender(){
+    const t = kpTot();
+    kpInfo.innerHTML = kp.v[0]+' <b>'+kp.v[1]+'</b> (ağırlık '+kp.v[2]+') karşıya geçecek!<br>🕳️ Boşluk: <b>'+kp.gap+'</b> birim · 💰 Bütçe: <b>'+kp.budget+'</b> (harcanan: '+t.cost+')';
+    kpBridge.textContent = kp.parts.length ? kp.parts.map(i=>KP_P[i][0]).join(' ')+'  — uzunluk '+t.len+'/'+kp.gap : 'Aşağıdan parça seç...';
+    kpParts.innerHTML = KP_P.map(function(p,i){
+      return '<button type="button" class="num-tile" data-i="'+i+'">'+p[0]+' '+p[1]+'<br><small>uzunluk '+p[2]+' · dayanım '+p[3]+' · '+p[4]+'💰</small></button>';
+    }).join('');
+  }
+  function kpNew(){
+    const v = KP_V[randInt(0,2)], gap = randInt(4,8);
+    const ok = KP_P.filter(p=>p[3] >= v[2]), dp = Array(gap+1).fill(99);
+    dp[0] = 0;
+    for(let g = 1; g <= gap; g++) ok.forEach(function(p){ dp[g] = Math.min(dp[g], dp[Math.max(0, g-p[2])] + p[4]); });
+    kp = {v:v, gap:gap, budget:dp[gap] + randInt(0,2), parts:[]};
+    kpFlash.textContent = ''; kpRender();
+  }
+  kpParts.addEventListener('click', function(e){
+    const b = e.target.closest('.num-tile');
+    if(!b) return;
+    const i = parseInt(b.dataset.i,10);
+    if(kpTot().cost + KP_P[i][4] > kp.budget){ kpFlash.style.color = 'var(--coral-dark)'; kpFlash.textContent = 'Bütçen yetmiyor 💰 Daha ucuz bir parça dene.'; return; }
+    kp.parts.push(i); kpFlash.textContent = ''; kpRender();
+  });
+  document.getElementById('kpUndo').addEventListener('click', function(){ kp.parts.pop(); kpFlash.textContent = ''; kpRender(); });
+  document.getElementById('kpClear').addEventListener('click', function(){ kp.parts = []; kpFlash.textContent = ''; kpRender(); });
+  document.getElementById('kpTest').addEventListener('click', function(){
+    if(!kp.parts.length) return;
+    const t = kpTot();
+    kpFlash.style.color = 'var(--coral-dark)';
+    if(t.len < kp.gap){ kpFlash.textContent = 'Köprü boşluğu kapatmıyor. Daha uzun yapmalısın!'; return; }
+    if(t.minD < kp.v[2]){ kpFlash.textContent = 'Köprü çöktü! 💥 En zayıf parçan (dayanım '+t.minD+') '+kp.v[1]+' için yetmedi.'; return; }
+    kpScore++; kpScoreEl.textContent = kpScore;
+    kpFlash.style.color = 'var(--grass-dark)'; kpFlash.textContent = 'Köprü sağlam! '+kp.v[0]+' karşıya geçti 🎉';
+    evRecordProgress('kopru','solved');
+    setTimeout(kpNew, 2200);
+  });
+  document.getElementById('kpNewBtn').addEventListener('click', kpNew);
+
+  /* ---- 💧 Batar mı Yüzer mi? ---- */
+  const BT_ITEMS = [
+    ['🪵','Odun parçası',1,'Odun sudan hafiftir.'],['🪨','Taş',0,'Taş sudan ağırdır.'],
+    ['🍎','Elma',1,'Elmanın içinde hava boşlukları vardır.'],['🔩','Çivi',0,'Demir sudan çok ağırdır.'],
+    ['🧊','Buz',1,'Buz sudan biraz hafiftir.'],['🪙','Madeni para',0,'Metal sudan ağırdır.'],
+    ['🎈','Şişmiş balon',1,'İçi havayla doludur.'],['⚽','Top',1,'İçi havayla doludur.'],
+    ['🔑','Anahtar',0,'Metal sudan ağırdır.'],['🧽','Sünger',1,'Süngerin içinde çok hava vardır.'],
+    ['🪶','Tüy',1,'Tüy çok hafiftir.'],['🧱','Tuğla',0,'Tuğla sudan ağırdır.'],
+    ['🕯️','Mum',1,'Mum sudan hafiftir.'],['🥔','Patates',0,'Patates sudan biraz ağırdır.'],
+    ['🥕','Havuç',0,'Havuç sudan biraz ağırdır.'],['🍌','Kabuklu muz',1,'Muzun kabuğunda hava vardır.'],
+    ['🥄','Metal kaşık',0,'Metal sudan ağırdır.'],['🍊','Kabuklu portakal',1,'Kabuğunda hava vardır, bu yüzden yüzer.']
+  ];
+  const btEmoji = document.getElementById('btEmoji'), btName = document.getElementById('btName');
+  const btFlash = document.getElementById('btFlash'), btScoreEl = document.getElementById('btScore');
+  let btScore = 0, btCur = null, btRecent = [], btLock = false;
+  function btNext(){
+    let it, tries = 0;
+    do { it = BT_ITEMS[randInt(0, BT_ITEMS.length-1)]; tries++; } while(btRecent.includes(it[1]) && tries < 30);
+    btRecent.push(it[1]); if(btRecent.length > 8) btRecent.shift();
+    btCur = it; btLock = false;
+    btEmoji.textContent = it[0]; btName.textContent = it[1]+' suya atılırsa ne olur?'; btFlash.textContent = '';
+  }
+  function btAnswer(floats){
+    if(btLock) return;
+    btLock = true;
+    if(floats === btCur[2]){
+      btScore++; btScoreEl.textContent = btScore;
+      btFlash.style.color = 'var(--grass-dark)'; btFlash.textContent = 'Doğru! ✔️ '+btCur[3];
+      evRecordProgress('batar','correct');
+    } else { btFlash.style.color = 'var(--coral-dark)'; btFlash.textContent = 'Yanlış! '+btCur[3]; }
+    setTimeout(btNext, 2400);
+  }
+  document.getElementById('btFloat').addEventListener('click', ()=>btAnswer(1));
+  document.getElementById('btSink').addEventListener('click', ()=>btAnswer(0));
+
+  /* ---- 🔦 Gölge Avcısı ---- */
+  const GL_BANK = [
+    ["Lamba cisme yaklaşırsa gölge nasıl olur?","Büyür","Küçülür","Hiç değişmez"],
+    ["Lamba cisimden uzaklaşırsa gölge nasıl olur?","Küçülür","Büyür","Kaybolur"],
+    ["Işık cismin sağından geliyorsa gölge nerede oluşur?","Solunda","Sağında","Üstünde"],
+    ["Işık cismin solundan geliyorsa gölge nerede oluşur?","Sağında","Solunda","Altında"],
+    ["Gün içinde gölgeler ne zaman en kısadır?","Öğle vakti","Sabah erken","Akşam üstü"],
+    ["Güneş sabah doğarken gölgeler nasıl olur?","Uzun","Çok kısa","Hiç olmaz"],
+    ["Akşam güneş batarken gölgeler nasıl olur?","Uzar","Kısalır","Hep aynı kalır"],
+    ["Gölge oluşması için ne gerekir?","Işık ve bir cisim","Sadece rüzgâr","Sadece su"],
+    ["Hangisi gölge oluşturur?","Tahta kapı","Temiz cam","Hava"],
+    ["Karanlık bir odada ışık yoksa gölge görebilir miyiz?","Hayır, ışık olmadan gölge olmaz","Evet, hep görürüz","Sadece sabah görürüz"]
+  ];
+  const glText = document.getElementById('glText'), glOptions = document.getElementById('glOptions');
+  const glFlash = document.getElementById('glFlash'), glScoreEl = document.getElementById('glScore');
+  let glScore = 0, glCorrect = '', glRecent = [];
+  function glNext(){
+    let q, tries = 0;
+    do { q = GL_BANK[randInt(0, GL_BANK.length-1)]; tries++; } while(glRecent.includes(q[0]) && tries < 30);
+    glRecent.push(q[0]); if(glRecent.length > 6) glRecent.shift();
+    glText.textContent = q[0]; glCorrect = q[1];
+    glOptions.innerHTML = shuffle([q[1], q[2], q[3]]).map(w=>'<button type="button" class="num-tile" data-w="'+esc(w)+'">'+esc(w)+'</button>').join('');
+    glFlash.textContent = '';
+  }
+  glOptions.addEventListener('click', function(e){
+    const b = e.target.closest('.num-tile');
+    if(!b) return;
+    if(b.dataset.w === glCorrect){
+      glScore++; glScoreEl.textContent = glScore;
+      glFlash.style.color = 'var(--grass-dark)'; glFlash.textContent = 'Doğru! ✔️';
+      evRecordProgress('golge','correct');
+    } else { glFlash.style.color = 'var(--coral-dark)'; glFlash.textContent = 'Yanlış! Doğru cevap: '+glCorrect; }
+    setTimeout(glNext, 1300);
+  });
+  document.getElementById('glNewBtn').addEventListener('click', glNext);
+
   /* Kategori kartlarındaki "N oyun" etiketlerini otomatik güncelle */
   ['evMatematik','evTurkce','evMantik','evStem'].forEach(function(k){
     const n = document.querySelectorAll('#screen-'+k+' .game-card').length;
@@ -4024,6 +4254,7 @@ function restoreDirty(b){
   evDedNext();
   evMtToIntro();
   rbNext(); krNext(); shNew();
+  kpNew(); btNext(); glNext();
   ev24Generate();
   evOruntuGenerate();
   evYaNewGame();
