@@ -331,7 +331,7 @@
           <option value="">Adını seç...</option>
         </select>
       </div>
-      <p class="hint" id="evStudentHint">Oyunlara başlamadan önce adını seç — ilerlemen öğretmenine kaydedilir, oynadıkça öğretmenin bunu görüp sana puan verebilir.</p>
+      <p class="hint" id="evStudentHint">Oyunlara başlamadan önce adını seç — ilerlemen öğretmenine kaydedilir, oynadıkça öğretmenin bunu görüp sana puan verebilir. Her 2 yanlış cevapta 1 puan düşer, dikkatli ol!</p>
       <p class="hint" id="evStudentActiveNote" style="display:none; color:var(--grass-dark); font-weight:800;"></p>
     </div>
     <div class="card-grid" id="evCardGrid">
@@ -1581,7 +1581,7 @@ function restoreDirty(b){
       const el = node && node.closest ? node.closest('.flash-msg, .guess-status, #kutRecapTitle') : null;
       if(el) seen.add(el);
     });
-    seen.forEach(el=>{ const k = classifyFeedback(el); if(k) playSound(k); });
+    seen.forEach(el=>{ const k = classifyFeedback(el); if(k) playSound(k); if(k === 'bad') evWrongHook(el); });
   });
   document.querySelectorAll('.flash-msg, .guess-status, #kutRecapTitle').forEach(el=>
     feedbackObserver.observe(el, { childList:true, characterData:true, subtree:true })
@@ -3314,7 +3314,11 @@ function restoreDirty(b){
     "uçak","roket","balon","güneş","bulut","yağmur","rüzgar","deniz","orman","çiçek",
     "ağaç","yaprak","papatya","lale","oda","kapı","pencere","masa","sandalye","koltuk",
     "yatak","dolap","ayna","saat","anne","baba","kardeş","dede","nine","arkadaş",
-    "öğretmen","doktor","polis","aşçı","gitar","piyano","davul","futbol","kaplumbağa","timsah"
+    "öğretmen","doktor","polis","aşçı","gitar","piyano","davul","futbol","kaplumbağa","timsah",
+    "kurbağa","civciv","sincap","leylek","papağan","güvercin","baykuş","kartal","kirpi","limon",
+    "portakal","mandalina","kayısı","fındık","ceviz","badem","kavun","soğan","salata","tatlı",
+    "bahçe","mutfak","banyo","balkon","halı","perde","lamba","yastık","öğrenci","sınıf",
+    "boya","makas","tebeşir","nehir","yıldız","gezegen","kumsal","vadi","çadır","fener"
   ];
   let evAnaWord = '';
   let evAnaRecent = [];
@@ -3362,13 +3366,15 @@ function restoreDirty(b){
     ["mutlu","sevinçli"],["üzgün","kederli"],["hızlı","çabuk"],["güzel","hoş"],["akıllı","zeki"],
     ["büyük","iri"],["küçük","ufak"],["cesur","yürekli"],["temiz","pak"],["kolay","basit"],
     ["yorgun","bitkin"],["sessiz","sakin"],
-    ["parlak","ışıltılı"],["soğuk","serin"],["şen","neşeli"],["zor","güç"]
+    ["parlak","ışıltılı"],["soğuk","serin"],["şen","neşeli"],["zor","güç"],
+    ["dost","arkadaş"],["fikir","düşünce"],["minik","ufak"],["koca","büyük"],["yiğit","cesur"],["çabuk","hızlı"]
   ];
   const ZITANLAM_PAIRS = [
     ["büyük","küçük"],["uzun","kısa"],["sıcak","soğuk"],["hızlı","yavaş"],["gece","gündüz"],
     ["yukarı","aşağı"],["açık","kapalı"],["ağır","hafif"],["temiz","kirli"],["kolay","zor"],
     ["mutlu","üzgün"],["genç","yaşlı"],["ucuz","pahalı"],["dolu","boş"],["ileri","geri"],
-    ["iyi","kötü"],["kalın","ince"],["sert","yumuşak"],["erken","geç"]
+    ["iyi","kötü"],["kalın","ince"],["sert","yumuşak"],["erken","geç"],
+    ["ıslak","kuru"],["yaz","kış"],["gülmek","ağlamak"],["doğru","yanlış"],["alçak","yüksek"],["tok","aç"],["uyumak","uyanmak"],["girmek","çıkmak"]
   ];
   let evEzRecent = [];
   const evEzMode = document.getElementById('evEzMode');
@@ -3455,7 +3461,19 @@ function restoreDirty(b){
     {text:"Arılar petekte ____ yapar.", answer:"bal", distractors:["çorba","ayakkabı","kitap"]},
     {text:"Dişlerimizi sağlıklı tutmak için günde iki kez ____.", answer:"fırçalamalıyız", distractors:["boyamalıyız","pişirmeliyiz","uçurmalıyız"]},
     {text:"Yazın sıcak havada ____ girmek çok keyifli.", answer:"denize", distractors:["ateşe","fırına","buzdolabına"]},
-    {text:"Okula gitmek için sabah ____ kalktım.", answer:"erken", distractors:["mavi","tatlı","yuvarlak"]}
+    {text:"Okula gitmek için sabah ____ kalktım.", answer:"erken", distractors:["mavi","tatlı","yuvarlak"]},
+    {text:"Yemekten sonra bulaşıkları ____.", answer:"yıkarız", distractors:["uçururuz","boyarız","yağdırırız"]},
+    {text:"Sınıfa girince öğretmenimize ____ dedik.", answer:"günaydın", distractors:["pasta","yatak","kalem"]},
+    {text:"Hasta olunca ____ gideriz.", answer:"doktora", distractors:["sinemaya","denize","pazara"]},
+    {text:"Bahçedeki gül çok güzel ____.", answer:"kokuyor", distractors:["yüzüyor","uçuyor","yazıyor"]},
+    {text:"Kuşlar kanatlarıyla ____.", answer:"uçar", distractors:["yüzer","koşar","pişer"]},
+    {text:"Balıklar suda ____.", answer:"yüzer", distractors:["uçar","yürür","pişer"]},
+    {text:"Çok susadım, bir bardak ____ içmek istiyorum.", answer:"su", distractors:["taş","kum","kitap"]},
+    {text:"Elbiselerimizi dolaba ____.", answer:"asarız", distractors:["yeriz","yüzeriz","uçururuz"]},
+    {text:"Yeşil ışık yanınca karşıdan karşıya ____.", answer:"geçeriz", distractors:["uçarız","yüzeriz","pişeriz"]},
+    {text:"Kışın kuşlar için bahçeye ____ koyarız.", answer:"yem", distractors:["taş","oyuncak","ayakkabı"]},
+    {text:"Ödevimi yapmak için ____ aldım.", answer:"kalemimi", distractors:["tabağımı","terliğimi","topumu"]},
+    {text:"Gece karanlık olunca ____ yakarız.", answer:"lambayı", distractors:["suyu","kitabı","tabağı"]}
   ];
   let evCumRecent = [];
   const evCumText = document.getElementById('evCumText');
@@ -3559,7 +3577,17 @@ function restoreDirty(b){
     {text:"Yaşasın, tatil başladı", type:"unlem"},
     {text:"Aferin sana, çok çalışkansın", type:"unlem"},
     {text:"Yardım edin, kediciğim ağaca çıktı", type:"unlem"},
-    {text:"Aman ne kadar korkutucuydu", type:"unlem"}
+    {text:"Aman ne kadar korkutucuydu", type:"unlem"},
+    {text:"Sınıfımızda yirmi öğrenci var", type:"nokta"},
+    {text:"Babam bugün işe gitti", type:"nokta"},
+    {text:"Kuşlar ağaçta ötüyor", type:"nokta"},
+    {text:"Yaz tatilinde denize gideceğiz", type:"nokta"},
+    {text:"Bu kalem kimin", type:"soru"},
+    {text:"Öğle yemeğinde ne yedin", type:"soru"},
+    {text:"Annen nerede çalışıyor", type:"soru"},
+    {text:"Bu hafta sonu ne yapacaksın", type:"soru"},
+    {text:"Dikkat et, yol kaygan", type:"unlem"},
+    {text:"Tebrikler, sınıfı çok güzel temizledin", type:"unlem"}
   ];
   let evNoktaRecent = [];
   const evNoktaText = document.getElementById('evNoktaText');
@@ -3635,7 +3663,7 @@ function restoreDirty(b){
   evSekNewBtn.addEventListener('click', evSekNext);
 
   /* ---- Sıralama Bulmacası ---- */
-  const SIRA_ISIMLER = ['Ali','Ayşe','Can','Deniz','Ela','Mert','Zeynep','Buse','Kerem','Sude'];
+  const SIRA_ISIMLER = ['Ali','Ayşe','Can','Deniz','Ela','Mert','Zeynep','Buse','Kerem','Sude','Efe','Mina','Eymen','Defne'];
   const evSiraText = document.getElementById('evSiraText');
   const evSiraOptions = document.getElementById('evSiraOptions');
   const evSiraProgress = document.getElementById('evSiraProgress');
@@ -3646,7 +3674,7 @@ function restoreDirty(b){
   let evSiraOrder = [];
   let evSiraClickIdx = 0;
   let evSiraLocked = false;
-  const SIRA_NESNELER = ['elma','bilye','şeker','çıkartma','boncuk'];
+  const SIRA_NESNELER = ['elma','bilye','şeker','çıkartma','boncuk','kitap','balon','kalem'];
   function evSiraNext(){
     const n = randInt(3,4);
     const names = shuffle(SIRA_ISIMLER).slice(0, n);
@@ -3710,6 +3738,14 @@ function restoreDirty(b){
     {text:"Eğer bir hayvan 8 bacaklıysa, hangisi olabilir?", options:["Örümcek","Kedi","Kuş","Balık"], answer:"Örümcek"},
     {text:"Eğer okul tatile girdiyse, çocuklar ne yapar?", options:["Evde/gezide vakit geçirir","Her gün sınava girer","Her gün ödev teslim eder","Okulda kalır"], answer:"Evde/gezide vakit geçirir"},
     {text:"Eğer bir şeklin 3 kenarı ve 3 köşesi varsa, o şekil hangisidir?", options:["Üçgen","Kare","Daire","Dikdörtgen"], answer:"Üçgen"},
+    {text:"Eğer bugün Pazar ise, yarın hangi gün olur?", options:["Pazartesi","Salı","Cumartesi","Cuma"], answer:"Pazartesi"},
+    {text:"Eğer bir sayının iki katı 10 ise, o sayı kaçtır?", options:["5","20","2","8"], answer:"5"},
+    {text:"Eğer bir hayvan yumurtlar ve uçabilirse, hangisi olabilir?", options:["Kuş","Balık","Kedi","Köpek"], answer:"Kuş"},
+    {text:"Eğer hava yağmurlu ve soğuksa, ne giymelisin?", options:["Yağmurluk ve mont","Mayo","Şort","Sandalet"], answer:"Yağmurluk ve mont"},
+    {text:"Eğer bir kutuda 3 kırmızı ve 2 mavi bilye varsa, kutuda kaç bilye vardır?", options:["5","1","6","32"], answer:"5"},
+    {text:"Eğer Ali Ayşe'den uzunsa ve Ayşe Can'dan uzunsa, en kısa kimdir?", options:["Can","Ali","Ayşe","Hepsi eşit"], answer:"Can"},
+    {text:"Eğer film saat 5'te başlıyorsa ve şimdi saat 4 ise, filme kaç saat var?", options:["1","2","5","9"], answer:"1"},
+    {text:"Eğer bir çiçeğe hiç su vermezsek ne olur?", options:["Solar","Daha da büyür","Uçar","Şarkı söyler"], answer:"Solar"},
   ];
   let evZinRecent = [];
   const evZinText = document.getElementById('evZinText');
@@ -4243,6 +4279,71 @@ function restoreDirty(b){
   });
   document.getElementById('glNewBtn').addEventListener('click', glNext);
 
+  /* ---- Yanlış cevap: her 2 yanlışta 1 puan düşer (yalnızca ev etkinlikleri, oynayan öğrenci seçiliyken) ---- */
+  function evWrongHook(el){
+    if(!/^ev/.test(currentScreenId) || currentEvStudentId == null) return;
+    if(!/^Yanlış/.test((el.textContent || '').trim())) return;
+    const s = findStudentById(currentEvStudentId);
+    if(!s) return;
+    const w = evEnsureProgress(s, '_wrong');
+    w.n = (w.n || 0) + 1;
+    if(w.n >= 2){
+      w.n -= 2;
+      if(s.score > 0){
+        s.score -= 1;
+        s.log.unshift({ label:'2 yanlış cevap — 1 puan düşüldü', delta:-1, total:s.score, at:Date.now() });
+        showToast('2 yanlış cevap: -1 puan');
+        renderStudentList();
+        touch(s.id, 'score', 'ev');
+        return;
+      }
+    }
+    touch(s.id, 'ev');
+  }
+
+  /* ---- Seviyeli rozetler (Bronz → Gümüş → Altın → Elmas); seviye bir kez kazanılınca düşmez ---- */
+  function evSum(s, keys){
+    return keys.reduce(function(t,k){ const b = (s.evProgress || {})[k] || {}; return t + (b.correct||0) + (b.wins||0) + (b.solved||0); }, 0);
+  }
+  const BADGE_FAMS = [
+    {id:'seri',  icon:'🔥', name:'Seri',            lv:[3,5,10,20],      m:s=>evMaxStreak(s)},
+    {id:'dogru', icon:'⭐', name:'Doğru Cevap',     lv:[25,100,300,600], m:s=>evTotalCorrect(s)},
+    {id:'cok',   icon:'🧩', name:'Çok Yönlü',       lv:[3,6,10,15],      m:s=>Object.values(s.evProgress || {}).filter(b=>(b.correct||0)+(b.wins||0)+(b.solved||0) > 0).length},
+    {id:'u24',   icon:'🎯', name:'24 Ustası',       lv:[3,10,25,50],     m:s=>evSum(s,['zincirTC','zincirTCC'])},
+    {id:'stem',  icon:'🔬', name:'STEM Kaşifi',     lv:[5,20,50,100],    m:s=>evSum(s,['robot','kural','sehir','golge','kopru','batar'])},
+    {id:'turk',  icon:'📖', name:'Türkçe Ustası',   lv:[10,50,150,300],  m:s=>evSum(s,['anagram','esZit','cumle','hece','noktalama','metin'])},
+    {id:'mat',   icon:'🔢', name:'Matematik Ustası',lv:[10,50,150,300],  m:s=>evSum(s,['sayiEv','oruntu','yuksekAlcak','saatPara','dedektif'])},
+    {id:'oku',   icon:'📚', name:'Okuyucu',         lv:[6,30,90,200],    m:s=>evSum(s,['metin'])},
+    {id:'puan',  icon:'🏆', name:'Puan Avcısı',     lv:[25,100,250,500], m:s=>s.score || 0}
+  ];
+  const BADGE_LVN = ['Bronz','Gümüş','Altın','Elmas'], BADGE_LVI = ['🥉','🥈','🥇','💎'];
+  function badgeById(id){
+    const p = String(id).split(':'), f = BADGE_FAMS.find(x=>x.id === p[0]), l = parseInt(p[1],10);
+    if(!f || !(l >= 1)) return null;
+    return { icon: f.icon + BADGE_LVI[l-1], name: f.name + ' · ' + BADGE_LVN[l-1], desc: f.name + ' — seviye ' + l + '/4' + (l < 4 ? ' (sonraki hedef: ' + f.lv[l] + ')' : ' (en üst seviye!)') };
+  }
+  function checkBadges(student, silent){
+    const old = Array.isArray(student.badges) ? student.badges : [];
+    const quiet = silent || old.some(b=>String(b).indexOf(':') < 0);
+    const prev = {};
+    old.forEach(function(b){ const p = String(b).split(':'); if(p[1]) prev[p[0]] = parseInt(p[1],10); });
+    const next = [];
+    BADGE_FAMS.forEach(function(f){
+      const before = prev[f.id] || 0;
+      const l = Math.max(before, f.lv.filter(t=>f.m(student) >= t).length);
+      if(l >= 1) next.push(f.id + ':' + l);
+      if(l > before && !quiet) showToast('🏅 Rozet: ' + f.icon + ' ' + f.name + ' — ' + BADGE_LVN[l-1] + ' ' + BADGE_LVI[l-1] + ' — ' + student.name);
+    });
+    if(next.join() === old.join()) return false;
+    student.badges = next;
+    return true;
+  }
+  function badgesHtml(student){
+    return (student.badges || []).map(badgeById).filter(Boolean).map(function(b){
+      return '<span class="badge-chip" title="'+esc(b.desc)+'">'+b.icon+' '+esc(b.name)+'</span>';
+    }).join('');
+  }
+
   /* Kategori kartlarındaki "N oyun" etiketlerini otomatik güncelle */
   ['evMatematik','evTurkce','evMantik','evStem'].forEach(function(k){
     const n = document.querySelectorAll('#screen-'+k+' .game-card').length;
@@ -4254,7 +4355,14 @@ function restoreDirty(b){
   evDedNext();
   evMtToIntro();
   rbNext(); krNext(); shNew();
-  kpNew(); btNext(); glNext();
+  glNext();
+  /* Mühendis Köprüsü ve Batar mı Yüzer mi kaldırıldı */
+  ['evKopru','evBatar'].forEach(function(k){
+    document.querySelectorAll('.game-card[data-target="'+k+'"]').forEach(function(c){ c.remove(); });
+    const sc = document.getElementById('screen-'+k); if(sc) sc.remove();
+  });
+  const stemTag = document.querySelector('#screen-ev .game-card[data-target="evStem"] .tag');
+  if(stemTag) stemTag.textContent = document.querySelectorAll('#screen-evStem .game-card').length + ' oyun';
   ev24Generate();
   evOruntuGenerate();
   evYaNewGame();
