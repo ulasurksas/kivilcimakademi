@@ -626,6 +626,12 @@
       <div class="timer-count">
         <div class="stat"><div class="num" id="evEzScore">0</div><div class="lbl">DOĞRU</div></div>
       </div>
+      <div class="field-label" style="justify-content:center;">Ne çalışmak istiyorsun?</div>
+      <div class="count-options" id="evEzChoiceOptions" style="justify-content:center;">
+        <button type="button" class="count-opt diff-opt" data-c="es">Eş Anlam</button>
+        <button type="button" class="count-opt diff-opt" data-c="zit">Zıt Anlam</button>
+        <button type="button" class="count-opt diff-opt active" data-c="karisik">Karışık</button>
+      </div>
       <div class="kategori-top"><span class="kategori-label" id="evEzMode">-</span></div>
       <div class="problem-box"><div class="problem-text" id="evEzWord" style="font-size:clamp(26px,4vw,38px);">-</div></div>
       <div class="chip-list" id="evEzOptions" style="justify-content:center;"></div>
@@ -946,6 +952,7 @@
     <div class="subview" id="kelimePlay">
       <div class="scoreboard" id="kelScoreboard"></div>
       <div class="row" style="justify-content:flex-end; margin-bottom:10px;">
+        <button class="btn sky" id="kelPauseBtn" type="button">⏸ Durdur</button>
         <button class="btn ghost" id="kelEndGameBtn">🏁 Oyunu Bitir</button>
       </div>
       <div id="kelPlayPanel">
@@ -1011,6 +1018,7 @@
     <div class="subview" id="kutuPlay">
       <div class="scoreboard" id="kutScoreboard"></div>
       <div class="row" style="justify-content:flex-end; margin-bottom:10px;">
+        <button class="btn sky" id="kutPauseBtn" type="button">⏸ Durdur</button>
         <button class="btn ghost" id="kutEndGameBtn">🏁 Oyunu Bitir</button>
       </div>
       <div id="kutPlayPanel">
@@ -1068,6 +1076,7 @@
     <div class="subview" id="sayiPlay">
       <div class="scoreboard" id="sayScoreboard"></div>
       <div class="row" style="justify-content:flex-end; margin-bottom:10px;">
+        <button class="btn sky" id="sayPauseBtn" type="button">⏸ Durdur</button>
         <button class="btn ghost" id="sayEndGameBtn">🏁 Oyunu Bitir</button>
       </div>
       <div id="sayPlayPanel">
@@ -2119,7 +2128,7 @@ function restoreDirty(b){
     { name:"Müzik aletleri", words:{ "gitar":2, "piyano":2, "davul":2, "keman":3, "flüt":3, "saksafon":4, "ud":5, "bateri":4, "org":4, "ney":5 } },
     { name:"Karada giden taşıtlar", words:{ "araba":2, "otobüs":2, "kamyon":2, "bisiklet":2, "motosiklet":3, "tren":3, "kamyonet":4, "traktör":4, "tramvay":5, "metro":4 } },
     { name:"Deniz taşıtları", words:{ "gemi":2, "tekne":2, "yat":3, "kano":4, "sandal":3, "feribot":4, "denizaltı":5, "yelkenli":4, "kayık":3, "römorkör":5 } },
-    { name:"Böcekler", words:{ "karınca":2, "arı":2, "kelebek":2, "uğur böceği":3, "sinek":2, "örümcek":3, "çekirge":3, "ateş böceği":4, "karafatma":5, "peygamber devesi":5 } },
+    { name:"Böcekler", words:{ "karınca":2, "arı":2, "kelebek":2, "uğur böceği":3, "sinek":2, "örümcek":3, "çekirge":3, "ateş böceği":4 } },
     { name:"Kuşlar", words:{ "serçe":2, "güvercin":2, "papağan":3, "baykuş":3, "kartal":3, "flamingo":4, "penguen":3, "tavuk":2, "ördek":2, "leylek":4 } },
     { name:"Çiçekler", words:{ "gül":2, "papatya":2, "lale":2, "orkide":4, "karanfil":3, "ayçiçeği":3, "menekşe":4, "zambak":5, "nergis":5, "kasımpatı":5 } },
     { name:"Kırmızı renkli şeyler", words:{ "elma":2, "domates":2, "çilek":2, "gül":2, "kalp":3, "biber":3, "kiraz":3, "bayrak":4, "nar":4, "böğürtlen":5 } },
@@ -2205,7 +2214,7 @@ function restoreDirty(b){
     kelWordCountEl.textContent = '0';
     kelNextCatBtn.style.display='inline-block';
     kelWordInput.disabled=false; kelAddWordBtn.disabled=false; kelWordInput.focus();
-    kel.timerHandle = setInterval(kelTick, 1000);
+    kel.paused = false; resetPause('kelPauseBtn'); kel.timerHandle = setInterval(kelTick, 1000);
   }
   function kelTick(){
     kel.timeLeft--;
@@ -2230,6 +2239,11 @@ function restoreDirty(b){
     kelWordCloud.appendChild(chip);
   }
   function kelAddWord(){
+    if(kel.paused) return;
+    if(isBlocked(kelWordInput.value)){
+      kelFlash.style.color='var(--coral-dark)'; kelFlash.textContent='Bu kelime kullanılamaz.';
+      kelOverrideBtn.style.display='none'; kelPendingReject=null; kelWordInput.value=''; return;
+    }
     if(kel.timeLeft<=0) return;
     const raw = kelWordInput.value;
     const val = trLower(raw);
@@ -2388,7 +2402,7 @@ function restoreDirty(b){
     kutGuessStatus.textContent = 'Kalan tahmin hakkı: '+(3-pg.attemptsUsed)+'/3';
     kutGuessStatus.style.color = 'var(--ink-soft)';
     kutTahminInput.focus();
-    kut.timerHandle = setInterval(kutTick, 1000);
+    kut.paused = false; resetPause('kutPauseBtn'); kut.timerHandle = setInterval(kutTick, 1000);
   }
   function kutTick(){
     kut.timeLeft--;
@@ -2402,7 +2416,7 @@ function restoreDirty(b){
       }
     }
   }
-  function kutGuess(){
+  function kutGuess(){ if(kut.paused) return;
     const pg = kut.perGroup[kut.activeIndex];
     if(pg.done || kut.timeLeft<=0) return;
     const g = appGroups[kut.activeIndex];
@@ -2547,7 +2561,7 @@ function restoreDirty(b){
     sayAnswerInput.disabled=false; sayAnswerBtn.disabled=false;
     sayNextProblem();
     sayAnswerInput.focus();
-    say.timerHandle = setInterval(sayTick, 1000);
+    say.paused = false; resetPause('sayPauseBtn'); say.timerHandle = setInterval(sayTick, 1000);
   }
   function sayNextProblem(){
     say.currentProblem = generateProblem();
@@ -2559,7 +2573,7 @@ function restoreDirty(b){
     sayTime.textContent = say.timeLeft;
     if(say.timeLeft<=0){ clearInterval(say.timerHandle); sayEndTurn(); }
   }
-  function sayAnswer(){
+  function sayAnswer(){ if(say.paused) return;
     if(say.timeLeft<=0) return;
     const raw = sayAnswerInput.value.trim();
     if(raw==='') return;
@@ -3114,14 +3128,14 @@ function restoreDirty(b){
   const ESANLAM_PAIRS = [
     ["mutlu","sevinçli"],["üzgün","kederli"],["hızlı","çabuk"],["güzel","hoş"],["akıllı","zeki"],
     ["büyük","iri"],["küçük","ufak"],["cesur","yürekli"],["temiz","pak"],["kolay","basit"],
-    ["yardımsever","cömert"],["korkak","ürkek"],["yorgun","bitkin"],["sessiz","sakin"],["kirli","pis"],
-    ["parlak","ışıltılı"],["soğuk","serin"],["şen","neşeli"],["kısa","ufak"],["zor","güç"]
+    ["yorgun","bitkin"],["sessiz","sakin"],
+    ["parlak","ışıltılı"],["soğuk","serin"],["şen","neşeli"],["zor","güç"]
   ];
   const ZITANLAM_PAIRS = [
     ["büyük","küçük"],["uzun","kısa"],["sıcak","soğuk"],["hızlı","yavaş"],["gece","gündüz"],
     ["yukarı","aşağı"],["açık","kapalı"],["ağır","hafif"],["temiz","kirli"],["kolay","zor"],
     ["mutlu","üzgün"],["genç","yaşlı"],["ucuz","pahalı"],["dolu","boş"],["ileri","geri"],
-    ["iyi","kötü"],["güzel","çirkin"],["kalın","ince"],["sert","yumuşak"],["erken","geç"]
+    ["iyi","kötü"],["kalın","ince"],["sert","yumuşak"],["erken","geç"]
   ];
   let evEzRecent = [];
   const evEzMode = document.getElementById('evEzMode');
@@ -3135,7 +3149,7 @@ function restoreDirty(b){
   function evEzNext(){
     let isEs, pair, tries = 0;
     do {
-      isEs = Math.random() < 0.5;
+      isEs = evEzChoice === 'es' ? true : (evEzChoice === 'zit' ? false : Math.random() < 0.5);
       const list = isEs ? ESANLAM_PAIRS : ZITANLAM_PAIRS;
       pair = list[randInt(0, list.length-1)];
       tries++;
@@ -3145,7 +3159,9 @@ function restoreDirty(b){
     evEzMode.textContent = isEs ? 'Eş anlamlısı hangisi?' : 'Zıt anlamlısı hangisi?';
     evEzWord.textContent = pair[0];
     evEzCorrect = pair[1];
-    const allWords = ESANLAM_PAIRS.concat(ZITANLAM_PAIRS).flat().filter(w=>w!==pair[0] && w!==pair[1]);
+    const related = new Set([pair[0], pair[1]]);
+    for(let k=0;k<2;k++) ESANLAM_PAIRS.concat(ZITANLAM_PAIRS).forEach(p=>{ if(related.has(p[0]) || related.has(p[1])){ related.add(p[0]); related.add(p[1]); } });
+    const allWords = ESANLAM_PAIRS.concat(ZITANLAM_PAIRS).flat().filter(w=>!related.has(w));
     const distractors = shuffle([...new Set(allWords)]).slice(0,3);
     const options = shuffle([pair[1], ...distractors]);
     evEzOptions.innerHTML = options.map(w=>'<button type="button" class="num-tile" data-w="'+esc(w)+'">'+esc(w)+'</button>').join('');
@@ -3164,40 +3180,49 @@ function restoreDirty(b){
     }
     setTimeout(evEzNext, 900);
   });
+  let evEzChoice = 'karisik';
+  document.getElementById('evEzChoiceOptions').addEventListener('click', e=>{
+    const b = e.target.closest('.count-opt');
+    if(!b) return;
+    evEzChoice = b.dataset.c;
+    document.querySelectorAll('#evEzChoiceOptions .count-opt').forEach(x=>x.classList.toggle('active', x===b));
+    evEzNext();
+  });
   evEzNewBtn.addEventListener('click', evEzNext);
 
   /* ---- Cümle Tamamlama ---- */
   const CUMLE_BANK = [
-    {text:"Kedi ____ içmeyi çok sever.", answer:"süt", distractors:["kitap","top","ayakkabı"]},
-    {text:"Sabah kalkınca dişlerimi ____.", answer:"fırçalarım", distractors:["yıkarım","giyerim","yerim"]},
-    {text:"Kış geldi, hava çok ____.", answer:"soğudu", distractors:["ısındı","kurudu","aydınlandı"]},
-    {text:"Okula ____ ile gidiyorum.", answer:"servis", distractors:["gemi","uçak","tekne"]},
-    {text:"Bahçedeki ____ çok güzel açtı.", answer:"çiçekler", distractors:["taşlar","arabalar","kitaplar"]},
-    {text:"Annem akşam yemeğinde ____ pişirdi.", answer:"çorba", distractors:["saat","masa","kalem"]},
-    {text:"Yağmur yağınca ____ açtım.", answer:"şemsiyemi", distractors:["gözlüğümü","defterimi","çantamı"]},
-    {text:"Kütüphanede sessizce ____ okuruz.", answer:"kitap", distractors:["top","müzik","yemek"]},
-    {text:"Uçurtmamı ____ günü uçurdum.", answer:"rüzgarlı", distractors:["karanlık","yorgun","kalabalık"]},
-    {text:"Öğretmenim tahtaya ____ ile yazdı.", answer:"tebeşir", distractors:["makas","silgi","cetvel"]},
-    {text:"Balık ____ içinde yüzer.", answer:"suyun", distractors:["havanın","toprağın","ateşin"]},
-    {text:"Kar yağınca ____ yaptık.", answer:"kardan adam", distractors:["kum kalesi","uçurtma","resim"]},
-    {text:"Doğum günümde arkadaşlarım bana ____ getirdi.", answer:"hediye", distractors:["fatura","ödev","gazete"]},
-    {text:"Sınıfımızda ____ tane sıra var.", answer:"on", distractors:["mavi","büyük","hızlı"]},
-    {text:"Akşam olunca gökyüzünde ____ görünür.", answer:"yıldızlar", distractors:["çiçekler","balıklar","taşlar"]},
-    {text:"Ağaçtan düşen ____ topladık.", answer:"yaprakları", distractors:["bulutları","yıldızları","denizleri"]},
-    {text:"Köpeğim topu getirince ____ verdim.", answer:"ödül", distractors:["ceza","borç","masraf"]},
-    {text:"Yüzme havuzunda ____ öğrendim.", answer:"yüzmeyi", distractors:["uçmayı","koşmayı","zıplamayı"]},
-    {text:"Markette annemle ____ aldık.", answer:"meyve", distractors:["gökyüzü","rüzgar","gölge"]},
-    {text:"Uzun bir yolculuktan sonra çok ____.", answer:"yorulduk", distractors:["sevindik","şaşırdık","kızdık"]},
-    {text:"Kitabın sayfalarını yavaşça ____.", answer:"çevirdim", distractors:["yıktım","yaktım","attım"]},
-    {text:"Bahçede ____ ile oynadık.", answer:"top", distractors:["fatura","makale","rapor"]},
-    {text:"Sabah güneş doğunca kuşlar ____ başlar.", answer:"ötmeye", distractors:["ağlamaya","koşmaya","yazmaya"]},
-    {text:"Dişçiye gidince ____ korktum biraz.", answer:"başta", distractors:["hiç","asla","sonsuza"]},
-    {text:"Yeni ayakkabılarım biraz ____.", answer:"dar geldi", distractors:["gökyüzü kadar maviydi","çok tatlıydı","çok hızlıydı"]},
-    {text:"Tatilde denize girip ____ topladık.", answer:"deniz kabuğu", distractors:["kar tanesi","kitap sayfası","kalem ucu"]},
-    {text:"Sınavdan önce iyi ____ çalıştım.", answer:"ders", distractors:["yemek","uyku","oyun"]},
-    {text:"Parkta salıncakta ____ sallandım.", answer:"keyifle", distractors:["üzülerek","kızarak","korkarak"]},
-    {text:"Kışın kalın ____ giyerim.", answer:"mont", distractors:["mayo","şort","terlik"]},
-    {text:"Doğum günü pastasındaki mumları ____.", answer:"üfledim", distractors:["yıkadım","kestim","attım"]}
+    {text:"Sabah kalkınca dişlerimi ____.", answer:"fırçalarım", distractors:["yerim","giyerim","uçururum"]},
+    {text:"Kış gelince hava çok ____.", answer:"soğur", distractors:["yüzer","okur","uçar"]},
+    {text:"Yağmur yağınca ____ açtım.", answer:"şemsiyemi", distractors:["topumu","ekmeğimi","terliğimi"]},
+    {text:"Kedi ____ içmeyi çok sever.", answer:"süt", distractors:["taş","kitap","ayakkabı"]},
+    {text:"Bahçede güzel kokulu ____ açmış.", answer:"çiçekler", distractors:["arabalar","kalemler","bulutlar"]},
+    {text:"Annem akşam yemeğinde bize ____ pişirdi.", answer:"çorba", distractors:["saat","masa","kalem"]},
+    {text:"Kütüphanede sessizce ____ okuruz.", answer:"kitap", distractors:["top","yemek","çorba"]},
+    {text:"Rüzgârlı bir günde ____ gökyüzüne uçurdum.", answer:"uçurtmamı", distractors:["masamı","ayakkabımı","defterimi"]},
+    {text:"Öğretmenim tahtaya ____ ile yazdı.", answer:"tebeşir", distractors:["makas","tabak","terlik"]},
+    {text:"Balıklar ____ yaşar.", answer:"suda", distractors:["havada","ateşte","kumda"]},
+    {text:"Kar yağınca arkadaşlarımla ____ yaptık.", answer:"kardan adam", distractors:["kum kalesi","gölge","çorap"]},
+    {text:"Doğum günümde arkadaşlarım bana ____ getirdi.", answer:"hediye", distractors:["rüzgâr","gölge","yıldız"]},
+    {text:"Akşam olunca gökyüzünde ____ görünür.", answer:"yıldızlar", distractors:["balıklar","ayakkabılar","tabaklar"]},
+    {text:"Sonbaharda ağaçlardan ____ dökülür.", answer:"yapraklar", distractors:["balıklar","tabaklar","kalemler"]},
+    {text:"Markette annemle ____ aldık.", answer:"meyve", distractors:["gökyüzü","rüzgâr","gölge"]},
+    {text:"Uzun yürüyüşten sonra çok ____.", answer:"yorulduk", distractors:["pişirdik","uçurduk","boyadık"]},
+    {text:"Kitabın sayfalarını yavaşça ____.", answer:"çevirdim", distractors:["yedim","içtim","giydim"]},
+    {text:"Bahçede arkadaşlarımla ____ oynadık.", answer:"top", distractors:["tabak","fatura","çorba"]},
+    {text:"Sabah olunca kuşlar ____ başladı.", answer:"ötmeye", distractors:["yüzmeye","pişmeye","yağmaya"]},
+    {text:"Kışın dışarı çıkarken sıcak tutan ____ giyerim.", answer:"mont", distractors:["mayo","şort","terlik"]},
+    {text:"Doğum günü pastasındaki mumları ____.", answer:"üfledim", distractors:["yıkadım","giydim","yazdım"]},
+    {text:"Ders başlayınca öğretmenimizi sessizce ____.", answer:"dinledik", distractors:["yedik","giydik","uçtuk"]},
+    {text:"Hava çok sıcak olduğu için ____ yemek istedim.", answer:"dondurma", distractors:["kalem","terlik","ceket"]},
+    {text:"Yemekten önce ellerimi ____ yıkarım.", answer:"sabunla", distractors:["boyayla","çamurla","tebeşirle"]},
+    {text:"Gece olunca uyumak için ____ giderim.", answer:"yatağıma", distractors:["okula","markete","parka"]},
+    {text:"Susayınca bardağa ____ doldurur ve içerim.", answer:"su", distractors:["taş","kum","kitap"]},
+    {text:"Kırmızı ışık yanınca arabalar ____.", answer:"durur", distractors:["uçar","yüzer","pişer"]},
+    {text:"Arılar petekte ____ yapar.", answer:"bal", distractors:["çorba","ayakkabı","kitap"]},
+    {text:"Dişlerimizi sağlıklı tutmak için günde iki kez ____.", answer:"fırçalamalıyız", distractors:["boyamalıyız","pişirmeliyiz","uçurmalıyız"]},
+    {text:"Yazın sıcak havada ____ girmek çok keyifli.", answer:"denize", distractors:["ateşe","fırına","buzdolabına"]},
+    {text:"Okula gitmek için sabah ____ kalktım.", answer:"erken", distractors:["mavi","tatlı","yuvarlak"]}
   ];
   let evCumRecent = [];
   const evCumText = document.getElementById('evCumText');
@@ -3526,6 +3551,38 @@ function restoreDirty(b){
     }
   });
   window.addEventListener('appinstalled', ()=>{ installBtn.style.display = 'none'; });
+
+  /* ---------------- Süre durdur/devam + uygunsuz kelime filtresi ---------------- */
+  const PAUSE_IDS = {};
+  function resetPause(btnId){
+    const b = document.getElementById(btnId);
+    if(b) b.textContent = '⏸ Durdur';
+    (PAUSE_IDS[btnId] || []).forEach(id=>{ const el = document.getElementById(id); if(el) el.disabled = false; });
+  }
+  function wirePause(btnId, getG, tick, ids){
+    PAUSE_IDS[btnId] = ids;
+    const btn = document.getElementById(btnId);
+    btn.addEventListener('click', ()=>{
+      const g = getG();
+      if(!g || g.timeLeft <= 0) return;
+      if(g.paused){
+        g.paused = false;
+        g.timerHandle = setInterval(tick, 1000);
+        btn.textContent = '⏸ Durdur';
+        ids.forEach(id=>{ document.getElementById(id).disabled = false; });
+      } else {
+        g.paused = true;
+        clearInterval(g.timerHandle);
+        btn.textContent = '▶ Devam Et';
+        ids.forEach(id=>{ document.getElementById(id).disabled = true; });
+      }
+    });
+  }
+  wirePause('kelPauseBtn', ()=>kel, kelTick, ['kelWordInput','kelAddWordBtn','kelNextCatBtn']);
+  wirePause('kutPauseBtn', ()=>kut, kutTick, ['kutTahminInput','kutTahminBtn']);
+  wirePause('sayPauseBtn', ()=>say, sayTick, ['sayAnswerInput','sayAnswerBtn']);
+  const BLOCKED_WORDS = ['amk','aq','sik','sikik','siktir','göt','yarak','yarrak','amcık','orospu','piç','bok','boktan','salak','aptal','gerizekalı','ahmak','dangalak','şerefsiz','pezevenk','ibne','puşt','öküz'];
+  function isBlocked(text){ return trLower(text).split(/[^a-zçğıöşü]+/).some(t=>BLOCKED_WORDS.includes(t)); }
 
   /* ---------------- Initial render ---------------- */
   renderStudentList();
