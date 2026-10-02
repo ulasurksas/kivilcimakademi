@@ -367,6 +367,18 @@
     <h2 class="game-title">🔢 Matematik</h2>
     <p class="game-desc">İstediğin oyunu seç, sonu gelmeyen yeni sorularla pratik yap.</p>
     <div class="card-grid">
+      <button class="game-card" data-target="evPiramit">
+        <span class="emoji">🔺</span>
+        <h3>Sayı Piramidi</h3>
+        <p>Her kutu altındaki iki kutunun toplamı. ❓ olan kutuyu bul.</p>
+        <span class="tag" style="background:var(--sky-dark)">Bireysel</span>
+      </button>
+      <button class="game-card" data-target="evDenge">
+        <span class="emoji">⚖️</span>
+        <h3>Denge Terazisi</h3>
+        <p>Terazilerden meyvelerin değerini bul. Eşitliği düşün!</p>
+        <span class="tag" style="background:var(--coral-dark)">Bireysel</span>
+      </button>
       <button class="game-card" data-target="evDedektif">
         <span class="emoji">🕵️</span>
         <h3>Sayı Dedektifi</h3>
@@ -455,6 +467,12 @@
     <h2 class="game-title">🧠 Mantık</h2>
     <p class="game-desc">İstediğin oyunu seç, sonu gelmeyen yeni sorularla pratik yap.</p>
     <div class="card-grid">
+      <button class="game-card" data-target="evKod">
+        <span class="emoji">🔐</span>
+        <h3>Kod Çözücü</h3>
+        <p>Gizli renk kodunu ipuçlarıyla en az denemede bul.</p>
+        <span class="tag" style="background:var(--sun-dark)">Bireysel</span>
+      </button>
       <button class="game-card" data-target="evSekilOruntu">
         <span class="emoji">🔶</span>
         <h3>Şekil Örüntüsü</h3>
@@ -846,6 +864,12 @@
         <p>Önce tahmin et, sonra nedenini öğren.</p>
         <span class="tag" style="background:var(--sky-dark)">Bireysel</span>
       </button>
+      <button class="game-card" data-target="evAlgo">
+        <span class="emoji">🍳</span>
+        <h3>Algoritma Aşçısı</h3>
+        <p>Günlük işlerin adımlarını doğru sıraya diz.</p>
+        <span class="tag" style="background:var(--grass-dark)">Bireysel</span>
+      </button>
       <button class="game-card" data-target="evGolge">
         <span class="emoji">🔦</span>
         <h3>Gölge Avcısı</h3>
@@ -964,6 +988,77 @@
       <div class="chip-list" id="glOptions" style="justify-content:center;"></div>
       <div class="flash-msg" id="glFlash"></div>
       <div class="row" style="justify-content:center; margin-top:14px;"><button class="btn ghost" id="glNewBtn">Yeni Soru</button></div>
+    </div>
+  </section>
+
+  <!-- ================= EV: SAYI PİRAMİDİ ================= -->
+  <section class="screen" id="screen-evPiramit">
+    <h2 class="game-title">🔺 Sayı Piramidi</h2>
+    <p class="game-desc">Her kutu, altındaki iki kutunun toplamıdır. ❓ olan kutuyu bul.</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count"><div class="stat"><div class="num" id="pyScore">0</div><div class="lbl">DOĞRU</div></div></div>
+      <div class="count-options" id="pyLevels" style="justify-content:center;">
+        <button type="button" class="count-opt diff-opt active" data-n="3">3 Katlı</button>
+        <button type="button" class="count-opt diff-opt" data-n="4">4 Katlı</button>
+      </div>
+      <div id="pyBoard" style="margin:10px 0 14px;"></div>
+      <div class="row" style="max-width:340px; margin:0 auto;">
+        <input class="field" id="pyInput" placeholder="❓ kaç?" type="text" inputmode="none" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" readonly>
+        <button class="btn coral" id="pyCheckBtn">Kontrol Et</button>
+      </div>
+      <div class="keypad" id="pyKeypad" style="margin:0 auto;"></div>
+      <div class="flash-msg" id="pyFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;"><button class="btn ghost" id="pyNewBtn">Yeni Piramit</button></div>
+    </div>
+  </section>
+
+  <!-- ================= EV: DENGE TERAZİSİ ================= -->
+  <section class="screen" id="screen-evDenge">
+    <h2 class="game-title">⚖️ Denge Terazisi</h2>
+    <p class="game-desc">Terazilerin iki kefesi eşit. Meyvenin değerini bul.</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count"><div class="stat"><div class="num" id="dgScore">0</div><div class="lbl">DOĞRU</div></div></div>
+      <div class="problem-box"><div class="problem-text" id="dgText" style="font-size:clamp(18px,3vw,26px); line-height:1.8;">-</div></div>
+      <div class="row" style="max-width:340px; margin:0 auto;">
+        <input class="field" id="dgInput" placeholder="Değeri yaz" type="text" inputmode="none" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" readonly>
+        <button class="btn coral" id="dgCheckBtn">Kontrol Et</button>
+      </div>
+      <div class="keypad" id="dgKeypad" style="margin:0 auto;"></div>
+      <div class="flash-msg" id="dgFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;"><button class="btn ghost" id="dgNewBtn">Yeni Terazi</button></div>
+    </div>
+  </section>
+
+  <!-- ================= EV: KOD ÇÖZÜCÜ ================= -->
+  <section class="screen" id="screen-evKod">
+    <h2 class="game-title">🔐 Kod Çözücü</h2>
+    <p class="game-desc">Gizli kod 3 farklı renkten oluşuyor. 8 denemede bul!</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count"><div class="stat"><div class="num" id="kdScore">0</div><div class="lbl">ÇÖZÜLEN KOD</div></div></div>
+      <div class="problem-box"><div class="problem-text" id="kdHist" style="font-size:clamp(16px,2.6vw,22px); line-height:1.8;">-</div></div>
+      <div class="expr-display" id="kdCur">⬜ ⬜ ⬜</div>
+      <div class="chip-list" id="kdPal" style="justify-content:center;"></div>
+      <div class="row" style="justify-content:center;">
+        <button type="button" class="btn ghost" id="kdUndo">⌫ Geri Al</button>
+        <button type="button" class="btn grass" id="kdTry">🔍 Dene</button>
+      </div>
+      <div class="flash-msg" id="kdFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;"><button class="btn ghost" id="kdNewBtn">🎲 Yeni Kod</button></div>
+      <p class="hint">✅ = renk doğru ve yeri doğru. 🔄 = renk kodda var ama yeri yanlış. İpuçlarını kullanarak eleme yap!</p>
+    </div>
+  </section>
+
+  <!-- ================= EV: ALGORİTMA AŞÇISI ================= -->
+  <section class="screen" id="screen-evAlgo">
+    <h2 class="game-title">🍳 Algoritma Aşçısı</h2>
+    <p class="game-desc">Bir işin adımlarını doğru sıraya diz. Önce ne, sonra ne yapılır?</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count"><div class="stat"><div class="num" id="agScore">0</div><div class="lbl">DOĞRU SIRA</div></div></div>
+      <div class="problem-box"><div class="problem-text" id="agTitle" style="font-size:clamp(17px,2.8vw,24px);">-</div></div>
+      <div class="chip-list" id="agOptions" style="justify-content:center;"></div>
+      <p class="hint" id="agDone" style="text-align:left; font-weight:700;"></p>
+      <div class="flash-msg" id="agFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;"><button class="btn ghost" id="agNewBtn">Yeni İş</button></div>
     </div>
   </section>
 
@@ -1637,7 +1732,7 @@ function restoreDirty(b){
     evSayi:'⚡ Sayı Şimşeği (Ev)', ev24:"🎯 24'e Ulaş", evOruntu:'🧩 Sayı Örüntüsü Avcısı',
     evYuksekAlcak:'🔼 Yüksek mi Alçak mı', evSaatPara:'🕒 Saat ve Para Problemleri',
     evAnagram:'🔤 Anagram', evEsZit:'🔁 Eş - Zıt Anlam', evCumle:'✏️ Cümle Tamamlama',
-    evHece:'🔠 Hecelere Ayırma', evNoktalama:'❓ Noktalama', evDedektif:'🕵️ Sayı Dedektifi', evMetin:'📚 Kısa Metin, 3 Soru', evStem:'🔬 STEM ve Düşünme', evRobot:'🤖 Robot Labirenti', evKural:'🔮 Gizli Kural Makinesi', evSehir:'🏙️ Şehir Kurucu', evKopru:'🌉 Mühendis Köprüsü', evBatar:'💧 Batar mı Yüzer mi?', evGolge:'🔦 Gölge Avcısı',
+    evHece:'🔠 Hecelere Ayırma', evNoktalama:'❓ Noktalama', evDedektif:'🕵️ Sayı Dedektifi', evMetin:'📚 Kısa Metin, 3 Soru', evStem:'🔬 STEM ve Düşünme', evRobot:'🤖 Robot Labirenti', evKural:'🔮 Gizli Kural Makinesi', evSehir:'🏙️ Şehir Kurucu', evKopru:'🌉 Mühendis Köprüsü', evBatar:'💧 Batar mı Yüzer mi?', evGolge:'🔦 Gölge Avcısı', evPiramit:'🔺 Sayı Piramidi', evDenge:'⚖️ Denge Terazisi', evKod:'🔐 Kod Çözücü', evAlgo:'🍳 Algoritma Aşçısı',
     evSekilOruntu:'🔶 Şekil Örüntüsü',
     evSiralama:'📊 Sıralama Bulmacası', evZincir:'🔗 Mantık Zincirleri',
     ogrenciler:'👤 Öğrenci Profilleri', studentProfile:'👤 Öğrenci Profili',
@@ -1651,7 +1746,7 @@ function restoreDirty(b){
     evSayi:'evMatematik', ev24:'evMatematik', evOruntu:'evMatematik',
     evYuksekAlcak:'evMatematik', evSaatPara:'evMatematik',
     evAnagram:'evTurkce', evEsZit:'evTurkce', evCumle:'evTurkce',
-    evHece:'evTurkce', evNoktalama:'evTurkce', evMetin:'evTurkce', evDedektif:'evMatematik', evStem:'ev', evRobot:'evStem', evKural:'evStem', evSehir:'evStem', evKopru:'evStem', evBatar:'evStem', evGolge:'evStem',
+    evHece:'evTurkce', evNoktalama:'evTurkce', evMetin:'evTurkce', evDedektif:'evMatematik', evStem:'ev', evRobot:'evStem', evKural:'evStem', evSehir:'evStem', evKopru:'evStem', evBatar:'evStem', evGolge:'evStem', evPiramit:'evMatematik', evDenge:'evMatematik', evKod:'evMantik', evAlgo:'evStem',
     evSekilOruntu:'evMantik',
     evSiralama:'evMantik', evZincir:'evMantik',
     ogrenciler:'home', studentProfile:'ogrenciler', yetkiKapisi:'ogrenciler',
@@ -1826,7 +1921,7 @@ function restoreDirty(b){
     sayiEv:'Sayı Şimşeği (Ev)', oruntu:'Sayı Örüntüsü Avcısı', yuksekAlcak:'Yüksek mi Alçak mı',
     saatPara:'Saat ve Para Problemleri', zincirTC:"24'e Ulaş (Toplama-Çıkarma)", zincirTCC:"24'e Ulaş (Toplama-Çıkarma-Çarpma)",
     anagram:'Anagram', esZit:'Eş - Zıt Anlam', cumle:'Cümle Tamamlama', hece:'Hecelere Ayırma', noktalama:'Noktalama',
-    sekilOruntu:'Şekil Örüntüsü', siralama:'Sıralama Bulmacası', mantikZincir:'Mantık Zincirleri', dedektif:'Sayı Dedektifi', metin:'Kısa Metin, 3 Soru', robot:'Robot Labirenti', kural:'Gizli Kural Makinesi', sehir:'Şehir Kurucu', kopru:'Mühendis Köprüsü', batar:'Batar mı Yüzer mi?', golge:'Gölge Avcısı'
+    sekilOruntu:'Şekil Örüntüsü', siralama:'Sıralama Bulmacası', mantikZincir:'Mantık Zincirleri', dedektif:'Sayı Dedektifi', metin:'Kısa Metin, 3 Soru', robot:'Robot Labirenti', kural:'Gizli Kural Makinesi', sehir:'Şehir Kurucu', kopru:'Mühendis Köprüsü', batar:'Batar mı Yüzer mi?', golge:'Gölge Avcısı', piramit:'Sayı Piramidi', denge:'Denge Terazisi', kod:'Kod Çözücü', algo:'Algoritma Aşçısı'
   };
   function evEnsureProgress(student, key){
     if(!student.evProgress) student.evProgress = {};
@@ -1871,7 +1966,11 @@ function restoreDirty(b){
     ['sehir','solved','🏙️ Şehir Kurucu','kez şehri kurdu'],
     ['kopru','solved','🌉 Mühendis Köprüsü','kez köprü kurdu'],
     ['batar','correct','💧 Batar mı Yüzer mi?','doğru cevap'],
-    ['golge','correct','🔦 Gölge Avcısı','doğru cevap']
+    ['golge','correct','🔦 Gölge Avcısı','doğru cevap'],
+    ['piramit','correct','🔺 Sayı Piramidi','doğru cevap'],
+    ['denge','correct','⚖️ Denge Terazisi','doğru cevap'],
+    ['kod','solved','🔐 Kod Çözücü','kez kodu çözdü'],
+    ['algo','correct','🍳 Algoritma Aşçısı','kez doğru sıraladı']
   ];
   const EV_ONERI_ESIK = 5; // her 5 yeni doğru/başarıda 1 puan önerilir
   function evHasPending(s){
@@ -4337,6 +4436,154 @@ function restoreDirty(b){
   });
   document.getElementById('glNewBtn').addEventListener('click', glNext);
 
+  /* ---- 🔺 Sayı Piramidi ---- */
+  const pyBoard = document.getElementById('pyBoard'), pyInput = document.getElementById('pyInput');
+  const pyFlash = document.getElementById('pyFlash'), pyScoreEl = document.getElementById('pyScore');
+  let pyN = 3, pyAns = 0, pyScore = 0;
+  function pyNew(){
+    const rows = [Array.from({length:pyN}, ()=>randInt(1,9))];
+    for(let r = 1; r < pyN; r++){ const p = rows[r-1]; rows.push(p.slice(1).map((x,i)=>x+p[i])); }
+    const br = randInt(0,pyN-1), bc = randInt(0, rows[br].length-1);
+    pyAns = rows[br][bc];
+    let h = '';
+    for(let r = pyN-1; r >= 0; r--){
+      h += '<div style="display:flex;justify-content:center;gap:6px;margin-bottom:6px;">' + rows[r].map(function(v,c){
+        const blank = (r === br && c === bc);
+        return '<span style="min-width:54px;padding:10px 6px;border-radius:12px;border:2px solid var(--line);font-size:20px;font-weight:800;background:'+(blank ? 'var(--sun)' : 'var(--paper)')+';">'+(blank ? '❓' : v)+'</span>';
+      }).join('') + '</div>';
+    }
+    pyBoard.innerHTML = h; pyInput.value = ''; pyFlash.textContent = '';
+  }
+  function pyCheck(){
+    const raw = pyInput.value.trim();
+    if(raw === '') return;
+    if(parseInt(raw,10) === pyAns){
+      pyScore++; pyScoreEl.textContent = pyScore;
+      pyFlash.style.color = 'var(--grass-dark)'; pyFlash.textContent = 'Doğru! ✔️';
+      evRecordProgress('piramit','correct');
+    } else { pyFlash.style.color = 'var(--coral-dark)'; pyFlash.textContent = 'Yanlış! Doğru cevap: '+pyAns; }
+    setTimeout(pyNew, 1100);
+  }
+  document.getElementById('pyCheckBtn').addEventListener('click', pyCheck);
+  document.getElementById('pyNewBtn').addEventListener('click', pyNew);
+  document.getElementById('pyLevels').addEventListener('click', function(e){
+    const b = e.target.closest('.count-opt');
+    if(!b) return;
+    pyN = parseInt(b.dataset.n,10);
+    document.querySelectorAll('#pyLevels .count-opt').forEach(x=>x.classList.toggle('active', x === b));
+    pyNew();
+  });
+  renderNumKeypad(document.getElementById('pyKeypad'), pyInput, { onEnter: pyCheck });
+
+  /* ---- ⚖️ Denge Terazisi ---- */
+  const DG_F = ['🍎','🍌','🍓','🍇','🍊'];
+  const dgText = document.getElementById('dgText'), dgInput = document.getElementById('dgInput');
+  const dgFlash = document.getElementById('dgFlash'), dgScoreEl = document.getElementById('dgScore');
+  let dgAns = 0, dgScore = 0;
+  function dgNew(){
+    const f = shuffle(DG_F), t = randInt(0,2), a = randInt(1,9), b = randInt(1,9), c = randInt(1,9);
+    let lines, ask;
+    if(t === 0){ const k = randInt(1,9); lines = [f[0]+' + '+f[0]+' + '+k+' = '+(2*a+k)]; ask = f[0]; dgAns = a; }
+    else if(t === 1){ lines = [f[0]+' + '+f[0]+' = '+(2*a), f[0]+' + '+f[1]+' = '+(a+b)]; ask = f[1]; dgAns = b; }
+    else { lines = [f[0]+' + '+f[0]+' = '+(2*a), f[0]+' + '+f[1]+' = '+(a+b), f[1]+' + '+f[2]+' = '+(b+c)]; ask = f[2]; dgAns = c; }
+    dgText.innerHTML = lines.map(l=>'⚖️ '+l).join('<br>') + '<br><br>' + ask + ' = <b>?</b>';
+    dgInput.value = ''; dgFlash.textContent = '';
+  }
+  function dgCheck(){
+    const raw = dgInput.value.trim();
+    if(raw === '') return;
+    if(parseInt(raw,10) === dgAns){
+      dgScore++; dgScoreEl.textContent = dgScore;
+      dgFlash.style.color = 'var(--grass-dark)'; dgFlash.textContent = 'Doğru! ✔️';
+      evRecordProgress('denge','correct');
+    } else { dgFlash.style.color = 'var(--coral-dark)'; dgFlash.textContent = 'Yanlış! Doğru cevap: '+dgAns; }
+    setTimeout(dgNew, 1200);
+  }
+  document.getElementById('dgCheckBtn').addEventListener('click', dgCheck);
+  document.getElementById('dgNewBtn').addEventListener('click', dgNew);
+  renderNumKeypad(document.getElementById('dgKeypad'), dgInput, { onEnter: dgCheck });
+
+  /* ---- 🔐 Kod Çözücü ---- */
+  const KD_C = ['🔴','🔵','🟢','🟡','🟣'];
+  const kdHist = document.getElementById('kdHist'), kdCur = document.getElementById('kdCur');
+  const kdPal = document.getElementById('kdPal'), kdFlash = document.getElementById('kdFlash'), kdScoreEl = document.getElementById('kdScore');
+  let kd = null, kdWins = 0;
+  function kdRender(){
+    kdHist.innerHTML = kd.hist.map(g=>g.c.join('')+' → ✅ '+g.e+' · 🔄 '+g.m).join('<br>') || 'Henüz tahmin yok';
+    kdCur.textContent = kd.cur.concat(['⬜','⬜','⬜']).slice(0,3).join(' ') + '   (' + kd.hist.length + '/8)';
+    kdPal.innerHTML = KD_C.map(c=>'<button type="button" class="num-tile" data-c="'+c+'" style="font-size:26px;">'+c+'</button>').join('');
+  }
+  function kdNew(){ kd = { secret: shuffle(KD_C).slice(0,3), hist: [], cur: [], over: false }; kdFlash.textContent = ''; kdRender(); }
+  kdPal.addEventListener('click', function(e){
+    const b = e.target.closest('.num-tile');
+    if(!b || kd.over) return;
+    if(kd.cur.length < 3 && !kd.cur.includes(b.dataset.c)){ kd.cur.push(b.dataset.c); kdFlash.textContent = ''; kdRender(); }
+    else if(kd.cur.includes(b.dataset.c)){ kdFlash.style.color = 'var(--ink-soft)'; kdFlash.textContent = 'Kodda her renk en fazla bir kez var.'; }
+  });
+  document.getElementById('kdUndo').addEventListener('click', function(){ if(!kd.over){ kd.cur.pop(); kdRender(); } });
+  document.getElementById('kdTry').addEventListener('click', function(){
+    if(kd.over || kd.cur.length < 3) return;
+    const exact = kd.cur.filter((c,i)=>c === kd.secret[i]).length;
+    const common = kd.cur.filter(c=>kd.secret.includes(c)).length;
+    kd.hist.push({ c: kd.cur.slice(), e: exact, m: common - exact });
+    kd.cur = [];
+    if(exact === 3){
+      kd.over = true; kdWins++; kdScoreEl.textContent = kdWins;
+      kdFlash.style.color = 'var(--grass-dark)'; kdFlash.textContent = 'Kodu çözdün! 🎉 ('+kd.hist.length+' denemede)';
+      evRecordProgress('kod','solved'); kdRender();
+      setTimeout(kdNew, 2400);
+    } else if(kd.hist.length >= 8){
+      kd.over = true; kdFlash.style.color = 'var(--coral-dark)';
+      kdFlash.textContent = 'Kod çözülemedi. Gizli kod: '+kd.secret.join('')+' — yeni kod geliyor.'; kdRender();
+      setTimeout(kdNew, 3000);
+    } else kdRender();
+  });
+  document.getElementById('kdNewBtn').addEventListener('click', kdNew);
+
+  /* ---- 🍳 Algoritma Aşçısı ---- */
+  const AG_BANK = [
+    ['🥪 Sandviç hazırlamak',['Elini yıka','Ekmek dilimini tabağa koy','Üstüne peynir ve domates koy','İkinci ekmeği kapat']],
+    ['🪥 Diş fırçalamak',['Fırçaya diş macunu sık','Dişlerini fırçala','Ağzını suyla çalkala','Fırçayı yıkayıp yerine koy']],
+    ['🌱 Fidan dikmek',['Toprağı kaz','Fidanı çukura yerleştir','Toprağı üstüne ört','Fidanı sula']],
+    ['🧼 El yıkamak',['Musluğu aç ve elleri ıslat','Sabunla köpürt','Suyla durula','Havluyla kurula']],
+    ['🎒 Çanta hazırlamak',['Ders programına bak','Defter ve kitapları koy','Kalem kutusunu koy','Çantanın fermuarını kapat']],
+    ['🎨 Resim yapmak',['Kâğıdı masaya koy','Fırçayı suya batır','Boyayı fırçaya al','Resmi boya','Fırçayı yıka']],
+    ['🚦 Karşıdan karşıya geçmek',['Yaya geçidine git','Sağa ve sola bak','Araçlar durunca yürü','Karşıya geç']],
+    ['🌻 Tohum ekmek',['Saksıya toprak doldur','Tohumu toprağa koy','Üzerini toprakla ört','Üzerine su ver']],
+    ['🌙 Uyumadan önce',['Pijamalarını giy','Dişlerini fırçala','Yatağına gir','Işığı kapat']]
+  ];
+  const agTitle = document.getElementById('agTitle'), agOptions = document.getElementById('agOptions');
+  const agDone = document.getElementById('agDone'), agFlash = document.getElementById('agFlash'), agScoreEl = document.getElementById('agScore');
+  let ag = null, agScore = 0, agRecent = [];
+  function agNew(){
+    let it, tries = 0;
+    do { it = AG_BANK[randInt(0, AG_BANK.length-1)]; tries++; } while(agRecent.includes(it[0]) && tries < 20);
+    agRecent.push(it[0]); if(agRecent.length > 5) agRecent.shift();
+    ag = { steps: it[1], idx: 0, lock: false };
+    agTitle.textContent = it[0]+' — adımları doğru sırayla seç';
+    agOptions.innerHTML = shuffle(it[1]).map(s=>'<button type="button" class="num-tile" data-s="'+esc(s)+'">'+esc(s)+'</button>').join('');
+    agDone.textContent = ''; agFlash.textContent = '';
+  }
+  agOptions.addEventListener('click', function(e){
+    const b = e.target.closest('.num-tile');
+    if(!b || b.disabled || ag.lock) return;
+    if(b.dataset.s === ag.steps[ag.idx]){
+      b.disabled = true; b.style.opacity = '0.35'; ag.idx++;
+      agDone.innerHTML = ag.steps.slice(0, ag.idx).map((s,i)=>(i+1)+'. '+esc(s)).join('<br>');
+      if(ag.idx === ag.steps.length){
+        ag.lock = true; agScore++; agScoreEl.textContent = agScore;
+        agFlash.style.color = 'var(--grass-dark)'; agFlash.textContent = 'Harika, doğru sıra! 🎉';
+        evRecordProgress('algo','correct');
+        setTimeout(agNew, 2000);
+      }
+    } else {
+      ag.lock = true;
+      agFlash.style.color = 'var(--coral-dark)'; agFlash.textContent = 'Yanlış sıra! Sıradaki adım şuydu: '+ag.steps[ag.idx];
+      setTimeout(agNew, 2600);
+    }
+  });
+  document.getElementById('agNewBtn').addEventListener('click', agNew);
+
   /* Seviyeli rozetler kaldırıldı: kayıtlı "rozet:seviye" girişlerini eski sisteme çevir */
   function evBadgeMigrate(){
     appStudents.forEach(function(s){
@@ -4425,6 +4672,7 @@ function restoreDirty(b){
   evMtToIntro();
   rbNext(); krNext(); shNew();
   glNext();
+  pyNew(); dgNew(); kdNew(); agNew();
   /* Mühendis Köprüsü ve Batar mı Yüzer mi kaldırıldı */
   ['evKopru','evBatar'].forEach(function(k){
     document.querySelectorAll('.game-card[data-target="'+k+'"]').forEach(function(c){ c.remove(); });
