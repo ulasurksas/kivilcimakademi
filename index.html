@@ -367,6 +367,12 @@
     <h2 class="game-title">🔢 Matematik</h2>
     <p class="game-desc">İstediğin oyunu seç, sonu gelmeyen yeni sorularla pratik yap.</p>
     <div class="card-grid">
+      <button class="game-card" data-target="evGrafik">
+        <span class="emoji">📊</span>
+        <h3>Grafik Kaşifi</h3>
+        <p>Resimli grafiğe bak, saymayı ve karşılaştırmayı dene.</p>
+        <span class="tag" style="background:var(--grass-dark)">Bireysel</span>
+      </button>
       <button class="game-card" data-target="evPiramit">
         <span class="emoji">🔺</span>
         <h3>Sayı Piramidi</h3>
@@ -423,6 +429,12 @@
     <h2 class="game-title">📖 Türkçe</h2>
     <p class="game-desc">İstediğin oyunu seç, sonu gelmeyen yeni sorularla pratik yap.</p>
     <div class="card-grid">
+      <button class="game-card" data-target="evHikaye">
+        <span class="emoji">🏗️</span>
+        <h3>Hikâye Mimarı</h3>
+        <p>Karışık cümleleri doğru sıraya dizerek hikâyeyi kur.</p>
+        <span class="tag" style="background:var(--grape-dark)">Bireysel</span>
+      </button>
       <button class="game-card" data-target="evMetin">
         <span class="emoji">📚</span>
         <h3>Kısa Metin, 3 Soru</h3>
@@ -1000,6 +1012,8 @@
       <div class="count-options" id="pyLevels" style="justify-content:center;">
         <button type="button" class="count-opt diff-opt active" data-n="3">3 Katlı</button>
         <button type="button" class="count-opt diff-opt" data-n="4">4 Katlı</button>
+        <button type="button" class="count-opt diff-opt" data-n="5">5 Katlı</button>
+        <button type="button" class="count-opt diff-opt" data-hard="1">🔥 Zor: 2 bilinmeyen</button>
       </div>
       <div id="pyBoard" style="margin:10px 0 14px;"></div>
       <div class="row" style="max-width:340px; margin:0 auto;">
@@ -1059,6 +1073,33 @@
       <p class="hint" id="agDone" style="text-align:left; font-weight:700;"></p>
       <div class="flash-msg" id="agFlash"></div>
       <div class="row" style="justify-content:center; margin-top:14px;"><button class="btn ghost" id="agNewBtn">Yeni İş</button></div>
+    </div>
+  </section>
+
+  <!-- ================= EV: GRAFİK KAŞİFİ ================= -->
+  <section class="screen" id="screen-evGrafik">
+    <h2 class="game-title">📊 Grafik Kaşifi</h2>
+    <p class="game-desc">Resimli grafiğe bak, sayarak soruyu cevapla.</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count"><div class="stat"><div class="num" id="grScore">0</div><div class="lbl">DOĞRU</div></div></div>
+      <div class="problem-box"><div id="grChart"></div></div>
+      <div class="problem-text" id="grText" style="font-size:clamp(18px,3vw,26px); margin:8px 0;">-</div>
+      <div class="chip-list" id="grOptions" style="justify-content:center;"></div>
+      <div class="flash-msg" id="grFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;"><button class="btn ghost" id="grNewBtn">Yeni Grafik</button></div>
+    </div>
+  </section>
+
+  <!-- ================= EV: HİKÂYE MİMARI ================= -->
+  <section class="screen" id="screen-evHikaye">
+    <h2 class="game-title">🏗️ Hikâye Mimarı</h2>
+    <p class="game-desc">Cümleleri hikâyenin başından sonuna doğru sırayla seç.</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count"><div class="stat"><div class="num" id="hkScore">0</div><div class="lbl">KURULAN HİKÂYE</div></div></div>
+      <div class="chip-list" id="hkOptions" style="justify-content:center;"></div>
+      <div class="problem-box" style="margin-top:14px;"><div class="problem-text" id="hkDone" style="font-size:clamp(16px,2.6vw,22px); line-height:1.7; text-align:left;"></div></div>
+      <div class="flash-msg" id="hkFlash"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;"><button class="btn ghost" id="hkNewBtn">Yeni Hikâye</button></div>
     </div>
   </section>
 
@@ -1185,6 +1226,9 @@
       <h3 style="font-size:17px; margin-bottom:10px; color:var(--coral-dark);">🏠 Ev İlerlemesi</h3>
       <p class="hint" style="margin-top:0;">Bu öğrencinin evde oynadığı oyunlardan otomatik toplanan sayılar. Her 5 yeni doğru cevapta 1 puan önerilir; "öner" butonuna basarsan puan tabloya işlenir, "Yoksay" dersen öneri puan verilmeden temizlenir.</p>
       <div id="evProgressList"></div>
+      <h3 style="font-size:17px; margin:18px 0 8px; color:var(--coral-dark);">📓 Hata Defteri</h3>
+      <p class="hint" style="margin-top:0;">Ev etkinliklerinde yapılan yanlışlar. En düşük başarı oranı en üstte; ⚠️ işareti en az 5 denemede %60'ın altındaki konuları gösterir.</p>
+      <div id="evWrongList"></div>
     </div>
   </section>
 
@@ -1677,7 +1721,7 @@ function restoreDirty(b){
       const el = node && node.closest ? node.closest('.flash-msg, .guess-status, #kutRecapTitle') : null;
       if(el) seen.add(el);
     });
-    seen.forEach(el=>{ const k = classifyFeedback(el); if(k) playSound(k); if(k === 'bad') evWrongHook(el); });
+    seen.forEach(el=>{ const k = classifyFeedback(el); if(k) playSound(k); if(k === 'bad'){ evWrongHook(el); evWrongLog(el); } });
   });
   document.querySelectorAll('.flash-msg, .guess-status, #kutRecapTitle').forEach(el=>
     feedbackObserver.observe(el, { childList:true, characterData:true, subtree:true })
@@ -1732,7 +1776,7 @@ function restoreDirty(b){
     evSayi:'⚡ Sayı Şimşeği (Ev)', ev24:"🎯 24'e Ulaş", evOruntu:'🧩 Sayı Örüntüsü Avcısı',
     evYuksekAlcak:'🔼 Yüksek mi Alçak mı', evSaatPara:'🕒 Saat ve Para Problemleri',
     evAnagram:'🔤 Anagram', evEsZit:'🔁 Eş - Zıt Anlam', evCumle:'✏️ Cümle Tamamlama',
-    evHece:'🔠 Hecelere Ayırma', evNoktalama:'❓ Noktalama', evDedektif:'🕵️ Sayı Dedektifi', evMetin:'📚 Kısa Metin, 3 Soru', evStem:'🔬 STEM ve Düşünme', evRobot:'🤖 Robot Labirenti', evKural:'🔮 Gizli Kural Makinesi', evSehir:'🏙️ Şehir Kurucu', evKopru:'🌉 Mühendis Köprüsü', evBatar:'💧 Batar mı Yüzer mi?', evGolge:'🔦 Gölge Avcısı', evPiramit:'🔺 Sayı Piramidi', evDenge:'⚖️ Denge Terazisi', evKod:'🔐 Kod Çözücü', evAlgo:'🍳 Algoritma Aşçısı',
+    evHece:'🔠 Hecelere Ayırma', evNoktalama:'❓ Noktalama', evDedektif:'🕵️ Sayı Dedektifi', evMetin:'📚 Kısa Metin, 3 Soru', evStem:'🔬 STEM ve Düşünme', evRobot:'🤖 Robot Labirenti', evKural:'🔮 Gizli Kural Makinesi', evSehir:'🏙️ Şehir Kurucu', evKopru:'🌉 Mühendis Köprüsü', evBatar:'💧 Batar mı Yüzer mi?', evGolge:'🔦 Gölge Avcısı', evPiramit:'🔺 Sayı Piramidi', evDenge:'⚖️ Denge Terazisi', evKod:'🔐 Kod Çözücü', evAlgo:'🍳 Algoritma Aşçısı', evGrafik:'📊 Grafik Kaşifi', evHikaye:'🏗️ Hikâye Mimarı',
     evSekilOruntu:'🔶 Şekil Örüntüsü',
     evSiralama:'📊 Sıralama Bulmacası', evZincir:'🔗 Mantık Zincirleri',
     ogrenciler:'👤 Öğrenci Profilleri', studentProfile:'👤 Öğrenci Profili',
@@ -1746,7 +1790,7 @@ function restoreDirty(b){
     evSayi:'evMatematik', ev24:'evMatematik', evOruntu:'evMatematik',
     evYuksekAlcak:'evMatematik', evSaatPara:'evMatematik',
     evAnagram:'evTurkce', evEsZit:'evTurkce', evCumle:'evTurkce',
-    evHece:'evTurkce', evNoktalama:'evTurkce', evMetin:'evTurkce', evDedektif:'evMatematik', evStem:'ev', evRobot:'evStem', evKural:'evStem', evSehir:'evStem', evKopru:'evStem', evBatar:'evStem', evGolge:'evStem', evPiramit:'evMatematik', evDenge:'evMatematik', evKod:'evMantik', evAlgo:'evStem',
+    evHece:'evTurkce', evNoktalama:'evTurkce', evMetin:'evTurkce', evDedektif:'evMatematik', evStem:'ev', evRobot:'evStem', evKural:'evStem', evSehir:'evStem', evKopru:'evStem', evBatar:'evStem', evGolge:'evStem', evPiramit:'evMatematik', evDenge:'evMatematik', evKod:'evMantik', evAlgo:'evStem', evGrafik:'evMatematik', evHikaye:'evTurkce',
     evSekilOruntu:'evMantik',
     evSiralama:'evMantik', evZincir:'evMantik',
     ogrenciler:'home', studentProfile:'ogrenciler', yetkiKapisi:'ogrenciler',
@@ -1921,7 +1965,7 @@ function restoreDirty(b){
     sayiEv:'Sayı Şimşeği (Ev)', oruntu:'Sayı Örüntüsü Avcısı', yuksekAlcak:'Yüksek mi Alçak mı',
     saatPara:'Saat ve Para Problemleri', zincirTC:"24'e Ulaş (Toplama-Çıkarma)", zincirTCC:"24'e Ulaş (Toplama-Çıkarma-Çarpma)",
     anagram:'Anagram', esZit:'Eş - Zıt Anlam', cumle:'Cümle Tamamlama', hece:'Hecelere Ayırma', noktalama:'Noktalama',
-    sekilOruntu:'Şekil Örüntüsü', siralama:'Sıralama Bulmacası', mantikZincir:'Mantık Zincirleri', dedektif:'Sayı Dedektifi', metin:'Kısa Metin, 3 Soru', robot:'Robot Labirenti', kural:'Gizli Kural Makinesi', sehir:'Şehir Kurucu', kopru:'Mühendis Köprüsü', batar:'Batar mı Yüzer mi?', golge:'Gölge Avcısı', piramit:'Sayı Piramidi', denge:'Denge Terazisi', kod:'Kod Çözücü', algo:'Algoritma Aşçısı'
+    sekilOruntu:'Şekil Örüntüsü', siralama:'Sıralama Bulmacası', mantikZincir:'Mantık Zincirleri', dedektif:'Sayı Dedektifi', metin:'Kısa Metin, 3 Soru', robot:'Robot Labirenti', kural:'Gizli Kural Makinesi', sehir:'Şehir Kurucu', kopru:'Mühendis Köprüsü', batar:'Batar mı Yüzer mi?', golge:'Gölge Avcısı', piramit:'Sayı Piramidi', denge:'Denge Terazisi', kod:'Kod Çözücü', algo:'Algoritma Aşçısı', grafik:'Grafik Kaşifi', hikaye:'Hikâye Mimarı'
   };
   function evEnsureProgress(student, key){
     if(!student.evProgress) student.evProgress = {};
@@ -1970,7 +2014,9 @@ function restoreDirty(b){
     ['piramit','correct','🔺 Sayı Piramidi','doğru cevap'],
     ['denge','correct','⚖️ Denge Terazisi','doğru cevap'],
     ['kod','solved','🔐 Kod Çözücü','kez kodu çözdü'],
-    ['algo','correct','🍳 Algoritma Aşçısı','kez doğru sıraladı']
+    ['algo','correct','🍳 Algoritma Aşçısı','kez doğru sıraladı'],
+    ['grafik','correct','📊 Grafik Kaşifi','doğru cevap'],
+    ['hikaye','correct','🏗️ Hikâye Mimarı','kez doğru sıraladı']
   ];
   const EV_ONERI_ESIK = 5; // her 5 yeni doğru/başarıda 1 puan önerilir
   function evHasPending(s){
@@ -2125,7 +2171,7 @@ function restoreDirty(b){
         '<div class="log-item'+(entry.delta<0?' neg':'')+'"><span>'+esc(entry.label)+'</span><span class="delta">'+(entry.delta>0?'+':'')+entry.delta+' → '+entry.total+'</span></div>'
       ).join('');
     }
-    renderEvProgress(s);
+    renderEvProgress(s); renderWrongList(s);
     profAmountInput.focus();
   }
     function applyPointChange(sign){
@@ -4440,7 +4486,7 @@ function restoreDirty(b){
   const pyBoard = document.getElementById('pyBoard'), pyInput = document.getElementById('pyInput');
   const pyFlash = document.getElementById('pyFlash'), pyScoreEl = document.getElementById('pyScore');
   let pyN = 3, pyAns = 0, pyScore = 0;
-  function pyNew(){
+  function pyNewOld(){
     const rows = [Array.from({length:pyN}, ()=>randInt(1,9))];
     for(let r = 1; r < pyN; r++){ const p = rows[r-1]; rows.push(p.slice(1).map((x,i)=>x+p[i])); }
     const br = randInt(0,pyN-1), bc = randInt(0, rows[br].length-1);
@@ -4454,7 +4500,7 @@ function restoreDirty(b){
     }
     pyBoard.innerHTML = h; pyInput.value = ''; pyFlash.textContent = '';
   }
-  function pyCheck(){
+  function pyCheckOld(){
     const raw = pyInput.value.trim();
     if(raw === '') return;
     if(parseInt(raw,10) === pyAns){
@@ -4469,11 +4515,172 @@ function restoreDirty(b){
   document.getElementById('pyLevels').addEventListener('click', function(e){
     const b = e.target.closest('.count-opt');
     if(!b) return;
-    pyN = parseInt(b.dataset.n,10);
-    document.querySelectorAll('#pyLevels .count-opt').forEach(x=>x.classList.toggle('active', x === b));
+    if(b.dataset.hard){ pyHard = !pyHard; } else { pyN = parseInt(b.dataset.n,10); }
+    document.querySelectorAll('#pyLevels .count-opt').forEach(function(x){ x.classList.toggle('active', x.dataset.hard ? pyHard : parseInt(x.dataset.n,10) === pyN); });
     pyNew();
   });
   renderNumKeypad(document.getElementById('pyKeypad'), pyInput, { onEnter: pyCheck });
+
+  /* ---- 🔺 Sayı Piramidi: 5 kat ve zor mod (2 bilinmeyen, çözülebilir) ---- */
+  let pyHard = false, pyGot = [];
+  function pySolvable(rows, bl){
+    const kn = rows.map((row,r)=>row.map((v,c)=>!bl.some(b=>b[0] === r && b[1] === c)));
+    let ch = true;
+    while(ch){
+      ch = false;
+      for(let r = 1; r < rows.length; r++) for(let c = 0; c < rows[r].length; c++){
+        const t = [kn[r][c], kn[r-1][c], kn[r-1][c+1]];
+        if(t.filter(x=>!x).length === 1){
+          if(!t[0]) kn[r][c] = true; else if(!t[1]) kn[r-1][c] = true; else kn[r-1][c+1] = true;
+          ch = true;
+        }
+      }
+    }
+    return kn.every(row=>row.every(Boolean));
+  }
+  function pyNew(){
+    const rows = [Array.from({length:pyN}, ()=>randInt(1,9))];
+    for(let r = 1; r < pyN; r++){ const p = rows[r-1]; rows.push(p.slice(1).map((x,i)=>x+p[i])); }
+    const all = [];
+    rows.forEach((row,r)=>row.forEach((v,c)=>all.push([r,c])));
+    let bl = [all[randInt(0, all.length-1)]];
+    if(pyHard){
+      for(let t = 0; t < 400; t++){
+        const a = all[randInt(0, all.length-1)], b = all[randInt(0, all.length-1)];
+        if(a !== b && pySolvable(rows, [a,b])){ bl = [a,b]; break; }
+      }
+    }
+    pyAns = bl.map(b=>rows[b[0]][b[1]]); pyGot = [];
+    const mw = pyN >= 5 ? 46 : 54;
+    let h = '';
+    for(let r = pyN-1; r >= 0; r--){
+      h += '<div style="display:flex;justify-content:center;gap:6px;margin-bottom:6px;">' + rows[r].map(function(v,c){
+        const bi = bl.findIndex(b=>b[0] === r && b[1] === c);
+        return '<span style="min-width:'+mw+'px;padding:10px 4px;border-radius:12px;border:2px solid var(--line);font-size:'+(pyN>=5?17:20)+'px;font-weight:800;background:'+(bi >= 0 ? 'var(--sun)' : 'var(--paper)')+';">'+(bi >= 0 ? '❓'+(bl.length > 1 ? bi+1 : '') : v)+'</span>';
+      }).join('') + '</div>';
+    }
+    pyBoard.innerHTML = h; pyInput.value = ''; pyFlash.textContent = '';
+    pyInput.placeholder = bl.length > 1 ? '❓1 kaç?' : '❓ kaç?';
+  }
+  function pyCheck(){
+    const raw = pyInput.value.trim();
+    if(raw === '') return;
+    pyGot.push(parseInt(raw,10));
+    if(pyGot.length < pyAns.length){
+      pyInput.value = ''; pyInput.placeholder = '❓'+(pyGot.length+1)+' kaç?';
+      pyFlash.style.color = 'var(--ink-soft)'; pyFlash.textContent = 'Şimdi ❓'+(pyGot.length+1)+' kaç?';
+      return;
+    }
+    if(pyGot.every((v,i)=>v === pyAns[i])){
+      pyScore++; pyScoreEl.textContent = pyScore;
+      pyFlash.style.color = 'var(--grass-dark)'; pyFlash.textContent = 'Doğru! ✔️';
+      evRecordProgress('piramit','correct');
+    } else { pyFlash.style.color = 'var(--coral-dark)'; pyFlash.textContent = 'Yanlış! Doğru cevap: '+pyAns.join(' ve '); }
+    setTimeout(pyNew, 1300);
+  }
+
+  /* ---- 📓 Hata Defteri ---- */
+  const EV_SCREEN_KEY = {evSayi:'sayiEv', evOruntu:'oruntu', evYuksekAlcak:'yuksekAlcak', evSaatPara:'saatPara', evAnagram:'anagram', evEsZit:'esZit', evCumle:'cumle', evHece:'hece', evNoktalama:'noktalama', evSekilOruntu:'sekilOruntu', evSiralama:'siralama', evZincir:'mantikZincir', evDedektif:'dedektif', evMetin:'metin', evKural:'kural', evGolge:'golge', evPiramit:'piramit', evDenge:'denge', evAlgo:'algo', evGrafik:'grafik', evHikaye:'hikaye'};
+  function evWrongLog(el){
+    if(!/^ev/.test(currentScreenId) || currentEvStudentId == null) return;
+    if(!/^Yanlış/.test((el.textContent || '').trim())) return;
+    const s = findStudentById(currentEvStudentId);
+    if(!s) return;
+    const w = evEnsureProgress(s, '_wrongBy');
+    w[currentScreenId] = (w[currentScreenId] || 0) + 1;
+    touch(s.id, 'ev');
+  }
+  function renderWrongList(s){
+    const el = document.getElementById('evWrongList');
+    if(!el) return;
+    const wb = (s.evProgress || {})._wrongBy || {};
+    const rows = Object.keys(wb).filter(k=>wb[k] > 0 && EV_SCREEN_KEY[k]).map(function(k){
+      const b = (s.evProgress || {})[EV_SCREEN_KEY[k]] || {}, ok = (b.correct||0) + (b.wins||0) + (b.solved||0), w = wb[k];
+      return { k:k, w:w, ok:ok, acc:Math.round(100 * ok / (ok + w)) };
+    }).sort((a,b)=>(a.acc - b.acc) || (b.w - a.w));
+    el.innerHTML = rows.length ? rows.map(function(r){
+      return '<div class="log-item neg"><span>'+((r.ok + r.w >= 5 && r.acc < 60) ? '⚠️ ' : '')+esc(titles[r.k] || r.k)+'</span><span class="delta">✖ '+r.w+' · ✔ '+r.ok+' · %'+r.acc+'</span></div>';
+    }).join('') : '<div class="empty-note">Henüz kayıtlı yanlış yok.</div>';
+  }
+
+  /* ---- 📊 Grafik Kaşifi ---- */
+  const GR_SETS = [['🍎','🍌','🍓','🍇','🍊','🍉'],['🐱','🐶','🐰','🐦','🐟','🐹'],['⚽','🏀','🎾','🏐','🎲','🧩']];
+  const grChart = document.getElementById('grChart'), grText = document.getElementById('grText'), grOptions = document.getElementById('grOptions');
+  const grFlash = document.getElementById('grFlash'), grScoreEl = document.getElementById('grScore');
+  let grScore = 0, grCorrect = '';
+  function grNums(a){
+    const s = new Set([a]);
+    [1,-1,2,-2,3].forEach(d=>{ if(s.size < 4 && a+d >= 0) s.add(a+d); });
+    return shuffle([...s]).map(String);
+  }
+  function grNew(){
+    const set = shuffle(GR_SETS[randInt(0,2)]).slice(0,4), vals = shuffle([1,2,3,4,5,6,7,8]).slice(0,4);
+    const mx = vals.indexOf(Math.max(...vals)), mn = vals.indexOf(Math.min(...vals));
+    const i = randInt(0,3), j = (i + randInt(1,3)) % 4, t = randInt(0,4);
+    let q, ans, opts;
+    if(t === 0){ q = 'En çok hangisi var?'; ans = set[mx]; opts = set; }
+    else if(t === 1){ q = 'En az hangisi var?'; ans = set[mn]; opts = set; }
+    else if(t === 2){ q = set[i]+' kaç tane var?'; ans = String(vals[i]); opts = grNums(vals[i]); }
+    else if(t === 3){ q = set[i]+' ile '+set[j]+' arasındaki fark kaç?'; ans = String(Math.abs(vals[i]-vals[j])); opts = grNums(Math.abs(vals[i]-vals[j])); }
+    else { const sum = vals.reduce((a,b)=>a+b,0); q = 'Hepsi birlikte kaç tane?'; ans = String(sum); opts = grNums(sum); }
+    grChart.innerHTML = set.map((e,k)=>'<div style="text-align:left; font-size:22px; line-height:1.6;">'+e+' : '+Array(vals[k]).fill(e).join(' ')+'</div>').join('');
+    grText.textContent = q; grCorrect = ans;
+    grOptions.innerHTML = shuffle(opts).map(w=>'<button type="button" class="num-tile" data-w="'+esc(w)+'">'+esc(w)+'</button>').join('');
+    grFlash.textContent = '';
+  }
+  grOptions.addEventListener('click', function(e){
+    const b = e.target.closest('.num-tile');
+    if(!b) return;
+    if(b.dataset.w === grCorrect){
+      grScore++; grScoreEl.textContent = grScore;
+      grFlash.style.color = 'var(--grass-dark)'; grFlash.textContent = 'Doğru! ✔️';
+      evRecordProgress('grafik','correct');
+    } else { grFlash.style.color = 'var(--coral-dark)'; grFlash.textContent = 'Yanlış! Doğru cevap: '+grCorrect; }
+    setTimeout(grNew, 1300);
+  });
+  document.getElementById('grNewBtn').addEventListener('click', grNew);
+
+  /* ---- 🏗️ Hikâye Mimarı ---- */
+  const HK_BANK = [
+    ['Ali sabah uyandı.','Yüzünü yıkayıp kahvaltı yaptı.','Çantasını alıp okula gitti.','Okulda arkadaşlarıyla buluştu.'],
+    ['Bir çiftçi tohumları toprağa ekti.','Her gün tohumları suladı.','Tohumlar filizlendi.','Sonunda güzel çiçekler açtı.'],
+    ['Kedi yavrusu ağaca çıktı.','Aşağı inemeyince miyavlamaya başladı.','Küçük Elif onu fark etti.','Babası merdivenle kediyi kurtardı.'],
+    ['Hava kararmaya başladı.','Gökyüzünü kara bulutlar kapladı.','Yağmur yağmaya başladı.','Çocuklar koşarak eve girdi.'],
+    ['Deniz kumdan bir kale yapmaya karar verdi.','Önce ıslak kumu topladı.','Sonra kumu üst üste dizdi.','En sonunda kalenin tepesine bayrak dikti.'],
+    ['Arı çiçekten çiçeğe uçtu.','Çiçeklerden özsu topladı.','Kovanına geri döndü.','Arkadaşlarıyla birlikte bal yaptı.'],
+    ['Mina yeni bir bisiklet istedi.','Annesi biraz beklemesini söyledi.','Doğum gününde bisikletini aldı.','Çok mutlu olup parka gitti.'],
+    ['Kar yağmaya başladı.','Çocuklar bahçeye çıktı.','Büyük bir kardan adam yaptılar.','Eve girip sıcak çorba içtiler.']
+  ];
+  const hkOptions = document.getElementById('hkOptions'), hkDone = document.getElementById('hkDone');
+  const hkFlash = document.getElementById('hkFlash'), hkScoreEl = document.getElementById('hkScore');
+  let hk = null, hkScore = 0, hkRecent = [];
+  function hkNew(){
+    let it, tries = 0;
+    do { it = HK_BANK[randInt(0, HK_BANK.length-1)]; tries++; } while(hkRecent.includes(it[0]) && tries < 20);
+    hkRecent.push(it[0]); if(hkRecent.length > 4) hkRecent.shift();
+    hk = { steps: it, idx: 0, lock: false };
+    hkOptions.innerHTML = shuffle(it).map(s=>'<button type="button" class="num-tile" data-s="'+esc(s)+'">'+esc(s)+'</button>').join('');
+    hkDone.textContent = ''; hkFlash.textContent = '';
+  }
+  hkOptions.addEventListener('click', function(e){
+    const b = e.target.closest('.num-tile');
+    if(!b || b.disabled || hk.lock) return;
+    if(b.dataset.s === hk.steps[hk.idx]){
+      b.disabled = true; b.style.opacity = '0.35'; hk.idx++;
+      hkDone.innerHTML = hk.steps.slice(0, hk.idx).map(esc).join(' ');
+      if(hk.idx === hk.steps.length){
+        hk.lock = true; hkScore++; hkScoreEl.textContent = hkScore;
+        hkFlash.style.color = 'var(--grass-dark)'; hkFlash.textContent = 'Harika, hikâyeyi kurdun! 🎉';
+        evRecordProgress('hikaye','correct');
+        setTimeout(hkNew, 2600);
+      }
+    } else {
+      hk.lock = true;
+      hkFlash.style.color = 'var(--coral-dark)'; hkFlash.textContent = 'Yanlış sıra! Sıradaki cümle şuydu: '+hk.steps[hk.idx];
+      setTimeout(hkNew, 3000);
+    }
+  });
+  document.getElementById('hkNewBtn').addEventListener('click', hkNew);
 
   /* ---- ⚖️ Denge Terazisi ---- */
   const DG_F = ['🍎','🍌','🍓','🍇','🍊'];
@@ -4672,7 +4879,7 @@ function restoreDirty(b){
   evMtToIntro();
   rbNext(); krNext(); shNew();
   glNext();
-  pyNew(); dgNew(); kdNew(); agNew();
+  pyNew(); dgNew(); kdNew(); agNew(); grNew(); hkNew();
   /* Mühendis Köprüsü ve Batar mı Yüzer mi kaldırıldı */
   ['evKopru','evBatar'].forEach(function(k){
     document.querySelectorAll('.game-card[data-target="'+k+'"]').forEach(function(c){ c.remove(); });
