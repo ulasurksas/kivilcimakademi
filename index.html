@@ -4989,10 +4989,6 @@ function restoreDirty(b){
     show:s=>s.steps[s.idx],
     progress:s=>{ hkDone.innerHTML = s.steps.slice(0, s.idx).map(esc).join(' '); },
     win:()=>{ hkScore++; hkScoreEl.textContent = hkScore; hkFlash.style.color = 'var(--grass-dark)'; hkFlash.textContent = 'Harika, hikâyeyi kurdun! 🎉'; evRecordProgress('hikaye','correct'); setTimeout(hkNew, 2600); } });
-  orderSetup({ opts:agOptions, attr:'s', skip:'agSkip', flash:agFlash, st:()=>ag, next:agNew,
-    show:s=>s.steps[s.idx],
-    progress:s=>{ agDone.innerHTML = s.steps.slice(0, s.idx).map((x,i)=>(i+1)+'. '+esc(x)).join('<br>'); },
-    win:()=>{ agScore++; agScoreEl.textContent = agScore; agFlash.style.color = 'var(--grass-dark)'; agFlash.textContent = 'Harika, doğru sıra! 🎉'; evRecordProgress('algo','correct'); setTimeout(agNew, 2000); } });
   orderSetup({ opts:evSiraOptions, attr:'name', skip:'sirSkip', flash:evSiraFlash, st:()=>sirSt, next:evSiraNext,
     show:s=>s.steps.join(' → '),
     progress:s=>{ evSiraProgress.textContent = 'Sıra: '+s.idx+'/'+s.steps.length; },
@@ -5275,6 +5271,12 @@ function restoreDirty(b){
   wirePause('sayPauseBtn', ()=>say, sayTick, ['sayAnswerInput','sayAnswerBtn']);
   const BLOCKED_WORDS = ['amk','aq','sik','sikik','siktir','göt','yarak','yarrak','amcık','orospu','piç','bok','boktan','salak','aptal','gerizekalı','ahmak','dangalak','şerefsiz','pezevenk','ibne','puşt','öküz'];
   function isBlocked(text){ return trLower(text).split(/[^a-zçğıöşü]+/).some(t=>BLOCKED_WORDS.includes(t)); }
+
+  /* Algoritma Aşçısı: agOptions tanımlandıktan sonra kurulmalı (TDZ hatası düzeltmesi) */
+  orderSetup({ opts:agOptions, attr:'s', skip:'agSkip', flash:agFlash, st:()=>ag, next:agNew,
+    show:s=>s.steps[s.idx],
+    progress:s=>{ agDone.innerHTML = s.steps.slice(0, s.idx).map((x,i)=>(i+1)+'. '+esc(x)).join('<br>'); },
+    win:()=>{ agScore++; agScoreEl.textContent = agScore; agFlash.style.color = 'var(--grass-dark)'; agFlash.textContent = 'Harika, doğru sıra! 🎉'; evRecordProgress('algo','correct'); setTimeout(agNew, 2000); } });
 
   /* ---------------- Initial render ---------------- */
   renderStudentList();
