@@ -883,12 +883,6 @@
         <p>Önce tahmin et, sonra nedenini öğren.</p>
         <span class="tag" style="background:var(--sky-dark)">Bireysel</span>
       </button>
-      <button class="game-card" data-target="evCevre">
-        <span class="emoji">🌍</span>
-        <h3>Çevre Kahramanı</h3>
-        <p>Su, enerji ve doğa için doğru kararları ver, dünyayı koru.</p>
-        <span class="tag" style="background:var(--grass-dark)">Bireysel</span>
-      </button>
       <button class="game-card" data-target="evPiksel">
         <span class="emoji">🎨</span>
         <h3>Piksel Ressamı</h3>
@@ -1142,28 +1136,13 @@
     </div>
   </section>
 
-  <!-- ================= EV: ÇEVRE KAHRAMANI ================= -->
-  <section class="screen" id="screen-evCevre">
-    <h2 class="game-title">🌍 Çevre Kahramanı</h2>
-    <p class="game-desc">6 olayda karar ver. 💧 su, ⚡ enerji ve 🌳 doğa hiç tükenmesin!</p>
-    <div class="panel" style="text-align:center;">
-      <div class="timer-count"><div class="stat"><div class="num" id="cvScore">0</div><div class="lbl">KAHRAMANLIK</div></div></div>
-      <div class="problem-box"><div class="problem-text" id="cvMeters" style="font-size:clamp(18px,3vw,26px); line-height:1.6;">-</div></div>
-      <div class="problem-text" id="cvText" style="font-size:clamp(18px,3vw,26px); margin:10px 0;">-</div>
-      <div class="chip-list" id="cvOptions" style="justify-content:center;"></div>
-      <div class="flash-msg" id="cvFlash"></div>
-      <div class="row" style="justify-content:center; margin-top:14px;"><button class="btn ghost" id="cvNewBtn">Yeniden Başla</button></div>
-      <p class="hint">Hedef: 6 olay sonunda hiçbir kaynağın bitmemesi ve toplamın en az 18 olması.</p>
-    </div>
-  </section>
-
   <!-- ================= EV: PİKSEL RESSAMI ================= -->
   <section class="screen" id="screen-evPiksel">
     <h2 class="game-title">🎨 Piksel Ressamı</h2>
     <p class="game-desc">Harf ve rakamla konumu bul, rengi seç, kareye dokun.</p>
     <div class="panel" style="text-align:center;">
       <div class="timer-count"><div class="stat"><div class="num" id="pxScore">0</div><div class="lbl">RESİM</div></div></div>
-      <div class="problem-box"><div class="problem-text" id="pxInfo" style="font-size:clamp(16px,2.6vw,22px); line-height:1.8;">-</div></div>
+      <div class="problem-box"><div class="problem-text" id="pxInfo" style="font-size:clamp(16px,2.6vw,22px); line-height:1.8; text-align:center;">-</div></div>
       <div class="chip-list" id="pxPal" style="justify-content:center;"></div>
       <div id="pxGrid" style="display:grid; grid-template-columns:28px repeat(5,1fr); gap:4px; max-width:340px; margin:0 auto 12px; align-items:center; font-weight:800;"></div>
       <div class="row" style="justify-content:center;"><button class="btn grass" id="pxCheckBtn">✅ Resmi Kontrol Et</button></div>
@@ -1294,7 +1273,7 @@
     </div>
     <div class="panel">
       <h3 style="font-size:17px; margin-bottom:10px; color:var(--coral-dark);">🏠 Ev İlerlemesi</h3>
-      <p class="hint" style="margin-top:0;">Bu öğrencinin evde oynadığı oyunlardan otomatik toplanan sayılar. Her 5 yeni doğru cevapta 1 puan önerilir; "öner" butonuna basarsan puan tabloya işlenir, "Yoksay" dersen öneri puan verilmeden temizlenir.</p>
+      <p class="hint" style="margin-top:0;">Bu öğrencinin evde oynadığı oyunlardan otomatik toplanan sayılar. Kolay sorularda her 5, zor sorularda her 3 yeni doğru cevapta 1 puan önerilir; "öner" butonuna basarsan puan tabloya işlenir, "Yoksay" dersen öneri puan verilmeden temizlenir.</p>
       <div id="evProgressList"></div>
       <h3 style="font-size:17px; margin:18px 0 8px; color:var(--coral-dark);">📓 Hata Defteri</h3>
       <p class="hint" style="margin-top:0;">Ev etkinliklerinde yapılan yanlışlar. En düşük başarı oranı en üstte; ⚠️ işareti en az 5 denemede %60'ın altındaki konuları gösterir.</p>
@@ -1846,7 +1825,7 @@ function restoreDirty(b){
     evSayi:'⚡ Sayı Şimşeği (Ev)', ev24:"🎯 24'e Ulaş", evOruntu:'🧩 Sayı Örüntüsü Avcısı',
     evYuksekAlcak:'🔼 Yüksek mi Alçak mı', evSaatPara:'🕒 Saat ve Para Problemleri',
     evAnagram:'🔤 Anagram', evEsZit:'🔁 Eş - Zıt Anlam', evCumle:'✏️ Cümle Tamamlama',
-    evHece:'🔠 Hecelere Ayırma', evNoktalama:'❓ Noktalama', evDedektif:'🕵️ Sayı Dedektifi', evMetin:'📚 Kısa Metin, 3 Soru', evStem:'🔬 STEM ve Düşünme', evRobot:'🤖 Robot Labirenti', evKural:'🔮 Gizli Kural Makinesi', evSehir:'🏙️ Şehir Kurucu', evKopru:'🌉 Mühendis Köprüsü', evBatar:'💧 Batar mı Yüzer mi?', evGolge:'🔦 Gölge Avcısı', evPiramit:'🔺 Sayı Piramidi', evDenge:'⚖️ Denge Terazisi', evKod:'🔐 Kod Çözücü', evAlgo:'🍳 Algoritma Aşçısı', evGrafik:'📊 Grafik Kaşifi', evHikaye:'🏗️ Hikâye Mimarı', evKacis:'🗝️ Kaçış Odası', evCevre:'🌍 Çevre Kahramanı', evPiksel:'🎨 Piksel Ressamı',
+    evHece:'🔠 Hecelere Ayırma', evNoktalama:'❓ Noktalama', evDedektif:'🕵️ Sayı Dedektifi', evMetin:'📚 Kısa Metin, 3 Soru', evStem:'🔬 STEM ve Düşünme', evRobot:'🤖 Robot Labirenti', evKural:'🔮 Gizli Kural Makinesi', evSehir:'🏙️ Şehir Kurucu', evKopru:'🌉 Mühendis Köprüsü', evBatar:'💧 Batar mı Yüzer mi?', evGolge:'🔦 Gölge Avcısı', evPiramit:'🔺 Sayı Piramidi', evDenge:'⚖️ Denge Terazisi', evKod:'🔐 Kod Çözücü', evAlgo:'🍳 Algoritma Aşçısı', evGrafik:'📊 Grafik Kaşifi', evHikaye:'🏗️ Hikâye Mimarı', evKacis:'🗝️ Kaçış Odası', evPiksel:'🎨 Piksel Ressamı',
     evSekilOruntu:'🔶 Şekil Örüntüsü',
     evSiralama:'📊 Sıralama Bulmacası', evZincir:'🔗 Mantık Zincirleri',
     ogrenciler:'👤 Öğrenci Profilleri', studentProfile:'👤 Öğrenci Profili',
@@ -1860,7 +1839,7 @@ function restoreDirty(b){
     evSayi:'evMatematik', ev24:'evMatematik', evOruntu:'evMatematik',
     evYuksekAlcak:'evMatematik', evSaatPara:'evMatematik',
     evAnagram:'evTurkce', evEsZit:'evTurkce', evCumle:'evTurkce',
-    evHece:'evTurkce', evNoktalama:'evTurkce', evMetin:'evTurkce', evDedektif:'evMatematik', evStem:'ev', evRobot:'evStem', evKural:'evStem', evSehir:'evStem', evKopru:'evStem', evBatar:'evStem', evGolge:'evStem', evPiramit:'evMatematik', evDenge:'evMatematik', evKod:'evMantik', evAlgo:'evStem', evGrafik:'evMatematik', evHikaye:'evTurkce', evKacis:'evMantik', evCevre:'evStem', evPiksel:'evStem',
+    evHece:'evTurkce', evNoktalama:'evTurkce', evMetin:'evTurkce', evDedektif:'evMatematik', evStem:'ev', evRobot:'evStem', evKural:'evStem', evSehir:'evStem', evKopru:'evStem', evBatar:'evStem', evGolge:'evStem', evPiramit:'evMatematik', evDenge:'evMatematik', evKod:'evMantik', evAlgo:'evStem', evGrafik:'evMatematik', evHikaye:'evTurkce', evKacis:'evMantik', evPiksel:'evStem',
     evSekilOruntu:'evMantik',
     evSiralama:'evMantik', evZincir:'evMantik',
     ogrenciler:'home', studentProfile:'ogrenciler', yetkiKapisi:'ogrenciler',
@@ -2035,19 +2014,20 @@ function restoreDirty(b){
     sayiEv:'Sayı Şimşeği (Ev)', oruntu:'Sayı Örüntüsü Avcısı', yuksekAlcak:'Yüksek mi Alçak mı',
     saatPara:'Saat ve Para Problemleri', zincirTC:"24'e Ulaş (Toplama-Çıkarma)", zincirTCC:"24'e Ulaş (Toplama-Çıkarma-Çarpma)",
     anagram:'Anagram', esZit:'Eş - Zıt Anlam', cumle:'Cümle Tamamlama', hece:'Hecelere Ayırma', noktalama:'Noktalama',
-    sekilOruntu:'Şekil Örüntüsü', siralama:'Sıralama Bulmacası', mantikZincir:'Mantık Zincirleri', dedektif:'Sayı Dedektifi', metin:'Kısa Metin, 3 Soru', robot:'Robot Labirenti', kural:'Gizli Kural Makinesi', sehir:'Şehir Kurucu', kopru:'Mühendis Köprüsü', batar:'Batar mı Yüzer mi?', golge:'Gölge Avcısı', piramit:'Sayı Piramidi', denge:'Denge Terazisi', kod:'Kod Çözücü', algo:'Algoritma Aşçısı', grafik:'Grafik Kaşifi', hikaye:'Hikâye Mimarı', kacis:'Kaçış Odası', cevre:'Çevre Kahramanı', piksel:'Piksel Ressamı'
+    sekilOruntu:'Şekil Örüntüsü', siralama:'Sıralama Bulmacası', mantikZincir:'Mantık Zincirleri', dedektif:'Sayı Dedektifi', metin:'Kısa Metin, 3 Soru', robot:'Robot Labirenti', kural:'Gizli Kural Makinesi', sehir:'Şehir Kurucu', kopru:'Mühendis Köprüsü', batar:'Batar mı Yüzer mi?', golge:'Gölge Avcısı', piramit:'Sayı Piramidi', denge:'Denge Terazisi', kod:'Kod Çözücü', algo:'Algoritma Aşçısı', grafik:'Grafik Kaşifi', hikaye:'Hikâye Mimarı', kacis:'Kaçış Odası', piksel:'Piksel Ressamı'
   };
   function evEnsureProgress(student, key){
     if(!student.evProgress) student.evProgress = {};
     if(!student.evProgress[key]) student.evProgress[key] = {};
     return student.evProgress[key];
   }
-    function evRecordProgress(key, field){
+    function evRecordProgress(key, field, hard){
     if(currentEvStudentId == null) return;
     const student = findStudentById(currentEvStudentId);
     if(!student) return;
     const bucket = evEnsureProgress(student, key);
     bucket[field] = (bucket[field]||0) + 1;
+    if(hard) bucket.hard = (bucket.hard||0) + 1;
     if(currentStudentIndex !== null && appStudents[currentStudentIndex] === student) renderEvProgress(student);
     if(!Array.isArray(student.evDays)) student.evDays = [];
     const today = todayStr();
@@ -2088,10 +2068,18 @@ function restoreDirty(b){
     ['grafik','correct','📊 Grafik Kaşifi','doğru cevap'],
     ['hikaye','correct','🏗️ Hikâye Mimarı','kez doğru sıraladı'],
     ['kacis','solved','🗝️ Kaçış Odası','kez odadan kaçtı'],
-    ['cevre','solved','🌍 Çevre Kahramanı','kez başardı'],
     ['piksel','solved','🎨 Piksel Ressamı','kez resmi tamamladı']
   ];
-  const EV_ONERI_ESIK = 5; // her 5 yeni doğru/başarıda 1 puan önerilir
+  const EV_BIRIM_KOLAY = 3, EV_BIRIM_ZOR = 5, EV_BIRIM_PUAN = 15; // kolay/orta: 5 doğruda 1 puan (3x5=15), zor: 3 doğruda 1 puan (5x3=15)
+  function evNewCounts(bucket, field){
+    const count = bucket[field] || 0, hard = Math.min(bucket.hard || 0, count);
+    const conv = Math.min(bucket.converted || 0, count), convHard = Math.min(bucket.convHard || 0, hard, conv);
+    return { easy: Math.max(0, (count - hard) - (conv - convHard)), hard: Math.max(0, hard - convHard), count: count, hardTotal: hard };
+  }
+  function evSuggestedPoints(bucket, field){
+    const n = evNewCounts(bucket, field);
+    return Math.floor((n.easy * EV_BIRIM_KOLAY + n.hard * EV_BIRIM_ZOR) / EV_BIRIM_PUAN);
+  }
   function evHasPending(s){
     const ep = s.evProgress || {}, base = s.evHiddenBase || {};
     return EV_PROGRESS_DEFS.some(function(d){
@@ -2099,7 +2087,7 @@ function restoreDirty(b){
       if(!b || !b[d[1]]) return false;
       const count = b[d[1]];
       if(count - ((base[d[0]] || {})[d[1]] || 0) <= 0) return false;
-      return Math.floor(Math.max(0, count - (b.converted || 0)) / EV_ONERI_ESIK) >= 1;
+      return evSuggestedPoints(b, d[1]) >= 1;
     });
   }
   function evProgressRow(ep, key, field, label, suffix, base){
@@ -2108,14 +2096,13 @@ function restoreDirty(b){
     const count = bucket[field];
     const shown = count - (((base||{})[key]||{})[field] || 0);
     if(shown <= 0) return null; // "geçmişi temizle" ile gizlenmiş; veri silinmez
-    const converted = bucket.converted || 0;
-    const newCount = Math.max(0, count - converted);
-    const suggested = Math.floor(newCount / EV_ONERI_ESIK);
+    const suggested = evSuggestedPoints(bucket, field);
+    const hardTotal = Math.min(bucket.hard || 0, count);
     let html = '<div class="log-item" style="align-items:center;"><span>'+esc(label)+': '+shown+' '+esc(suffix)+'</span>';
     if(suggested >= 1){
       html += '<span class="delta" style="display:flex; gap:6px; align-items:center;">'+
-        '<button type="button" class="btn sun" style="padding:4px 10px; font-size:12px; box-shadow:none;" data-approve="'+key+'" data-points="'+suggested+'" data-count="'+count+'">+'+suggested+' puan öner</button>'+
-        '<button type="button" class="btn ghost" style="padding:4px 10px; font-size:12px;" data-dismiss="'+key+'" data-count="'+count+'">Yoksay</button>'+
+        '<button type="button" class="btn sun" style="padding:4px 10px; font-size:12px; box-shadow:none;" data-approve="'+key+'" data-points="'+suggested+'" data-count="'+count+'" data-hard="'+hardTotal+'">+'+suggested+' puan öner</button>'+
+        '<button type="button" class="btn ghost" style="padding:4px 10px; font-size:12px;" data-dismiss="'+key+'" data-count="'+count+'" data-hard="'+hardTotal+'">Yoksay</button>'+
       '</span>';
     } else {
       html += '<span class="delta"></span>';
@@ -2318,18 +2305,20 @@ function restoreDirty(b){
       const key = approveBtn.dataset.approve;
       const points = parseInt(approveBtn.dataset.points, 10);
       const count = parseInt(approveBtn.dataset.count, 10);
+      const hardCnt = parseInt(approveBtn.dataset.hard, 10) || 0;
       const bucket = s.evProgress[key];
       if(!bucket || isNaN(points) || points < 1) return;
-      bucket.converted = count;
+      bucket.converted = count; bucket.convHard = hardCnt;
       s.score += points;
       s.log.unshift({ label: 'Ev ilerlemesi onaylandı — '+(EV_GAME_LABELS[key]||key), delta: points, total: s.score, at: Date.now() });
       checkBadges(s, false);
     } else {
       const key = dismissBtn.dataset.dismiss;
       const count = parseInt(dismissBtn.dataset.count, 10);
+      const hardCnt = parseInt(dismissBtn.dataset.hard, 10) || 0;
       const bucket = s.evProgress[key];
       if(!bucket) return;
-      bucket.converted = count;
+      bucket.converted = count; bucket.convHard = hardCnt;
     }
     renderStudentProfile();
     renderStudentList();
@@ -3182,7 +3171,7 @@ function restoreDirty(b){
     if(val === evSayiProblem.answer){
       evSayiScore++; evSayiScoreEl.textContent = evSayiScore;
       evSayiFlash.style.color='var(--grass-dark)'; evSayiFlash.textContent='Doğru! ✔️';
-      evRecordProgress('sayiEv','correct');
+      evRecordProgress('sayiEv','correct', evSayiDiff === 'zor');
       evSayiStreak++;
       if(evSayiStreak >= EV_SAYI_ONERI_SERI && EV_SAYI_NEXT[evSayiDiff] && evSayiSuggest.style.display === 'none'){
         evSayiSuggestText.textContent = '🎉 Üst üste '+evSayiStreak+' doğru! İstersen '+EV_SAYI_NAME[EV_SAYI_NEXT[evSayiDiff]]+' seviyeyi deneyebilirsin.';
@@ -4579,7 +4568,7 @@ function restoreDirty(b){
     if(parseInt(raw,10) === pyAns){
       pyScore++; pyScoreEl.textContent = pyScore;
       pyFlash.style.color = 'var(--grass-dark)'; pyFlash.textContent = 'Doğru! ✔️';
-      evRecordProgress('piramit','correct');
+      evRecordProgress('piramit','correct', pyHard);
     } else { pyFlash.style.color = 'var(--coral-dark)'; pyFlash.textContent = 'Yanlış! Doğru cevap: '+pyAns; }
     setTimeout(pyNew, 1100);
   }
@@ -4647,13 +4636,13 @@ function restoreDirty(b){
     if(pyGot.every((v,i)=>v === pyAns[i])){
       pyScore++; pyScoreEl.textContent = pyScore;
       pyFlash.style.color = 'var(--grass-dark)'; pyFlash.textContent = 'Doğru! ✔️';
-      evRecordProgress('piramit','correct');
+      evRecordProgress('piramit','correct', pyHard);
     } else { pyFlash.style.color = 'var(--coral-dark)'; pyFlash.textContent = 'Yanlış! Doğru cevap: '+pyAns.join(' ve '); }
     setTimeout(pyNew, 1300);
   }
 
   /* ---- 📓 Hata Defteri ---- */
-  const EV_SCREEN_KEY = {evSayi:'sayiEv', evOruntu:'oruntu', evYuksekAlcak:'yuksekAlcak', evSaatPara:'saatPara', evAnagram:'anagram', evEsZit:'esZit', evCumle:'cumle', evHece:'hece', evNoktalama:'noktalama', evSekilOruntu:'sekilOruntu', evSiralama:'siralama', evZincir:'mantikZincir', evDedektif:'dedektif', evMetin:'metin', evKural:'kural', evGolge:'golge', evPiramit:'piramit', evDenge:'denge', evAlgo:'algo', evGrafik:'grafik', evHikaye:'hikaye', evKacis:'kacis', evCevre:'cevre', evPiksel:'piksel'};
+  const EV_SCREEN_KEY = {evSayi:'sayiEv', evOruntu:'oruntu', evYuksekAlcak:'yuksekAlcak', evSaatPara:'saatPara', evAnagram:'anagram', evEsZit:'esZit', evCumle:'cumle', evHece:'hece', evNoktalama:'noktalama', evSekilOruntu:'sekilOruntu', evSiralama:'siralama', evZincir:'mantikZincir', evDedektif:'dedektif', evMetin:'metin', evKural:'kural', evGolge:'golge', evPiramit:'piramit', evDenge:'denge', evAlgo:'algo', evGrafik:'grafik', evHikaye:'hikaye', evKacis:'kacis', evPiksel:'piksel'};
   function evWrongLog(el){
     if(!/^ev/.test(currentScreenId) || currentEvStudentId == null) return;
     if(!/^Yanlış/.test((el.textContent || '').trim())) return;
@@ -4707,7 +4696,7 @@ function restoreDirty(b){
     if(b.dataset.w === grCorrect){
       grScore++; grScoreEl.textContent = grScore;
       grFlash.style.color = 'var(--grass-dark)'; grFlash.textContent = 'Doğru! ✔️';
-      evRecordProgress('grafik','correct');
+      evRecordProgress('grafik','correct', grHard);
     } else { grFlash.style.color = 'var(--coral-dark)'; grFlash.textContent = 'Yanlış! Doğru cevap: '+grCorrect; }
     setTimeout(grNew, 1300);
   });
@@ -4797,57 +4786,6 @@ function restoreDirty(b){
   });
   document.getElementById('kcNewBtn').addEventListener('click', kcNew);
 
-  /* ---- 🌍 Çevre Kahramanı ---- */
-  const CV_EV = [
-    ['Musluk damlatıyor.',[['Sıkıca kapatırım',1,0,0],['Görmezden gelirim',-2,0,0],['Biraz daha açık bırakırım',-1,0,0]]],
-    ['Sınıfta kimse yokken ışıklar yanıyor.',[['Işıkları söndürürüm',0,1,0],['Yanık kalsın',0,-2,0],['Bir lamba daha yakarım',0,-3,0]]],
-    ['Yerde bir plastik şişe var.',[['Geri dönüşüm kutusuna atarım',0,0,2],['Bahçeye atarım',0,0,-2],['Yerde bırakırım',0,0,-1]]],
-    ['Bahçedeki çiçekler susuzluktan solmuş.',[['Akşam serinliğinde sularım',-1,0,2],['Saatlerce hortumla sularım',-3,0,1],['Hiçbir şey yapmam',0,0,-2]]],
-    ['Ödev bitti, bilgisayar hâlâ açık.',[['Kapatırım',0,1,0],['Açık kalsın',0,-2,0],['Ekran koruyucu açarım',0,-1,0]]],
-    ['Okula nasıl gidersin?',[['Yürüyerek giderim',0,1,1],['Arabayla giderim',0,-2,-1],['Servisle gideriz',0,0,0]]],
-    ['Banyoda duş alıyorsun.',[['Kısa duş alırım',1,0,0],['Çok uzun duş alırım',-3,0,0],['Küvet doldururum',-2,0,0]]],
-    ['Kış geldi, oda çok sıcak.',[['Kalorifer kısıp ince giyinirim',0,2,0],['Pencereyi açarım, kalorifer yansın',0,-2,0],['Hiçbir şey yapmam',0,-1,0]]],
-    ['Okulda fidan dikme etkinliği var.',[['Gönüllü olurum',0,0,3],['Sadece izlerim',0,0,0],['Fidanı yere atarım',0,0,-3]]],
-    ['Dişlerini fırçalıyorsun.',[['Musluğu kapatırım',1,0,0],['Musluk akarken fırçalarım',-2,0,0],['Bardağa su doldururum',0,0,0]]],
-    ['Kullanılmayan bir şarj aleti prizde duruyor.',[['Prizden çekerim',0,1,0],['Takılı kalsın',0,-1,0],['Yanına bir tane daha takarım',0,-2,0]]],
-    ['Piknikte çöplerin var.',[['Çöpleri toplayıp götürürüm',0,0,2],['Ağacın dibine bırakırım',0,0,-3],['Göle atarım',-1,0,-2]]]
-  ];
-  const cvMeters = document.getElementById('cvMeters'), cvText = document.getElementById('cvText'), cvOptions = document.getElementById('cvOptions');
-  const cvFlash = document.getElementById('cvFlash'), cvScoreEl = document.getElementById('cvScore');
-  let cv = null, cvScore = 0;
-  function cvRender(){
-    cvMeters.innerHTML = '💧 '+cv.m[0]+' &nbsp; ⚡ '+cv.m[1]+' &nbsp; 🌳 '+cv.m[2]+'<br>Tur '+(cv.round+1)+'/6';
-    const ev = cv.ev[cv.round];
-    cvText.textContent = ev[0];
-    cvOptions.innerHTML = ev[1].map((c,i)=>'<button type="button" class="num-tile" data-i="'+i+'">'+esc(c[0])+'</button>').join('');
-  }
-  function cvNew(){ cv = { m:[6,6,6], round:0, over:false, ev:shuffle(CV_EV).slice(0,6) }; cvFlash.textContent = ''; cvRender(); }
-  cvOptions.addEventListener('click', function(e){
-    const b = e.target.closest('.num-tile');
-    if(!b || cv.over) return;
-    const c = cv.ev[cv.round][1][parseInt(b.dataset.i,10)], d = c.slice(1);
-    cv.m = cv.m.map((v,k)=>Math.max(0, Math.min(10, v + d[k])));
-    const sum = d[0] + d[1] + d[2];
-    cvFlash.style.color = sum > 0 ? 'var(--grass-dark)' : 'var(--coral-dark)';
-    cvFlash.textContent = (sum > 0 ? 'Güzel karar! 🌍 ' : (sum < 0 ? 'Doğa bunu sevmedi 😟 ' : 'Fena değil. ')) + '(💧'+d[0]+' ⚡'+d[1]+' 🌳'+d[2]+')';
-    cv.round++;
-    const total = cv.m[0] + cv.m[1] + cv.m[2];
-    if(cv.m.some(v=>v <= 0)){
-      cv.over = true; cvMeters.innerHTML = '💧 '+cv.m[0]+' &nbsp; ⚡ '+cv.m[1]+' &nbsp; 🌳 '+cv.m[2];
-      cvFlash.textContent = 'Bir kaynak tükendi! 😟 Daha dikkatli kararlar ver. Yeni bir oyun geliyor...'; cvOptions.innerHTML = '';
-      setTimeout(cvNew, 3200);
-    } else if(cv.round === 6){
-      cv.over = true; cvMeters.innerHTML = '💧 '+cv.m[0]+' &nbsp; ⚡ '+cv.m[1]+' &nbsp; 🌳 '+cv.m[2]; cvOptions.innerHTML = '';
-      if(total >= 18){
-        cvScore++; cvScoreEl.textContent = cvScore;
-        cvFlash.style.color = 'var(--grass-dark)'; cvFlash.textContent = 'Çevre Kahramanı oldun! 🌍🎉 Dünya senin sayende daha iyi.';
-        evRecordProgress('cevre','solved');
-      } else { cvFlash.style.color = 'var(--coral-dark)'; cvFlash.textContent = 'Biraz daha dikkat! Kaynaklar yetmedi. Tekrar dene.'; }
-      setTimeout(cvNew, 3200);
-    } else setTimeout(cvRender, 1400);
-  });
-  document.getElementById('cvNewBtn').addEventListener('click', cvNew);
-
   /* ---- 🎨 Piksel Ressamı ---- */
   const PX_C = ['🔴','🔵','🟡','🟢'], PX_L = 'ABCDE';
   const pxInfo = document.getElementById('pxInfo'), pxGrid = document.getElementById('pxGrid'), pxPal = document.getElementById('pxPal');
@@ -4855,7 +4793,7 @@ function restoreDirty(b){
   let px = null, pxScore = 0;
   function pxName(i){ return PX_L[i % 5] + (Math.floor(i / 5) + 1); }
   function pxRender(){
-    pxInfo.innerHTML = Object.keys(px.target).map(Number).sort((a,b)=>a-b).map(i=>pxName(i)+' → '+px.target[i]).join(' &nbsp;·&nbsp; ');
+    pxInfo.innerHTML = Object.keys(px.target).map(Number).sort((a,b)=>a-b).map(i=>'<div>'+pxName(i)+' karesini '+px.target[i]+' boya</div>').join('');
     let h = '<span></span>' + PX_L.split('').map(l=>'<b>'+l+'</b>').join('');
     for(let r = 0; r < 5; r++){
       h += '<b>'+(r+1)+'</b>';
@@ -5191,7 +5129,7 @@ function restoreDirty(b){
   evMtToIntro();
   rbNext(); krNext(); shNew();
   glNext();
-  pyNew(); dgNew(); kdNew(); agNew(); grNew(); hkNew(); kcNew(); cvNew(); pxNew();
+  pyNew(); dgNew(); kdNew(); agNew(); grNew(); hkNew(); kcNew(); pxNew();
   /* Mühendis Köprüsü ve Batar mı Yüzer mi kaldırıldı */
   ['evKopru','evBatar'].forEach(function(k){
     document.querySelectorAll('.game-card[data-target="'+k+'"]').forEach(function(c){ c.remove(); });
