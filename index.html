@@ -4624,23 +4624,6 @@ function restoreDirty(b){
     pyBoard.innerHTML = h; pyInput.value = ''; pyFlash.textContent = '';
     pyInput.placeholder = bl.length > 1 ? '❓1 kaç?' : '❓ kaç?';
   }
-  function pyCheck(){
-    const raw = pyInput.value.trim();
-    if(raw === '') return;
-    pyGot.push(parseInt(raw,10));
-    if(pyGot.length < pyAns.length){
-      pyInput.value = ''; pyInput.placeholder = '❓'+(pyGot.length+1)+' kaç?';
-      pyFlash.style.color = 'var(--ink-soft)'; pyFlash.textContent = 'Şimdi ❓'+(pyGot.length+1)+' kaç?';
-      return;
-    }
-    if(pyGot.every((v,i)=>v === pyAns[i])){
-      pyScore++; pyScoreEl.textContent = pyScore;
-      pyFlash.style.color = 'var(--grass-dark)'; pyFlash.textContent = 'Doğru! ✔️';
-      evRecordProgress('piramit','correct', pyHard);
-    } else { pyFlash.style.color = 'var(--coral-dark)'; pyFlash.textContent = 'Yanlış! Doğru cevap: '+pyAns.join(' ve '); }
-    setTimeout(pyNew, 1300);
-  }
-
   /* ---- 📓 Hata Defteri ---- */
   const EV_SCREEN_KEY = {evSayi:'sayiEv', evOruntu:'oruntu', evYuksekAlcak:'yuksekAlcak', evSaatPara:'saatPara', evAnagram:'anagram', evEsZit:'esZit', evCumle:'cumle', evHece:'hece', evNoktalama:'noktalama', evSekilOruntu:'sekilOruntu', evSiralama:'siralama', evZincir:'mantikZincir', evDedektif:'dedektif', evMetin:'metin', evKural:'kural', evGolge:'golge', evPiramit:'piramit', evDenge:'denge', evAlgo:'algo', evGrafik:'grafik', evHikaye:'hikaye', evKacis:'kacis', evPiksel:'piksel'};
   function evWrongLog(el){
@@ -4834,11 +4817,51 @@ function restoreDirty(b){
   });
   document.getElementById('pxNewBtn').addEventListener('click', pxNew);
 
-  /* ---- 🔺 Sayı Piramidi: 3-5 kat karışık; Kolay (1 bilinmeyen) / Zor (2-4 bilinmeyen, çözülebilir) ---- */
+  /* ---- 🔺 Sayı Piramidi: 3-5 kat karışık; Kolay (1 bilinmeyen) / Zor (2-4 bilinmeyen, çözülebilir) ----
+     Bilinmeyenler sırayla sorulur; doğru bulununca ❓ yerine sayı yazılır ve sonrakine geçilir. */
+  let py = null;
+  function pyOrder(rows, bl){
+    /* Her adımda, o ana kadar bulunanlarla çözülebilen bir kutu sıradaki olur. */
+    const n = rows.length;
+    const kn = rows.map((row,r)=>row.map((v,c)=>!bl.some(b=>b[0] === r && b[1] === c)));
+    const known = (r,c)=> r >= 0 && r < n && c >= 0 && c < rows[r].length && kn[r][c];
+    const deducible = (r,c)=>
+      (known(r-1,c) && known(r-1,c+1)) ||          /* altındaki iki kutu belli */
+      (known(r+1,c) && known(r,c+1)) ||            /* üstündeki ve sağ komşusu belli */
+      (known(r+1,c-1) && known(r,c-1));            /* üstündeki ve sol komşusu belli */
+    const left = bl.slice(), order = [];
+    while(left.length){
+      let at = left.findIndex(x=>deducible(x[0], x[1]));
+      if(at < 0) at = 0;
+      const x = left.splice(at,1)[0];
+      kn[x[0]][x[1]] = true; order.push(x);
+    }
+    return order;
+  }
+  function pyRender(){
+    const mw = py.n >= 5 ? 46 : 54, multi = py.bl.length > 1;
+    let h = '';
+    for(let r = py.n-1; r >= 0; r--){
+      h += '<div style="display:flex;justify-content:center;gap:6px;margin-bottom:6px;">' + py.rows[r].map(function(v,c){
+        const bi = py.bl.findIndex(b=>b[0] === r && b[1] === c);
+        let bg = 'var(--paper)', txt = v, extra = '';
+        if(bi >= 0){
+          if(bi < py.idx){ bg = '#EAFBF1'; txt = v; extra = 'border-color:var(--grass-dark);'; }
+          else if(bi === py.idx){ bg = 'var(--sun)'; txt = '❓'+(multi ? bi+1 : ''); extra = 'outline:3px solid var(--sky); outline-offset:1px;'; }
+          else { bg = 'var(--sun)'; txt = '❓'+(multi ? bi+1 : ''); extra = 'opacity:0.55;'; }
+        }
+        return '<span style="min-width:'+mw+'px;padding:10px 4px;border-radius:12px;border:2px solid var(--line);font-size:'+(py.n>=5?17:20)+'px;font-weight:800;background:'+bg+';'+extra+'">'+txt+'</span>';
+      }).join('') + '</div>';
+    }
+    pyBoard.innerHTML = h;
+    pyInput.value = '';
+    pyInput.placeholder = '❓'+(multi ? (py.idx+1) : '')+' kaç?';
+  }
   function pyNew(){
-    pyN = randInt(3,5);
-    const rows = [Array.from({length:pyN}, ()=>randInt(1,9))];
-    for(let r = 1; r < pyN; r++){ const p = rows[r-1]; rows.push(p.slice(1).map((x,i)=>x+p[i])); }
+    const n = randInt(3,5);
+    pyN = n;
+    const rows = [Array.from({length:n}, ()=>randInt(1,9))];
+    for(let r = 1; r < n; r++){ const p = rows[r-1]; rows.push(p.slice(1).map((x,i)=>x+p[i])); }
     const all = [];
     rows.forEach((row,r)=>row.forEach((v,c)=>all.push([r,c])));
     let bl = [all[randInt(0, all.length-1)]];
@@ -4851,18 +4874,53 @@ function restoreDirty(b){
         }
       }
     }
-    bl.sort((a,b)=>(b[0]-a[0]) || (a[1]-b[1]));
+    bl = pyOrder(rows, bl);
+    py = { n:n, rows:rows, bl:bl, idx:0, tries:0, missed:false, done:false };
     pyAns = bl.map(b=>rows[b[0]][b[1]]); pyGot = [];
-    const mw = pyN >= 5 ? 46 : 54;
-    let h = '';
-    for(let r = pyN-1; r >= 0; r--){
-      h += '<div style="display:flex;justify-content:center;gap:6px;margin-bottom:6px;">' + rows[r].map(function(v,c){
-        const bi = bl.findIndex(b=>b[0] === r && b[1] === c);
-        return '<span style="min-width:'+mw+'px;padding:10px 4px;border-radius:12px;border:2px solid var(--line);font-size:'+(pyN>=5?17:20)+'px;font-weight:800;background:'+(bi >= 0 ? 'var(--sun)' : 'var(--paper)')+';">'+(bi >= 0 ? '❓'+(bl.length > 1 ? bi+1 : '') : v)+'</span>';
-      }).join('') + '</div>';
+    pyFlash.textContent = '';
+    pyRender();
+  }
+  function pyCheck(){
+    if(!py || py.done) return;
+    const raw = pyInput.value.trim();
+    if(raw === '') return;
+    const want = pyAns[py.idx], multi = py.bl.length > 1;
+    if(parseInt(raw,10) === want){
+      py.idx++; py.tries = 0;
+      if(py.idx >= py.bl.length){
+        py.done = true; pyRender();
+        pyInput.placeholder = 'Bitti!';
+        if(!py.missed){
+          pyScore++; pyScoreEl.textContent = pyScore;
+          pyFlash.style.color = 'var(--grass-dark)'; pyFlash.textContent = 'Doğru! ✔️ Piramit tamam!';
+          evRecordProgress('piramit','correct', pyHard);
+        } else {
+          pyFlash.style.color = 'var(--ink-soft)'; pyFlash.textContent = 'Piramit bitti. Bu sefer puan yok, bir sonrakinde başaracaksın!';
+        }
+        setTimeout(pyNew, 1600);
+      } else {
+        pyRender();
+        pyFlash.style.color = 'var(--grass-dark)';
+        pyFlash.textContent = 'Doğru! ✔️ Şimdi ❓'+(py.idx+1)+' kaç?';
+      }
+    } else {
+      py.tries++;
+      pyFlash.style.color = 'var(--coral-dark)';
+      if(py.tries < 2){
+        pyFlash.textContent = 'Yanlış! Bir hakkın daha var, tekrar dene.';
+        pyInput.value = '';
+      } else {
+        py.missed = true; py.idx++; py.tries = 0;
+        if(py.idx >= py.bl.length){
+          py.done = true; pyRender(); pyInput.placeholder = 'Bitti!';
+          pyFlash.textContent = 'Yanlış! Doğru cevap: '+want;
+          setTimeout(pyNew, 2200);
+        } else {
+          pyRender();
+          pyFlash.textContent = 'Yanlış! Doğru cevap: '+want+'. Şimdi ❓'+(py.idx+1)+' kaç?';
+        }
+      }
     }
-    pyBoard.innerHTML = h; pyInput.value = ''; pyFlash.textContent = '';
-    pyInput.placeholder = bl.length > 1 ? '❓1 kaç?' : '❓ kaç?';
   }
 
   /* ---- 📊 Grafik Kaşifi: Kolay / Zor ---- */
