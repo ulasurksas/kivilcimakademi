@@ -313,9 +313,9 @@
       </button>
       <button class="game-card" data-target="bireysel">
         <span class="emoji">🧍</span>
-        <h3>Bireysel Oyunlar</h3>
-        <p>Öğrencilerin tek başına oynayacağı oyunlar yakında burada olacak.</p>
-        <span class="tag" style="background:var(--sky-dark)">Yakında</span>
+        <h3>Sınıf Yarışmaları</h3>
+        <p>Akıllı tahtada tüm sınıfın katıldığı bilgi yarışmaları ve kişisel soru turları.</p>
+        <span class="tag" style="background:var(--sky-dark)">Tahta etkinlikleri</span>
       </button>
     </div>
   </section>
@@ -1152,6 +1152,109 @@
     </div>
   </section>
 
+  <!-- ================= SINIF: KART YARIŞMASI ================= -->
+  <section class="screen" id="screen-sKart">
+    <div class="subview active" id="skCfg">
+      <h2 class="game-title">🟥 Kart Yarışması</h2>
+      <p class="game-desc">Soruyu tahtada göster, çocuklar A-B-C-D kartını kaldırsın. Cevabı gösterip doğru yapanlara dokun.</p>
+      <div class="panel">
+        <div class="field-label">Konu</div>
+        <div class="count-options" id="skTopic">
+          <button type="button" class="count-opt diff-opt active" data-v="karisik">Karışık</button>
+          <button type="button" class="count-opt diff-opt" data-v="mat">Matematik</button>
+          <button type="button" class="count-opt diff-opt" data-v="tur">Türkçe</button>
+          <button type="button" class="count-opt diff-opt" data-v="man">Mantık</button>
+        </div>
+        <div class="field-label">Zorluk</div>
+        <div class="count-options" id="skLvl">
+          <button type="button" class="count-opt diff-opt" data-v="kolay">Kolay</button>
+          <button type="button" class="count-opt diff-opt active" data-v="orta">Orta</button>
+          <button type="button" class="count-opt diff-opt" data-v="zor">Zor</button>
+        </div>
+        <div class="field-label">Soru sayısı</div>
+        <div class="count-options" id="skN">
+          <button type="button" class="count-opt active" data-v="5">5</button>
+          <button type="button" class="count-opt" data-v="10">10</button>
+        </div>
+        <div class="row"><button class="btn grass" id="skStart">▶️ Başla</button></div>
+        <p class="hint">Gelmeyen öğrencileri bir önceki sayfadaki "Bugün gelmeyenler" listesinden çıkarabilirsin. Doğru cevap başına 1 puan verilir; yarışma sonunda puanları profillere sen onaylayarak işlersin. Bu etkinlikte yanlış cevap puan düşürmez. Zorluk, şimdilik matematikte sayı büyüklüğünü, Türkçe ve mantıkta ise soru uzunluğunu değiştirir.</p>
+      </div>
+    </div>
+    <div class="subview" id="skPlay">
+      <div class="panel" style="text-align:center;">
+        <div class="turn-banner" id="skProg"></div>
+        <div class="problem-box"><div class="problem-text" id="skQ" style="font-size:clamp(22px,4vw,40px); line-height:1.4;">-</div></div>
+        <div id="skOpts" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;"></div>
+        <div class="row" style="justify-content:center;"><button class="btn sun" id="skReveal">✅ Cevabı Göster</button></div>
+        <div id="skRosterWrap" style="display:none;">
+          <p class="hint">Doğru yapanlara dokun:</p>
+          <div class="chip-list" id="skRoster" style="justify-content:center;"></div>
+          <div class="row" style="justify-content:center;">
+            <button class="btn ghost" id="skAll">Hepsi doğru</button>
+            <button class="btn ghost" id="skNone">Temizle</button>
+            <button class="btn grape" id="skNext">Sonraki ➡️</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="subview" id="skEnd">
+      <div class="panel">
+        <h3 style="text-align:center; font-size:24px; margin-bottom:6px;">🏆 Yarışma Sonucu</h3>
+        <div id="skSummary"></div>
+        <div class="row" style="justify-content:center; margin-top:16px;">
+          <button class="btn grass" id="skAward">➕ Puanları profillere işle</button>
+          <button class="btn ghost" id="skAgain">↩ Yeni yarışma</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SINIF: HERKESE SIRA ================= -->
+  <section class="screen" id="screen-sSira">
+    <div class="subview active" id="ssCfg">
+      <h2 class="game-title">🎯 Herkese Sıra</h2>
+      <p class="game-desc">Her öğrenci rastgele sırayla kendi seviyesine uygun tek bir soru alır.</p>
+      <div class="panel">
+        <div class="field-label">Konu</div>
+        <div class="count-options" id="ssTopic">
+          <button type="button" class="count-opt diff-opt active" data-v="karisik">Karışık</button>
+          <button type="button" class="count-opt diff-opt" data-v="mat">Matematik</button>
+          <button type="button" class="count-opt diff-opt" data-v="tur">Türkçe</button>
+          <button type="button" class="count-opt diff-opt" data-v="man">Mantık</button>
+        </div>
+        <div class="field-label">Öğrenci seviyeleri (dokununca değişir: 🟢 kolay, 🟡 orta, 🔴 zor)</div>
+        <div class="chip-list" id="ssLevels" style="justify-content:center;"></div>
+        <div class="row"><button class="btn grass" id="ssStart">▶️ Başla</button></div>
+        <p class="hint">Seviyeler bu cihazda saklanır. Doğru cevap 1 puandır; sonunda puanları onayla. Yanlış cevap puan düşürmez.</p>
+      </div>
+    </div>
+    <div class="subview" id="ssPlay">
+      <div class="panel" style="text-align:center;">
+        <div class="turn-banner" id="ssWho" style="font-size:clamp(20px,3.4vw,32px);"></div>
+        <div class="problem-box"><div class="problem-text" id="ssQ" style="font-size:clamp(20px,3.6vw,36px); line-height:1.4;">-</div></div>
+        <div id="ssOpts" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;"></div>
+        <div class="flash-msg" id="ssAnswer" style="color:var(--ink);"></div>
+        <div class="row" style="justify-content:center;">
+          <button class="btn ghost" id="ssShowAns">👁 Cevabı göster</button>
+          <button class="btn grass" id="ssRight">✅ Doğru</button>
+          <button class="btn coral" id="ssWrong">❌ Yanlış</button>
+          <button class="btn ghost" id="ssSkip">⏭ Sonra</button>
+        </div>
+        <div class="chip-list" id="ssBoard" style="justify-content:center; margin-top:16px;"></div>
+      </div>
+    </div>
+    <div class="subview" id="ssEnd">
+      <div class="panel">
+        <h3 style="text-align:center; font-size:24px; margin-bottom:6px;">🏆 Tur Sonucu</h3>
+        <div id="ssSummary"></div>
+        <div class="row" style="justify-content:center; margin-top:16px;">
+          <button class="btn grass" id="ssAward">➕ Puanları profillere işle</button>
+          <button class="btn ghost" id="ssAgain">↩ Yeni tur</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= VELİ GİRİŞİ (şifresiz, salt-okunur) ================= -->
   <section class="screen" id="screen-veli">
     <h2 class="game-title">👪 Veli Girişi</h2>
@@ -1525,10 +1628,26 @@
 
   <!-- ================= BİREYSEL OYUNLAR ================= -->
   <section class="screen" id="screen-bireysel">
-    <h2 class="game-title">🧍 Bireysel Oyunlar</h2>
-    <p class="game-desc">Öğrencilerin tek başına, kendi sırasında oynayacağı oyunlar.</p>
+    <h2 class="game-title">🏫 Sınıf Yarışmaları</h2>
+    <p class="game-desc">Tahta ortak ekran: çocuklar kart, defter ya da el kaldırarak cevaplar, sen doğru yapanlara dokunursun.</p>
     <div class="panel" style="text-align:center;">
-      <p class="empty-note">Burası hazırlanıyor 👀<br>Yakında bireysel oyunlar eklenecek ve öğrenci puanları doğrudan <strong>Öğrenci Profilleri</strong> ile aynı tabloya işlenecek.</p>
+      <div class="card-grid" style="text-align:left;">
+        <button type="button" class="game-card" id="sGoKart">
+          <span class="emoji">🟥</span>
+          <h3>Kart Yarışması</h3>
+          <p>Soru ve A-B-C-D şıkları tahtada. Çocuklar kartını kaldırır, doğru yapanlara dokunursun.</p>
+          <span class="tag" style="background:var(--coral-dark)">Tüm sınıf</span>
+        </button>
+        <button type="button" class="game-card" id="sGoSira">
+          <span class="emoji">🎯</span>
+          <h3>Herkese Sıra</h3>
+          <p>Her öğrenci sırayla kendi seviyesine uygun bir soru alır. Kimse unutulmaz.</p>
+          <span class="tag" style="background:var(--grape-dark)">Kişisel soru turu</span>
+        </button>
+      </div>
+      <h3 style="font-size:17px; margin:22px 0 6px;">🚫 Bugün gelmeyenler</h3>
+      <p class="hint" style="margin-top:0;">Gelmeyen öğrenciye dokun, listeden çıksın. Seçim bu cihazda saklanır.</p>
+      <div class="chip-list" id="sAbsentList" style="justify-content:center;"></div>
     </div>
   </section>
 
@@ -1831,7 +1950,7 @@ function restoreDirty(b){
     ogrenciler:'👤 Öğrenci Profilleri', studentProfile:'👤 Öğrenci Profili',
     veli:'👪 Veli Girişi', yetkiKapisi:'🔒 Yetkili Girişi', yonetici:'🔐 Yönetici Paneli', arsiv:'🗂 Arşivlenmiş Sonuçlar',
     grup:'🤝 Grup Oyunları', kelime:'💥 Kelime Oyunu', kutu:'📦 Gizemli Kutu',
-    sayi:'🔢 Sayı Şimşeği', bireysel:'🧍 Bireysel Oyunlar'
+    sayi:'🔢 Sayı Şimşeği', bireysel:'🏫 Sınıf Yarışmaları', sKart:'🟥 Kart Yarışması', sSira:'🎯 Herkese Sıra'
   };
   const PARENT = {
     sinif:'home', ev:'home',
@@ -1845,7 +1964,7 @@ function restoreDirty(b){
     ogrenciler:'home', studentProfile:'ogrenciler', yetkiKapisi:'ogrenciler',
     yonetici:'ogrenciler', arsiv:'ogrenciler', veli:'ogrenciler',
     grup:'sinif', kelime:'grup', kutu:'grup', sayi:'grup',
-    bireysel:'sinif'
+    bireysel:'sinif', sKart:'bireysel', sSira:'bireysel'
   };
   let currentScreenId = 'home';
   let replaceNext = false;
@@ -1871,6 +1990,7 @@ function restoreDirty(b){
     }
     if(id === 'ogrenciler') renderStudentList();
     if(id === 'grup') renderGroupSection();
+    if(id === 'bireysel') sRenderAbsent();
     if(id === 'ev') renderEvStudentSelect();
     if(id === 'arsiv') renderArsivList();
     if(id === 'veli') renderVeliSelect();
@@ -4989,6 +5109,190 @@ function restoreDirty(b){
     show:s=>s.steps.join(' → '),
     progress:s=>{ evSiraProgress.textContent = 'Sıra: '+s.idx+'/'+s.steps.length; },
     win:()=>{ evSiraScore++; evSiraScoreEl.textContent = evSiraScore; evSiraFlash.style.color = 'var(--grass-dark)'; evSiraFlash.textContent = 'Doğru sıraladın! 🎉'; evRecordProgress('siralama','correct'); setTimeout(evSiraNext, 1100); } });
+
+  /* =========================================================
+     SINIF YARIŞMALARI (tahta ortak ekran; öğretmen doğru yapanları işaretler)
+     ========================================================= */
+  let sAbsent = new Set();
+  try{ sAbsent = new Set(JSON.parse(localStorage.getItem('kivilcimDevamsiz') || '[]')); }catch(e){}
+  let sLevels = {};
+  try{ sLevels = JSON.parse(localStorage.getItem('kivilcimSeviye') || '{}') || {}; }catch(e){}
+  const SN = 'font-size:14px; padding:8px 14px;';
+  function sPresent(){ return appStudents.filter(s=>!sAbsent.has(s.id)); }
+  function sSub(scr, sub){ document.querySelectorAll('#screen-'+scr+' .subview').forEach(s=>s.classList.toggle('active', s.id === sub)); }
+  function sRenderAbsent(){
+    const el = document.getElementById('sAbsentList');
+    if(!el) return;
+    el.innerHTML = appStudents.map(s=>'<button type="button" class="num-tile" data-id="'+s.id+'" style="'+SN+(sAbsent.has(s.id) ? 'opacity:.4; text-decoration:line-through;' : '')+'">'+esc(s.name)+'</button>').join('');
+  }
+  document.getElementById('sAbsentList').addEventListener('click', function(e){
+    const b = e.target.closest('.num-tile');
+    if(!b) return;
+    const id = parseInt(b.dataset.id,10);
+    if(sAbsent.has(id)) sAbsent.delete(id); else sAbsent.add(id);
+    try{ localStorage.setItem('kivilcimDevamsiz', JSON.stringify([...sAbsent])); }catch(err){}
+    sRenderAbsent();
+  });
+  function sRosterRender(el, marked){
+    el.innerHTML = sPresent().map(s=>'<button type="button" class="num-tile" data-id="'+s.id+'" style="'+SN+(marked.has(s.id) ? 'background:var(--grass); color:#fff;' : '')+'">'+(marked.has(s.id) ? '✓ ' : '')+esc(s.name)+'</button>').join('');
+  }
+  function sPick(contId, cb){
+    document.getElementById(contId).addEventListener('click', function(e){
+      const b = e.target.closest('.count-opt');
+      if(!b) return;
+      document.querySelectorAll('#'+contId+' .count-opt').forEach(x=>x.classList.toggle('active', x === b));
+      cb(b.dataset.v);
+    });
+  }
+  function sAward(tally, label){
+    Object.keys(tally).forEach(function(k){
+      const s = findStudentById(parseInt(k,10)), p = tally[k];
+      if(!s || p <= 0) return;
+      s.score += p;
+      s.log.unshift({ label:'Sınıf yarışması — '+label, delta:p, total:s.score, at:Date.now() });
+      touch(s.id, 'score', 'ev');
+      if(checkBadges(s, false)) touch(s.id, 'ev');
+    });
+    renderStudentList();
+    showToast('Puanlar profillere işlendi ✔️');
+  }
+  function sSummary(el, tally, extra){
+    const rows = sPresent().map(s=>({ n:s.name, p:tally[s.id] || 0 })).sort((a,b)=>b.p - a.p);
+    el.innerHTML = '<div class="ranking-list">' + rows.map((r,i)=>'<div class="rank-item"><span class="rank-medal">'+medalFor(i)+'</span><span class="rank-name">'+esc(r.n)+'</span><span class="rank-score">'+r.p+' puan</span></div>').join('') + '</div>' + (extra || '');
+  }
+  function sqMake(topic, lvl){
+    const t = topic === 'karisik' ? ['mat','tur','man'][randInt(0,2)] : topic;
+    if(t === 'mat'){
+      const old = evSayiDiff; evSayiDiff = lvl;
+      const p = evSayiGenerate(); evSayiDiff = old;
+      return { q:p.text, opts:grNums(p.answer), ans:String(p.answer) };
+    }
+    const bank = t === 'tur' ? CUMLE_BANK : ZINCIR_BANK;
+    const ok = bank.filter(x=>lvl === 'kolay' ? x.text.length <= 40 : (lvl === 'zor' ? x.text.length >= 52 : true));
+    const pool = ok.length ? ok : bank, it = pool[randInt(0, pool.length-1)];
+    return t === 'tur' ? { q:it.text, opts:shuffle([it.answer].concat(it.distractors)), ans:it.answer } : { q:it.text, opts:shuffle(it.options), ans:it.answer };
+  }
+  document.getElementById('sGoKart').addEventListener('click', ()=>requireAuth(()=>showScreen('sKart')));
+  document.getElementById('sGoSira').addEventListener('click', ()=>requireAuth(()=>{ sRenderLevels(); showScreen('sSira'); }));
+
+  /* ---- 🟥 Kart Yarışması ---- */
+  const SK_COL = [['🟥','var(--coral)','#fff'],['🟦','var(--sky)','#fff'],['🟩','var(--grass)','#fff'],['🟨','var(--sun)','var(--ink)']];
+  let skCfg = { topic:'karisik', lvl:'orta', n:5 }, sk = null;
+  sPick('skTopic', v=>{ skCfg.topic = v; });
+  sPick('skLvl', v=>{ skCfg.lvl = v; });
+  sPick('skN', v=>{ skCfg.n = parseInt(v,10); });
+  function skShow(){
+    const q = sk.qs[sk.i];
+    sk.marked = new Set(); sk.revealed = false;
+    document.getElementById('skProg').textContent = 'Soru '+(sk.i+1)+'/'+sk.qs.length;
+    document.getElementById('skQ').textContent = q.q;
+    document.getElementById('skOpts').innerHTML = q.opts.map((o,k)=>'<div data-o="'+esc(o)+'" style="background:'+SK_COL[k][1]+'; color:'+SK_COL[k][2]+'; border-radius:16px; padding:16px; font-size:clamp(18px,3vw,28px); font-weight:800; text-align:left;">'+SK_COL[k][0]+' '+'ABCD'[k]+') '+esc(o)+'</div>').join('');
+    document.getElementById('skRosterWrap').style.display = 'none';
+    document.getElementById('skReveal').style.display = 'inline-block';
+  }
+  document.getElementById('skStart').addEventListener('click', function(){
+    if(!sPresent().length) return;
+    const qs = [], seen = new Set();
+    for(let t = 0; t < 300 && qs.length < skCfg.n; t++){ const q = sqMake(skCfg.topic, skCfg.lvl); if(!seen.has(q.q)){ seen.add(q.q); qs.push(q); } }
+    sk = { qs:qs, i:0, tally:{}, results:[], marked:new Set(), revealed:false, awarded:false };
+    sSub('sKart', 'skPlay'); skShow();
+  });
+  document.getElementById('skReveal').addEventListener('click', function(){
+    const q = sk.qs[sk.i];
+    sk.revealed = true;
+    document.querySelectorAll('#skOpts > div').forEach(function(d){
+      if(d.dataset.o === q.ans) d.style.outline = '5px solid var(--ink)'; else d.style.opacity = '0.3';
+    });
+    document.getElementById('skReveal').style.display = 'none';
+    document.getElementById('skRosterWrap').style.display = 'block';
+    sRosterRender(document.getElementById('skRoster'), sk.marked);
+  });
+  document.getElementById('skRoster').addEventListener('click', function(e){
+    const b = e.target.closest('.num-tile');
+    if(!b) return;
+    const id = parseInt(b.dataset.id,10);
+    if(sk.marked.has(id)) sk.marked.delete(id); else sk.marked.add(id);
+    sRosterRender(document.getElementById('skRoster'), sk.marked);
+  });
+  document.getElementById('skAll').addEventListener('click', function(){ sk.marked = new Set(sPresent().map(s=>s.id)); sRosterRender(document.getElementById('skRoster'), sk.marked); });
+  document.getElementById('skNone').addEventListener('click', function(){ sk.marked = new Set(); sRosterRender(document.getElementById('skRoster'), sk.marked); });
+  document.getElementById('skNext').addEventListener('click', function(){
+    sk.results.push({ q:sk.qs[sk.i].q, c:sk.marked.size, p:sPresent().length });
+    sk.marked.forEach(id=>{ sk.tally[id] = (sk.tally[id] || 0) + 1; });
+    sk.i++;
+    if(sk.i < sk.qs.length){ skShow(); return; }
+    const worst = [...sk.results].sort((a,b)=>(a.c/a.p) - (b.c/b.p))[0];
+    const avg = Math.round(100 * sk.results.reduce((t,r)=>t + r.c, 0) / sk.results.reduce((t,r)=>t + r.p, 0));
+    sSummary(document.getElementById('skSummary'), sk.tally,
+      '<p class="hint">📊 Sınıf ortalaması: %'+avg+' doğru.<br>📉 En çok zorlanılan soru: <b>'+esc(worst.q)+'</b> ('+worst.c+'/'+worst.p+' doğru) — bunu tekrar anlatmayı düşün.</p>');
+    document.getElementById('skAward').disabled = false;
+    sSub('sKart', 'skEnd');
+  });
+  document.getElementById('skAward').addEventListener('click', function(){
+    if(sk.awarded) return;
+    sk.awarded = true; this.disabled = true;
+    sAward(sk.tally, 'Kart Yarışması');
+  });
+  document.getElementById('skAgain').addEventListener('click', ()=>sSub('sKart', 'skCfg'));
+
+  /* ---- 🎯 Herkese Sıra ---- */
+  const SS_LV = ['kolay','orta','zor'], SS_IC = { kolay:'🟢', orta:'🟡', zor:'🔴' };
+  let ssTopic = 'karisik', ss = null;
+  sPick('ssTopic', v=>{ ssTopic = v; });
+  function sRenderLevels(){
+    document.getElementById('ssLevels').innerHTML = appStudents.map(s=>'<button type="button" class="num-tile" data-id="'+s.id+'" style="'+SN+'">'+SS_IC[sLevels[s.id] || 'orta']+' '+esc(s.name)+'</button>').join('');
+  }
+  document.getElementById('ssLevels').addEventListener('click', function(e){
+    const b = e.target.closest('.num-tile');
+    if(!b) return;
+    const id = parseInt(b.dataset.id,10), cur = sLevels[id] || 'orta';
+    sLevels[id] = SS_LV[(SS_LV.indexOf(cur) + 1) % 3];
+    try{ localStorage.setItem('kivilcimSeviye', JSON.stringify(sLevels)); }catch(err){}
+    sRenderLevels();
+  });
+  function ssProgress(){
+    document.getElementById('ssBoard').innerHTML = ss.all.map(function(s){
+      const r = ss.res[s.id];
+      return '<span class="num-tile" style="'+SN+' cursor:default;'+(r === true ? 'background:var(--grass); color:#fff;' : (r === false ? 'background:var(--coral); color:#fff;' : (ss.cur && ss.cur.id === s.id ? 'outline:3px solid var(--sky);' : ''))) +'">'+(r === true ? '✓ ' : (r === false ? '✗ ' : ''))+esc(s.name)+'</span>';
+    }).join(' ');
+  }
+  function ssShow(){
+    if(ss.queue.length === 0){ ssEnd(); return; }
+    ss.cur = ss.queue[0];
+    const lv = sLevels[ss.cur.id] || 'orta', q = sqMake(ssTopic, lv);
+    ss.q = q;
+    document.getElementById('ssWho').textContent = '🎯 Sıra: '+ss.cur.name+' '+SS_IC[lv]+' ('+(ss.all.length - ss.queue.length + 1)+'/'+ss.all.length+')';
+    document.getElementById('ssQ').textContent = q.q;
+    document.getElementById('ssOpts').innerHTML = q.opts.map((o,k)=>'<div data-o="'+esc(o)+'" style="background:'+SK_COL[k][1]+'; color:'+SK_COL[k][2]+'; border-radius:16px; padding:14px; font-size:clamp(17px,2.8vw,26px); font-weight:800; text-align:left;">'+SK_COL[k][0]+' '+'ABCD'[k]+') '+esc(o)+'</div>').join('');
+    document.getElementById('ssAnswer').textContent = '';
+    ssProgress();
+  }
+  function ssEnd(){
+    const tally = {}, wrong = [];
+    ss.all.forEach(s=>{ if(ss.res[s.id] === true) tally[s.id] = 1; else wrong.push(s.name); });
+    ss.tally = tally; ss.awarded = false;
+    sSummary(document.getElementById('ssSummary'), tally, wrong.length ? '<p class="hint">Tekrar çalışılacaklar: <b>'+esc(wrong.join(', '))+'</b></p>' : '<p class="hint">Herkes doğru yaptı! 🎉</p>');
+    document.getElementById('ssAward').disabled = false;
+    sSub('sSira', 'ssEnd');
+  }
+  document.getElementById('ssStart').addEventListener('click', function(){
+    const all = shuffle(sPresent());
+    if(!all.length) return;
+    ss = { all:all, queue:all.slice(), res:{}, cur:null, q:null, tally:{}, awarded:false };
+    sSub('sSira', 'ssPlay'); ssShow();
+  });
+  document.getElementById('ssShowAns').addEventListener('click', function(){
+    document.getElementById('ssAnswer').textContent = 'Doğru cevap: '+ss.q.ans;
+  });
+  document.getElementById('ssRight').addEventListener('click', function(){ ss.res[ss.cur.id] = true; ss.queue.shift(); ssShow(); });
+  document.getElementById('ssWrong').addEventListener('click', function(){ ss.res[ss.cur.id] = false; ss.queue.shift(); ssShow(); });
+  document.getElementById('ssSkip').addEventListener('click', function(){ if(ss.queue.length > 1){ ss.queue.push(ss.queue.shift()); } ssShow(); });
+  document.getElementById('ssAward').addEventListener('click', function(){
+    if(ss.awarded) return;
+    ss.awarded = true; this.disabled = true;
+    sAward(ss.tally, 'Herkese Sıra');
+  });
+  document.getElementById('ssAgain').addEventListener('click', ()=>sSub('sSira', 'ssCfg'));
 
   /* ---- ⚖️ Denge Terazisi ---- */
   const DG_F = ['🍎','🍌','🍓','🍇','🍊'];
