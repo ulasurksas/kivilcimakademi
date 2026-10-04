@@ -1160,6 +1160,9 @@
       <div class="panel">
         <div class="field-label">Konu</div>
         <div class="count-options" id="skTopic">
+          <button type="button" class="count-opt diff-opt" data-v="oku">📖 Okuma</button>
+          <button type="button" class="count-opt diff-opt" data-v="dy">✋ Doğru/Yanlış</button>
+          <button type="button" class="count-opt diff-opt" data-v="haf">🧠 Hafıza</button>
           <button type="button" class="count-opt diff-opt active" data-v="karisik">Karışık</button>
           <button type="button" class="count-opt diff-opt" data-v="mat">Matematik</button>
           <button type="button" class="count-opt diff-opt" data-v="tur">Türkçe</button>
@@ -1177,15 +1180,16 @@
           <button type="button" class="count-opt" data-v="10">10</button>
         </div>
         <div class="row"><button class="btn grass" id="skStart">▶️ Başla</button></div>
-        <p class="hint">Gelmeyen öğrencileri bir önceki sayfadaki "Bugün gelmeyenler" listesinden çıkarabilirsin. Doğru cevap başına 1 puan verilir; yarışma sonunda puanları profillere sen onaylayarak işlersin. Bu etkinlikte yanlış cevap puan düşürmez. Zorluk, şimdilik matematikte sayı büyüklüğünü, Türkçe ve mantıkta ise soru uzunluğunu değiştirir.</p>
+        <p class="hint">Gelmeyen öğrencileri bir önceki sayfadaki "Bugün gelmeyenler" listesinden çıkarabilirsin. Doğru cevap başına 1 puan verilir; yarışma sonunda puanları profillere sen onaylayarak işlersin. Bu etkinlikte yanlış cevap puan düşürmez. Her soru için 10 saniye süre vardır. Zorluk seviyesi soruların türünü ve büyüklüğünü değiştirir. Okuma konusunda metin 25, Hafıza konusunda resim 20 saniye gösterilir; bu üç özel konuda (Okuma, Doğru/Yanlış, Hafıza) zorluk ayarı yoktur.</p>
       </div>
     </div>
     <div class="subview" id="skPlay">
       <div class="panel" style="text-align:center;">
         <div class="turn-banner" id="skProg"></div>
+        <div class="timer-count"><div class="stat"><div class="num" id="skTime">10</div><div class="lbl">SANİYE</div></div></div>
         <div class="problem-box"><div class="problem-text" id="skQ" style="font-size:clamp(22px,4vw,40px); line-height:1.4;">-</div></div>
         <div id="skOpts" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;"></div>
-        <div class="row" style="justify-content:center;"><button class="btn sun" id="skReveal">✅ Cevabı Göster</button></div>
+        <div class="row" style="justify-content:center;"><button class="btn sky" id="skReady" style="display:none;">✅ Hazırım, soruya geç</button><button class="btn sun" id="skReveal">✅ Cevabı Göster</button></div>
         <div id="skRosterWrap" style="display:none;">
           <p class="hint">Doğru yapanlara dokun:</p>
           <div class="chip-list" id="skRoster" style="justify-content:center;"></div>
@@ -1231,6 +1235,7 @@
     <div class="subview" id="ssPlay">
       <div class="panel" style="text-align:center;">
         <div class="turn-banner" id="ssWho" style="font-size:clamp(20px,3.4vw,32px);"></div>
+        <div class="timer-count"><div class="stat"><div class="num" id="ssTime">10</div><div class="lbl">SANİYE</div></div></div>
         <div class="problem-box"><div class="problem-text" id="ssQ" style="font-size:clamp(20px,3.6vw,36px); line-height:1.4;">-</div></div>
         <div id="ssOpts" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;"></div>
         <div class="flash-msg" id="ssAnswer" style="color:var(--ink);"></div>
@@ -1251,6 +1256,31 @@
           <button class="btn grass" id="ssAward">➕ Puanları profillere işle</button>
           <button class="btn ghost" id="ssAgain">↩ Yeni tur</button>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SINIF: ÇARK VE ZAMANLAYICI ================= -->
+  <section class="screen" id="screen-sCark">
+    <h2 class="game-title">🎡 Çark ve Zamanlayıcı</h2>
+    <p class="game-desc">Sınıfta rastgele öğrenci ve görev seç, ders içi geri sayım yap. Gelmeyenler çarka girmez.</p>
+    <div class="panel" style="text-align:center;">
+      <div class="problem-box"><div class="problem-text" id="ckName" style="font-size:clamp(26px,5vw,48px);">🎡 Çevir!</div></div>
+      <div class="flash-msg" id="ckTask" style="color:var(--ink); font-size:clamp(16px,2.6vw,22px);"></div>
+      <div class="row" style="justify-content:center;"><button class="btn coral" id="ckSpin">🎡 Çarkı Çevir</button></div>
+    </div>
+    <div class="panel" style="text-align:center;">
+      <h3 style="font-size:17px; margin-bottom:10px;">⏱ Zamanlayıcı</h3>
+      <div class="problem-box"><div class="problem-text" id="tmDisp" style="font-size:clamp(40px,9vw,90px);">0:00</div></div>
+      <div class="row" style="justify-content:center;" id="tmPresets">
+        <button type="button" class="btn sky" data-min="1">1 dk</button>
+        <button type="button" class="btn sky" data-min="2">2 dk</button>
+        <button type="button" class="btn sky" data-min="5">5 dk</button>
+        <button type="button" class="btn sky" data-min="10">10 dk</button>
+      </div>
+      <div class="row" style="justify-content:center; margin-top:10px;">
+        <button type="button" class="btn ghost" id="tmPause">⏸ Duraklat</button>
+        <button type="button" class="btn ghost" id="tmReset">↺ Sıfırla</button>
       </div>
     </div>
   </section>
@@ -1638,6 +1668,12 @@
           <p>Soru ve A-B-C-D şıkları tahtada. Çocuklar kartını kaldırır, doğru yapanlara dokunursun.</p>
           <span class="tag" style="background:var(--coral-dark)">Tüm sınıf</span>
         </button>
+        <button type="button" class="game-card" id="sGoCark">
+          <span class="emoji">🎡</span>
+          <h3>Çark ve Zamanlayıcı</h3>
+          <p>Rastgele öğrenci ve görev seç, ders içi geri sayım yap.</p>
+          <span class="tag" style="background:var(--sun-dark)">Sınıf aracı</span>
+        </button>
         <button type="button" class="game-card" id="sGoSira">
           <span class="emoji">🎯</span>
           <h3>Herkese Sıra</h3>
@@ -1950,7 +1986,7 @@ function restoreDirty(b){
     ogrenciler:'👤 Öğrenci Profilleri', studentProfile:'👤 Öğrenci Profili',
     veli:'👪 Veli Girişi', yetkiKapisi:'🔒 Yetkili Girişi', yonetici:'🔐 Yönetici Paneli', arsiv:'🗂 Arşivlenmiş Sonuçlar',
     grup:'🤝 Grup Oyunları', kelime:'💥 Kelime Oyunu', kutu:'📦 Gizemli Kutu',
-    sayi:'🔢 Sayı Şimşeği', bireysel:'🏫 Sınıf Yarışmaları', sKart:'🟥 Kart Yarışması', sSira:'🎯 Herkese Sıra'
+    sayi:'🔢 Sayı Şimşeği', bireysel:'🏫 Sınıf Yarışmaları', sKart:'🟥 Kart Yarışması', sSira:'🎯 Herkese Sıra', sCark:'🎡 Çark ve Zamanlayıcı'
   };
   const PARENT = {
     sinif:'home', ev:'home',
@@ -1964,7 +2000,7 @@ function restoreDirty(b){
     ogrenciler:'home', studentProfile:'ogrenciler', yetkiKapisi:'ogrenciler',
     yonetici:'ogrenciler', arsiv:'ogrenciler', veli:'ogrenciler',
     grup:'sinif', kelime:'grup', kutu:'grup', sayi:'grup',
-    bireysel:'sinif', sKart:'bireysel', sSira:'bireysel'
+    bireysel:'sinif', sKart:'bireysel', sSira:'bireysel', sCark:'bireysel'
   };
   let currentScreenId = 'home';
   let replaceNext = false;
@@ -5160,7 +5196,7 @@ function restoreDirty(b){
     const rows = sPresent().map(s=>({ n:s.name, p:tally[s.id] || 0 })).sort((a,b)=>b.p - a.p);
     el.innerHTML = '<div class="ranking-list">' + rows.map((r,i)=>'<div class="rank-item"><span class="rank-medal">'+medalFor(i)+'</span><span class="rank-name">'+esc(r.n)+'</span><span class="rank-score">'+r.p+' puan</span></div>').join('') + '</div>' + (extra || '');
   }
-  function sqMake(topic, lvl){
+  function sqMakeOld(topic, lvl){
     const t = topic === 'karisik' ? ['mat','tur','man'][randInt(0,2)] : topic;
     if(t === 'mat'){
       const old = evSayiDiff; evSayiDiff = lvl;
@@ -5178,10 +5214,10 @@ function restoreDirty(b){
   /* ---- 🟥 Kart Yarışması ---- */
   const SK_COL = [['🟥','var(--coral)','#fff'],['🟦','var(--sky)','#fff'],['🟩','var(--grass)','#fff'],['🟨','var(--sun)','var(--ink)']];
   let skCfg = { topic:'karisik', lvl:'orta', n:5 }, sk = null;
-  sPick('skTopic', v=>{ skCfg.topic = v; });
+  sPick('skTopic', v=>{ skCfg.topic = v; sOku.q = []; sHaf.q = []; });
   sPick('skLvl', v=>{ skCfg.lvl = v; });
   sPick('skN', v=>{ skCfg.n = parseInt(v,10); });
-  function skShow(){
+  function skShowOld(){
     const q = sk.qs[sk.i];
     sk.marked = new Set(); sk.revealed = false;
     document.getElementById('skProg').textContent = 'Soru '+(sk.i+1)+'/'+sk.qs.length;
@@ -5199,7 +5235,7 @@ function restoreDirty(b){
   });
   document.getElementById('skReveal').addEventListener('click', function(){
     const q = sk.qs[sk.i];
-    sk.revealed = true;
+    sk.revealed = true; sTimerStop();
     document.querySelectorAll('#skOpts > div').forEach(function(d){
       if(d.dataset.o === q.ans) d.style.outline = '5px solid var(--ink)'; else d.style.opacity = '0.3';
     });
@@ -5266,8 +5302,12 @@ function restoreDirty(b){
     document.getElementById('ssOpts').innerHTML = q.opts.map((o,k)=>'<div data-o="'+esc(o)+'" style="background:'+SK_COL[k][1]+'; color:'+SK_COL[k][2]+'; border-radius:16px; padding:14px; font-size:clamp(17px,2.8vw,26px); font-weight:800; text-align:left;">'+SK_COL[k][0]+' '+'ABCD'[k]+') '+esc(o)+'</div>').join('');
     document.getElementById('ssAnswer').textContent = '';
     ssProgress();
+    sTimerStart('ssTime', function(){
+      document.getElementById('ssShowAns').click();
+      const a = document.getElementById('ssAnswer'); a.textContent = '⏰ Süre doldu! ' + a.textContent;
+    });
   }
-  function ssEnd(){
+  function ssEnd(){ sTimerStop();
     const tally = {}, wrong = [];
     ss.all.forEach(s=>{ if(ss.res[s.id] === true) tally[s.id] = 1; else wrong.push(s.name); });
     ss.tally = tally; ss.awarded = false;
@@ -5282,7 +5322,7 @@ function restoreDirty(b){
     sSub('sSira', 'ssPlay'); ssShow();
   });
   document.getElementById('ssShowAns').addEventListener('click', function(){
-    document.getElementById('ssAnswer').textContent = 'Doğru cevap: '+ss.q.ans;
+    sTimerStop(); document.getElementById('ssAnswer').textContent = 'Doğru cevap: '+ss.q.ans;
   });
   document.getElementById('ssRight').addEventListener('click', function(){ ss.res[ss.cur.id] = true; ss.queue.shift(); ssShow(); });
   document.getElementById('ssWrong').addEventListener('click', function(){ ss.res[ss.cur.id] = false; ss.queue.shift(); ssShow(); });
@@ -5293,6 +5333,203 @@ function restoreDirty(b){
     sAward(ss.tally, 'Herkese Sıra');
   });
   document.getElementById('ssAgain').addEventListener('click', ()=>sSub('sSira', 'ssCfg'));
+
+  /* =========================================================
+     SINIF YARIŞMALARI: zor sorular, 10 sn süre, yeni konular, çark
+     ========================================================= */
+  let sTick = null;
+  function sTimerStop(){ clearInterval(sTick); }
+  function sTimerStart(elId, onEnd, secs){
+    clearInterval(sTick);
+    let t = secs || 10;
+    const el = document.getElementById(elId);
+    el.textContent = t; el.style.color = '';
+    sTick = setInterval(function(){
+      if(currentScreenId !== 'sKart' && currentScreenId !== 'sSira'){ clearInterval(sTick); return; }
+      t--; el.textContent = Math.max(0, t);
+      if(t <= 3) el.style.color = 'var(--coral-dark)';
+      if(t <= 0){ clearInterval(sTick); onEnd(); }
+    }, 1000);
+  }
+  function sqOpts(a){
+    const s = new Set([a]);
+    shuffle([1,-1,2,-2,10,-10]).forEach(d=>{ if(s.size < 4 && a + d >= 0) s.add(a + d); });
+    return shuffle([...s]).map(String);
+  }
+  function sqMath(lvl){
+    const r = randInt(0,5);
+    let q, a;
+    if(lvl === 'kolay'){
+      if(r < 2){ const x = randInt(25,69), y = randInt(17,29); q = x+' + '+y+' = ?'; a = x+y; }
+      else if(r < 4){ const x = randInt(51,99), y = randInt(18,49); q = x+' − '+y+' = ?'; a = x-y; }
+      else { const x = randInt(3,6), y = randInt(4,9); q = x+' × '+y+' = ?'; a = x*y; }
+    } else if(lvl === 'orta'){
+      if(r === 0){ const x = randInt(35,89), y = randInt(26,69); q = x+' + '+y+' = ?'; a = x+y; }
+      else if(r === 1){ const x = randInt(7,9), y = randInt(6,9); q = x+' × '+y+' = ?'; a = x*y; }
+      else if(r === 2){ const y = randInt(4,9), z = randInt(4,9); q = (y*z)+' ÷ '+y+' = ?'; a = z; }
+      else if(r === 3){ const b = randInt(18,48), t = randInt(60,99); q = '□ + '+b+' = '+t; a = t-b; }
+      else if(r === 4){ const x = randInt(40,80), y = randInt(15,35), z = randInt(5,15); q = x+' + '+y+' − '+z+' = ?'; a = x+y-z; }
+      else { const b = randInt(3,9), c = randInt(4,9); q = '□ × '+b+' = '+(b*c); a = c; }
+    } else {
+      if(r === 0){ const x = randInt(120,480), y = randInt(135,399); q = x+' + '+y+' = ?'; a = x+y; }
+      else if(r === 1){ const x = randInt(520,980), y = randInt(135,398); q = x+' − '+y+' = ?'; a = x-y; }
+      else if(r === 2){ const x = randInt(12,19), y = randInt(3,6); q = x+' × '+y+' = ?'; a = x*y; }
+      else if(r === 3){ const x = randInt(6,9), y = randInt(6,9), z = randInt(8,25); q = '('+x+' × '+y+') + '+z+' = ?'; a = x*y+z; }
+      else if(r === 4){ const b = randInt(6,9), c = randInt(6,9), d = randInt(11,29); q = '□ × '+b+' + '+d+' = '+(b*c+d); a = c; }
+      else { const x = randInt(5,9), y = randInt(5,9), z = randInt(11,29); q = (x*y)+' − '+z+' + '+(x+y)+' = ?'; a = x*y - z + (x+y); }
+    }
+    return { q:q, opts:sqOpts(a), ans:String(a) };
+  }
+  function sqTur(lvl){
+    const r = randInt(0,2);
+    if(lvl === 'kolay' && r === 0){
+      const it = CUMLE_BANK[randInt(0, CUMLE_BANK.length-1)];
+      return { q:it.text, opts:shuffle([it.answer].concat(it.distractors)), ans:it.answer };
+    }
+    if(r === 0 || (lvl !== 'zor' && r === 2)){
+      const es = Math.random() < 0.5, list = es ? ESANLAM_PAIRS : ZITANLAM_PAIRS, p = list[randInt(0, list.length-1)];
+      const all = ESANLAM_PAIRS.concat(ZITANLAM_PAIRS), rel = new Set([p[0], p[1]]);
+      for(let k = 0; k < 2; k++) all.forEach(x=>{ if(rel.has(x[0]) || rel.has(x[1])){ rel.add(x[0]); rel.add(x[1]); } });
+      const wrong = shuffle([...new Set(all.flat())].filter(w=>!rel.has(w))).slice(0,3);
+      return { q:'"'+p[0]+'" sözcüğünün '+(es ? 'eş' : 'zıt')+' anlamlısı hangisidir?', opts:shuffle([p[1]].concat(wrong)), ans:p[1] };
+    }
+    if(r === 1){
+      const ws = ANAGRAM_WORDS.filter(w=>w.length >= (lvl === 'zor' ? 8 : 6)), w = ws[randInt(0, ws.length-1)], c = countHece(w);
+      const opts = shuffle([1,2,3,4,5].filter(x=>x !== c)).slice(0,3).concat(c);
+      return { q:'"'+w+'" sözcüğü kaç heceli?', opts:shuffle(opts).map(String), ans:String(c) };
+    }
+    const ws = ANAGRAM_WORDS.filter(w=>w.length >= 6), w = ws[randInt(0, ws.length-1)];
+    let others = ANAGRAM_WORDS.filter(x=>x.length === w.length && x !== w);
+    if(others.length < 3) others = ANAGRAM_WORDS.filter(x=>x !== w);
+    return { q:'Harfleri karışık: '+scrambleWord(w).toLocaleUpperCase('tr-TR')+' — hangi sözcük?', opts:shuffle([w].concat(shuffle(others).slice(0,3))), ans:w };
+  }
+  function sqMan(lvl){
+    const r = randInt(0,3);
+    if(lvl === 'kolay' && r === 0){
+      const it = ZINCIR_BANK[randInt(0, ZINCIR_BANK.length-1)];
+      return { q:it.text, opts:shuffle(it.options), ans:it.answer };
+    }
+    if(r === 0){
+      const s0 = randInt(3,25), kind = lvl === 'zor' ? randInt(1,2) : randInt(0,1);
+      let seq, a;
+      if(kind === 0){ const st = randInt(3,9); seq = [0,1,2,3].map(i=>s0 + i*st); a = s0 + 4*st; }
+      else if(kind === 1){ const d = randInt(1,4); const x1 = s0+d, x2 = x1+d+2, x3 = x2+d+4; seq = [s0,x1,x2,x3]; a = x3+d+6; }
+      else { const b = randInt(2,6); seq = [b,2*b,4*b,8*b]; a = 16*b; }
+      return { q:seq.join(', ')+', ?', opts:sqOpts(a), ans:String(a) };
+    }
+    if(r === 1){
+      const a = randInt(25,60), b = randInt(12,35), c = randInt(10,a+b-5), d = randInt(5,18);
+      if(Math.random() < 0.5){ return { q:'Bir kutuda '+a+' bilye vardı. '+b+' bilye daha eklendi, sonra '+c+' bilye alındı. Kutuda kaç bilye kaldı?', opts:sqOpts(a+b-c), ans:String(a+b-c) }; }
+      return { q:'Ali '+a+' sayfa kitap okudu. Ayşe, Ali\'den '+d+' sayfa fazla okudu. İkisi birlikte kaç sayfa okudu?', opts:sqOpts(2*a+d), ans:String(2*a+d) };
+    }
+    if(r === 2){
+      const k = randInt(3,6), mult = shuffle([2,3,4,5,6,7,8,9]).slice(0,3).map(x=>x*k);
+      let odd; do { odd = randInt(10,60); } while(odd % k === 0);
+      return { q:'Bu sayılardan üçü '+k+' sayısının katıdır. Katı olmayan hangisidir?', opts:shuffle(mult.concat(odd)).map(String), ans:String(odd) };
+    }
+    const k = randInt(4,9), m = randInt(3,8), extra = randInt(2,9);
+    return { q:'Bir pakette '+k+' kalem var. '+m+' paket ve ayrıca '+extra+' tane tek kalem kaç kalem eder?', opts:sqOpts(k*m+extra), ans:String(k*m+extra) };
+  }
+  const SQ_DY = [
+    ['Bir hafta 7 gündür.',1],['Güneş bir gezegendir.',0],['Balinalar bir balık türüdür.',0],['Yarım saat 30 dakikadır.',1],
+    ['Su 0°C\'de donar.',1],['Üçgenin 4 kenarı vardır.',0],['Türkiye\'nin başkenti İstanbul\'dur.',0],['Kelebek bir böcektir.',1],
+    ['Yılın en kısa ayı şubattır.',1],['Bir dakikada 100 saniye vardır.',0],['Dünya, Güneş\'in etrafında döner.',1],
+    ['Cumhuriyet 29 Ekim 1923\'te ilan edildi.',1],['5 + 5 + 5 işlemi 3 × 5 ile aynıdır.',1],['Bütün kuşlar uçabilir.',0],
+    ['Yarım litre 500 mililitredir.',1],['100\'den büyük en küçük sayı 101\'dir.',1],['Bir yılda 12 ay vardır.',1],
+    ['Karınca bir böcek değildir.',0],['Nefes alırken havadaki oksijeni kullanırız.',1],['Dikdörtgenin 4 köşesi vardır.',1],
+    ['Sayı doğrusunda 8, 5\'ten küçüktür.',0],['Cuma günü ile Pazar günü arasında Cumartesi vardır.',1],['Yedi gün iki haftadır.',0],
+    ['Çift sayılar 2\'ye tam bölünür.',1]
+  ];
+  const SQ_EM = ['🍎','🍌','🍓','🍇','🍊','🐱','🐶','🐰','🚗','⚽','🎈','🌳'];
+  const sOku = { q: [] }, sHaf = { q: [] };
+  function sqHaf(){
+    if(!sHaf.q.length){
+      const pool = shuffle(SQ_EM), shown = pool.slice(0,5), absent = pool.slice(5), rep = shown[0], cnt = randInt(2,3);
+      const text = shuffle(shown.concat(Array(cnt-1).fill(rep))).join(' ');
+      sHaf.q = [
+        { q:'Resimde hangisi YOKTU?', opts:shuffle([absent[0], shown[1], shown[2], shown[3]]), ans:absent[0], text:text, rs:20 },
+        { q:'Resimde hangisi VARDI?', opts:shuffle([shown[4], absent[1], absent[2], absent[3]]), ans:shown[4], text:text, rs:20 },
+        { q:rep+' resimde kaç tane vardı?', opts:grNums(cnt), ans:String(cnt), text:text, rs:20 }
+      ];
+    }
+    return sHaf.q.shift();
+  }
+  function sqMake(topic, lvl){
+    if(topic === 'oku'){
+      if(!sOku.q.length){
+        const it = METIN_BANK[randInt(0, METIN_BANK.length-1)];
+        sOku.q = it.q.map(x=>({ q:x[0], opts:shuffle([x[1], x[2], x[3]]), ans:x[1], text:it.t, rs:25 }));
+      }
+      return sOku.q.shift();
+    }
+    if(topic === 'dy'){ const s = SQ_DY[randInt(0, SQ_DY.length-1)]; return { q:s[0], opts:['✅ Doğru','❌ Yanlış'], ans:s[1] ? '✅ Doğru' : '❌ Yanlış' }; }
+    if(topic === 'haf') return sqHaf();
+    const t = topic === 'karisik' ? ['mat','tur','man'][randInt(0,2)] : topic;
+    return t === 'mat' ? sqMath(lvl) : (t === 'tur' ? sqTur(lvl) : sqMan(lvl));
+  }
+  /* Kart Yarışması: okuma/hafıza aşaması (metin ya da resim gösterilir, sonra kaybolur) + her soruya 10 sn */
+  function skAsk(){
+    sTimerStop();
+    const q = sk.qs[sk.i];
+    document.getElementById('skReady').style.display = 'none';
+    document.getElementById('skQ').textContent = q.q;
+    document.getElementById('skOpts').innerHTML = q.opts.map((o,k)=>'<div data-o="'+esc(o)+'" style="background:'+SK_COL[k][1]+'; color:'+SK_COL[k][2]+'; border-radius:16px; padding:16px; font-size:clamp(18px,3vw,28px); font-weight:800; text-align:left;">'+SK_COL[k][0]+' '+'ABCD'[k]+') '+esc(o)+'</div>').join('');
+    document.getElementById('skReveal').style.display = 'inline-block';
+    sTimerStart('skTime', function(){ document.getElementById('skReveal').click(); });
+  }
+  function skShow(){
+    const q = sk.qs[sk.i], first = q.text && (sk.i === 0 || sk.qs[sk.i-1].text !== q.text);
+    sk.marked = new Set(); sk.revealed = false;
+    document.getElementById('skProg').textContent = 'Soru '+(sk.i+1)+'/'+sk.qs.length;
+    document.getElementById('skRosterWrap').style.display = 'none';
+    document.getElementById('skReveal').style.display = 'none';
+    if(first){
+      document.getElementById('skQ').textContent = q.text;
+      document.getElementById('skOpts').innerHTML = '<p class="hint" style="grid-column:1 / 3; font-weight:800;">👀 Dikkatle bak! Süre bitince kaybolacak.</p>';
+      document.getElementById('skReady').style.display = 'inline-block';
+      sTimerStart('skTime', skAsk, q.rs || 20);
+    } else skAsk();
+  }
+  document.getElementById('skReady').addEventListener('click', skAsk);
+
+  /* ---- 🎡 Sınıf Çarkı ve Zamanlayıcı ---- */
+  const CK_TASKS = ['Tahtaya gel ve soruyu yüksek sesle oku.','Bir arkadaşına güzel bir soru sor.','Bugün öğrendiğin bir şeyi sınıfa anlat.','Bir sayı söyle, sınıf 15 ekleyip cevabı bulsun.','Bir hayvan taklidi yap, sınıf bulsun.','Bir sonraki soruyu sen seç.','Sessizce bir nesneyi tarif et, sınıf tahmin etsin.','Bir kelime söyle, sınıf zıt anlamlısını bulsun.'];
+  let ckBusy = false;
+  document.getElementById('sGoCark').addEventListener('click', ()=>showScreen('sCark'));
+  document.getElementById('ckSpin').addEventListener('click', function(){
+    const p = sPresent();
+    if(ckBusy || !p.length) return;
+    ckBusy = true;
+    const el = document.getElementById('ckName'), pick = p[randInt(0, p.length-1)];
+    let n = 0;
+    document.getElementById('ckTask').textContent = '';
+    const h = setInterval(function(){
+      el.textContent = '🎡 '+p[randInt(0, p.length-1)].name; n++;
+      if(n >= 22){
+        clearInterval(h); el.textContent = '🎉 '+pick.name;
+        document.getElementById('ckTask').textContent = '📌 Görev: '+CK_TASKS[randInt(0, CK_TASKS.length-1)];
+        playSound('ok'); ckBusy = false;
+      }
+    }, 90);
+  });
+  let tmLeft = 0, tmH = null;
+  function tmShow(){ document.getElementById('tmDisp').textContent = Math.floor(tmLeft/60)+':'+String(tmLeft % 60).padStart(2,'0'); }
+  function tmRun(){
+    clearInterval(tmH);
+    if(tmLeft <= 0) return;
+    tmH = setInterval(function(){
+      if(currentScreenId !== 'sCark'){ clearInterval(tmH); return; }
+      tmLeft--; tmShow();
+      if(tmLeft <= 0){ clearInterval(tmH); playSound('ok'); setTimeout(()=>playSound('ok'), 450); setTimeout(()=>playSound('ok'), 900); }
+    }, 1000);
+  }
+  document.getElementById('tmPresets').addEventListener('click', function(e){
+    const b = e.target.closest('button');
+    if(!b) return;
+    tmLeft = parseInt(b.dataset.min,10) * 60; tmShow(); tmRun();
+  });
+  document.getElementById('tmPause').addEventListener('click', function(){ if(tmH){ clearInterval(tmH); tmH = null; this.textContent = '▶ Devam'; } else { tmRun(); this.textContent = '⏸ Duraklat'; } });
+  document.getElementById('tmReset').addEventListener('click', function(){ clearInterval(tmH); tmH = null; tmLeft = 0; tmShow(); });
 
   /* ---- ⚖️ Denge Terazisi ---- */
   const DG_F = ['🍎','🍌','🍓','🍇','🍊'];
