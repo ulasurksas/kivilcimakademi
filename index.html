@@ -247,6 +247,15 @@
   @media (max-width: 640px){ .card-grid{ grid-template-columns:1fr; } }
   @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; } }
   :focus-visible{ outline:3px solid var(--sky); outline-offset:2px; }
+  .absent-sum{ cursor:pointer; font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:800; }
+  .absent-count{ font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; color:var(--ink-soft); }
+  .abs-tile{ font-size:14px; padding:8px 14px; }
+  .abs-tile.off{ opacity:.4; text-decoration:line-through; }
+  .kura-chip{ background:var(--paper); border:2px solid var(--line); border-radius:999px; padding:6px 14px; font-weight:800; font-size:13.5px; }
+  .kura-chip.done{ background:var(--grass); border-color:var(--grass-dark); color:#fff; }
+  .kura-chip.absent{ opacity:.4; text-decoration:line-through; }
+  .kura-chip.current{ background:var(--sun); border-color:var(--sun-dark); color:var(--ink); transform:scale(1.08); }
+  .kura-name{ font-family:'Baloo 2',sans-serif; font-size:clamp(30px,7vw,64px); color:var(--coral-dark); min-height:1.3em; }
   .recent-list{ max-height:260px; overflow-y:auto; display:flex; flex-direction:column; gap:4px; }
   .recent-item{ display:flex; align-items:center; gap:8px; background:var(--paper); border-radius:8px; padding:6px 10px; font-size:13px; font-weight:700; border-left:4px solid var(--grass-dark); }
   .recent-item.neg{ border-left-color:var(--coral-dark); }
@@ -291,12 +300,26 @@
         <p>Öğrencilerin evde tek başına oynayabileceği matematik, Türkçe ve mantık oyunları.</p>
         <span class="tag" style="background:var(--grass-dark)">Etkinlikler</span>
       </button>
+      <button class="game-card" id="kuraCard" type="button">
+        <span class="emoji">🎲</span>
+        <h3>Kura</h3>
+        <p>Sunum yapacak öğrenciyi rastgele seç. Seçilen öğrenci bir daha çıkmaz.</p>
+        <span class="tag" style="background:var(--coral-dark)">Rastgele seçim</span>
+      </button>
       <button class="game-card" data-target="ogrenciler">
         <span class="emoji">👤</span>
         <h3>Öğrenci Profilleri</h3>
         <p>Puan tablosu ve sıralama herkese açıktır. Puan eklemek/silmek için yetkili girişi gerekir.</p>
         <span class="tag" style="background:var(--grape-dark)">Bireysel puanlar</span>
       </button>
+    </div>
+    <div class="panel" style="margin-top:22px;">
+      <details id="absentDetails">
+        <summary class="absent-sum">🚫 Bugün gelmeyenler <span id="absentCount" class="absent-count"></span></summary>
+        <p class="hint">Gelmeyen öğrencilere dokun. İşaretlenenler bugün sınıf etkinliklerinde gruplara alınmaz, çarka ve kuraya girmez, puan almaz. Liste ertesi gün kendiliğinden sıfırlanır. Değiştirmek için yetkili şifresi gerekir.</p>
+        <div class="chip-list" id="absentChips" style="justify-content:center;"></div>
+        <div class="row" style="justify-content:center; margin-top:10px;"><button type="button" class="btn ghost" id="absentClearBtn">Listeyi temizle</button></div>
+      </details>
     </div>
   </section>
 
@@ -1670,6 +1693,31 @@
   </section>
 
   <!-- ================= BİREYSEL OYUNLAR ================= -->
+  <section class="screen" id="screen-kura">
+    <h2 class="game-title">🎲 Kura</h2>
+    <p class="game-desc">Düğmeye bas, sunum yapacak öğrenci seçilsin. Seçilen öğrenci tekrar çıkmaz. Gelmeyenler kuraya girmez.</p>
+    <div class="panel" style="text-align:center;">
+      <div class="timer-count">
+        <div class="stat"><div class="num" id="kuraLeft">0</div><div class="lbl">KALAN</div></div>
+        <div class="stat"><div class="num" id="kuraDoneN">0</div><div class="lbl">SUNUM YAPAN</div></div>
+      </div>
+      <div class="problem-box"><div class="kura-name" id="kuraName">Kura için hazır!</div></div>
+      <div class="row" style="justify-content:center;">
+        <button class="btn coral" id="kuraDrawBtn" type="button">🎲 Kura Çek</button>
+        <button class="btn ghost" id="kuraUndoBtn" type="button">↩ Son seçimi geri al</button>
+      </div>
+      <div class="flash-msg" id="kuraNote"></div>
+    </div>
+    <div class="panel">
+      <h3 style="font-size:17px; margin-bottom:10px;">Tüm öğrenciler</h3>
+      <p class="hint" style="margin-top:0;">Yeşil: sunum yaptı. Sarı: şimdi seçilen. Üstü çizili: bugün gelmedi.</p>
+      <div class="chip-list" id="kuraAll"></div>
+      <div class="row" style="justify-content:center; margin-top:14px;">
+        <button class="btn ghost" id="kuraResetBtn" type="button">Listeyi baştan başlat</button>
+      </div>
+    </div>
+  </section>
+
   <section class="screen" id="screen-bireysel">
     <h2 class="game-title">🏫 Sınıf Yarışmaları</h2>
     <p class="game-desc">Tahta ortak ekran: çocuklar kart, defter ya da el kaldırarak cevaplar, sen doğru yapanlara dokunursun.</p>
@@ -1695,7 +1743,7 @@
         </button>
       </div>
       <h3 style="font-size:17px; margin:22px 0 6px;">🚫 Bugün gelmeyenler</h3>
-      <p class="hint" style="margin-top:0;">Gelmeyen öğrenciye dokun, listeden çıksın. Seçim bu cihazda saklanır.</p>
+      <p class="hint" style="margin-top:0;">Gelmeyen öğrenciye dokun, listeden çıksın. Seçim bu cihazda saklanır ve ertesi gün kendiliğinden sıfırlanır.</p>
       <div class="chip-list" id="sAbsentList" style="justify-content:center;"></div>
     </div>
   </section>
@@ -1988,7 +2036,7 @@ function restoreDirty(b){
   const backBtn = document.getElementById('backBtn');
   const headerTitle = document.getElementById('gameHeaderTitle');
   const titles = {
-    sinif:'🏫 Sınıf Etkinlikleri', ev:'🏠 Ev Etkinlikleri',
+    kura:'🎲 Kura', sinif:'🏫 Sınıf Etkinlikleri', ev:'🏠 Ev Etkinlikleri',
     evMatematik:'🔢 Matematik', evTurkce:'📖 Türkçe', evMantik:'🧠 Mantık',
     evSayi:'⚡ Sayı Şimşeği (Ev)', ev24:"🎯 24'e Ulaş", evOruntu:'🧩 Sayı Örüntüsü Avcısı',
     evYuksekAlcak:'🔼 Yüksek mi Alçak mı', evSaatPara:'🕒 Saat ve Para Problemleri',
@@ -2002,7 +2050,7 @@ function restoreDirty(b){
     sayi:'🔢 Sayı Şimşeği', bireysel:'🏫 Sınıf Yarışmaları', sKart:'🟥 Kart Yarışması', sSira:'🎯 Herkese Sıra', sCark:'🎡 Çark ve Zamanlayıcı'
   };
   const PARENT = {
-    sinif:'home', ev:'home',
+    kura:'home', sinif:'home', ev:'home',
     evMatematik:'ev', evTurkce:'ev', evMantik:'ev',
     evSayi:'evMatematik', ev24:'evMatematik', evOruntu:'evMatematik',
     evYuksekAlcak:'evMatematik', evSaatPara:'evMatematik',
@@ -2017,7 +2065,7 @@ function restoreDirty(b){
   };
   let currentScreenId = 'home';
   let replaceNext = false;
-  const PROTECTED_SCREENS = ['yonetici','studentProfile'];
+  const PROTECTED_SCREENS = ['yonetici','studentProfile','kura'];
   function stopRunningGames(nextId){
     if(nextId !== 'kelime' && kel){ clearInterval(kel.timerHandle); kelShowSubview('kelimeConfig'); }
     if(nextId !== 'kutu' && kut){ clearInterval(kut.timerHandle); kutShowSubview('kutuConfig'); }
@@ -2040,6 +2088,8 @@ function restoreDirty(b){
     if(id === 'ogrenciler') renderStudentList();
     if(id === 'grup') renderGroupSection();
     if(id === 'bireysel') sRenderAbsent();
+    if(id !== 'kura' && kuraBusy){ clearTimeout(kuraTimer); kuraBusy = false; }
+    if(id === 'kura') renderKura();
     if(id === 'ev') renderEvStudentSelect();
     if(id === 'arsiv') renderArsivList();
     if(id === 'veli') renderVeliSelect();
@@ -2334,6 +2384,7 @@ function restoreDirty(b){
   evStudentSelect.addEventListener('change', ()=> onStudentSelectChange(evStudentSelect));
 
   function renderStudentList(){
+    try{ renderHomeAbsent(); }catch(e){}
     const sorted = [...appStudents].sort((a,b)=>b.score-a.score);
     studentList.innerHTML = sorted.map((s,i)=>{
       const realIndex = appStudents.indexOf(s);
@@ -2656,7 +2707,7 @@ function restoreDirty(b){
 
   function renderGroupCards(){
     groupCardsWrap.innerHTML = appGroups.map((g,i)=>{
-      const memberNames = g.members.map(id=>{ const st=findStudentById(id); return st ? st.name : '?'; });
+      const memberNames = g.members.map(id=>{ const st=findStudentById(id); return st ? (st.name + (isAbsentToday(id) ? ' (gelmedi)' : '')) : '?'; });
       return '<div class="group-card">'+
         '<input class="field gname" data-i="'+i+'" value="'+esc(g.name)+'">'+
         '<div class="group-members">'+memberNames.length+' öğrenci: '+esc(memberNames.join(', '))+'</div>'+
@@ -2674,7 +2725,7 @@ function restoreDirty(b){
     }
   });
   function renderGroupSection(){
-    studentCountForGroups.textContent = appStudents.length;
+    studentCountForGroups.textContent = appStudents.filter(s=>!isAbsentToday(s.id)).length;
     renderGroupCountOptions();
     renderScoreboardInto(homeScoreboard, appGroups, -1);
     const enough = appGroups.length >= 2;
@@ -2682,9 +2733,10 @@ function restoreDirty(b){
     gameCardsGroup.forEach(c => { c.classList.toggle('disabled', !enough); c.disabled = !enough; });
   }
     autoGroupBtn.addEventListener('click', ()=>{
-    if(appStudents.length < 2) return;
-    const n = Math.min(selectedGroupCount, appStudents.length);
-    const shuffledIds = shuffle(appStudents.map(s=>s.id));
+    const presentStudents = appStudents.filter(s=>!isAbsentToday(s.id));
+    if(presentStudents.length < 2) return;
+    const n = Math.min(selectedGroupCount, presentStudents.length);
+    const shuffledIds = shuffle(presentStudents.map(s=>s.id));
     const groups = Array.from({length:n}, (_,i)=>({ name:'Grup '+(i+1), score:0, members:[] }));
     shuffledIds.forEach((id, idx)=>{ groups[idx % n].members.push(id); });
     appGroups = groups;
@@ -2712,11 +2764,12 @@ function restoreDirty(b){
       (g.members||[]).forEach(id=>{
         const student = findStudentById(id);
         if(!student) return;
+        if(isAbsentToday(student.id)) return;
         student.score += p;
         student.log.unshift({ label: gameLabel+' — '+g.name+' ('+(i+1)+'. sıra)', delta:p, total: student.score, at: Date.now() });
         touch(student.id, 'score', 'ev');
       });
-      lines.push((medals[i]||(i+1)+'.')+' '+esc(g.name)+' — her öğrenciye +'+p+' puan');
+      lines.push((medals[i]||(i+1)+'.')+' '+esc(g.name)+' — her öğrenciye +'+p+' puan'+(sAbsent.size ? ' (gelmeyenler hariç)' : ''));
     });
     noteEl.innerHTML = lines.length ? ('Puanlar öğrenci profillerine işlendi:<br>'+lines.join('<br>')) : '';
     touchGroups();
@@ -5163,13 +5216,24 @@ function restoreDirty(b){
      SINIF YARIŞMALARI (tahta ortak ekran; öğretmen doğru yapanları işaretler)
      ========================================================= */
   let sAbsent = new Set();
-  try{ sAbsent = new Set(JSON.parse(localStorage.getItem('kivilcimDevamsiz') || '[]')); }catch(e){}
+  let sAbsentDate = '';
+  function sSaveAbsent(){ try{ localStorage.setItem('kivilcimDevamsiz', JSON.stringify({ d:sAbsentDate, ids:[...sAbsent] })); }catch(e){} }
+  function sCheckAbsentDate(){
+    if(sAbsentDate !== todayStr()){ sAbsent = new Set(); sAbsentDate = todayStr(); sSaveAbsent(); }
+  }
+  try{
+    const rawAbs = JSON.parse(localStorage.getItem('kivilcimDevamsiz') || 'null');
+    if(rawAbs && !Array.isArray(rawAbs) && rawAbs.d === todayStr()){ sAbsent = new Set(rawAbs.ids || []); sAbsentDate = rawAbs.d; }
+  }catch(e){}
+  function isAbsentToday(id){ sCheckAbsentDate(); return sAbsent.has(id); }
   let sLevels = {};
   try{ sLevels = JSON.parse(localStorage.getItem('kivilcimSeviye') || '{}') || {}; }catch(e){}
   const SN = 'font-size:14px; padding:8px 14px;';
-  function sPresent(){ return appStudents.filter(s=>!sAbsent.has(s.id)); }
+  function sPresent(){ sCheckAbsentDate(); return appStudents.filter(s=>!sAbsent.has(s.id)); }
   function sSub(scr, sub){ document.querySelectorAll('#screen-'+scr+' .subview').forEach(s=>s.classList.toggle('active', s.id === sub)); }
   function sRenderAbsent(){
+    sCheckAbsentDate();
+    try{ renderHomeAbsent(); }catch(e){}
     const el = document.getElementById('sAbsentList');
     if(!el) return;
     el.innerHTML = appStudents.map(s=>'<button type="button" class="num-tile" data-id="'+s.id+'" style="'+SN+(sAbsent.has(s.id) ? 'opacity:.4; text-decoration:line-through;' : '')+'">'+esc(s.name)+'</button>').join('');
@@ -5178,8 +5242,9 @@ function restoreDirty(b){
     const b = e.target.closest('.num-tile');
     if(!b) return;
     const id = parseInt(b.dataset.id,10);
+    sCheckAbsentDate();
     if(sAbsent.has(id)) sAbsent.delete(id); else sAbsent.add(id);
-    try{ localStorage.setItem('kivilcimDevamsiz', JSON.stringify([...sAbsent])); }catch(err){}
+    sSaveAbsent();
     sRenderAbsent();
   });
   function sRosterRender(el, marked){
@@ -5196,7 +5261,7 @@ function restoreDirty(b){
   function sAward(tally, label){
     Object.keys(tally).forEach(function(k){
       const s = findStudentById(parseInt(k,10)), p = tally[k];
-      if(!s || p <= 0) return;
+      if(!s || p <= 0 || isAbsentToday(s.id)) return;
       s.score += p;
       s.log.unshift({ label:'Sınıf yarışması — '+label, delta:p, total:s.score, at:Date.now() });
       touch(s.id, 'score', 'ev');
@@ -5574,6 +5639,7 @@ function restoreDirty(b){
   function sGive(id, delta, label, quiet){
     const s = findStudentById(id);
     if(!s) return;
+    if(delta > 0 && isAbsentToday(id)) return;
     const before = s.score;
     s.score = Math.max(0, s.score + delta);
     const real = s.score - before;
@@ -5940,6 +6006,88 @@ function restoreDirty(b){
     show:s=>s.steps[s.idx],
     progress:s=>{ agDone.innerHTML = s.steps.slice(0, s.idx).map((x,i)=>(i+1)+'. '+esc(x)).join('<br>'); },
     win:()=>{ agScore++; agScoreEl.textContent = agScore; agFlash.style.color = 'var(--grass-dark)'; agFlash.textContent = 'Harika, doğru sıra! 🎉'; evRecordProgress('algo','correct'); setTimeout(agNew, 2000); } });
+
+
+  /* ---------------- Ana ekran: bugün gelmeyenler ---------------- */
+  function renderHomeAbsent(){
+    const box = document.getElementById('absentChips');
+    if(!box) return;
+    sCheckAbsentDate();
+    box.innerHTML = appStudents.map(s=>'<button type="button" class="num-tile abs-tile'+(sAbsent.has(s.id) ? ' off' : '')+'" data-id="'+s.id+'">'+esc(s.name)+'</button>').join('');
+    const n = appStudents.filter(s=>sAbsent.has(s.id)).length;
+    document.getElementById('absentCount').textContent = n ? '('+n+' kişi gelmedi)' : '(herkes burada)';
+  }
+  function absentChanged(){
+    sSaveAbsent(); sRenderAbsent(); renderHomeAbsent();
+    if(currentScreenId !== 'home') showScreen('home');
+  }
+  document.getElementById('absentChips').addEventListener('click', e=>{
+    const b = e.target.closest('.abs-tile');
+    if(!b) return;
+    const id = parseInt(b.dataset.id, 10);
+    requireAuth(()=>{
+      sCheckAbsentDate();
+      if(sAbsent.has(id)) sAbsent.delete(id); else sAbsent.add(id);
+      absentChanged();
+    });
+  });
+  document.getElementById('absentClearBtn').addEventListener('click', ()=> requireAuth(()=>{
+    sCheckAbsentDate(); sAbsent = new Set(); absentChanged();
+  }));
+
+  /* ---------------- Kura ---------------- */
+  let kuraDone = [];
+  try{ kuraDone = JSON.parse(localStorage.getItem('kivilcimKura') || '[]') || []; }catch(e){}
+  let kuraBusy = false, kuraCurrent = null, kuraTimer = null;
+  function kuraSave(){ try{ localStorage.setItem('kivilcimKura', JSON.stringify(kuraDone)); }catch(e){} }
+  function kuraPool(){ return sPresent().filter(s=>!kuraDone.includes(s.id)); }
+  function renderKura(){
+    sCheckAbsentDate();
+    const pool = kuraPool();
+    document.getElementById('kuraLeft').textContent = pool.length;
+    document.getElementById('kuraDoneN').textContent = kuraDone.filter(id=>findStudentById(id)).length;
+    document.getElementById('kuraAll').innerHTML = appStudents.map(s=>{
+      const cls = sAbsent.has(s.id) ? ' absent' : (s.id === kuraCurrent ? ' current' : (kuraDone.includes(s.id) ? ' done' : ''));
+      return '<span class="kura-chip'+cls+'">'+(cls === ' done' ? '✓ ' : '')+esc(s.name)+'</span>';
+    }).join('');
+    document.getElementById('kuraDrawBtn').disabled = kuraBusy;
+    document.getElementById('kuraNote').textContent = (!pool.length && !kuraBusy) ? 'Herkes sunum yaptı 🎉 İstersen listeyi baştan başlat.' : '';
+  }
+  document.getElementById('kuraCard').addEventListener('click', ()=> requireAuth(()=> showScreen('kura')));
+  document.getElementById('kuraDrawBtn').addEventListener('click', ()=>{
+    if(kuraBusy) return;
+    const pool = kuraPool();
+    if(!pool.length){ renderKura(); return; }
+    const winner = pool[Math.floor(Math.random() * pool.length)];
+    const nameEl = document.getElementById('kuraName');
+    kuraBusy = true; kuraCurrent = null; renderKura();
+    function step(i){
+      if(i >= 20){
+        nameEl.textContent = winner.name;
+        kuraDone.push(winner.id); kuraCurrent = winner.id; kuraSave();
+        kuraBusy = false;
+        playSound('ok');
+        renderKura();
+        return;
+      }
+      nameEl.textContent = pool[Math.floor(Math.random() * pool.length)].name;
+      kuraTimer = setTimeout(()=>step(i + 1), 60 + i * 9);
+    }
+    step(0);
+  });
+  document.getElementById('kuraUndoBtn').addEventListener('click', ()=>{
+    if(kuraBusy || !kuraDone.length) return;
+    kuraDone.pop(); kuraCurrent = null; kuraSave();
+    document.getElementById('kuraName').textContent = 'Kura için hazır!';
+    renderKura();
+  });
+  document.getElementById('kuraResetBtn').addEventListener('click', ()=>{
+    if(kuraBusy) return;
+    if(!confirm('Sunum yapanlar listesi sıfırlansın mı?')) return;
+    kuraDone = []; kuraCurrent = null; kuraSave();
+    document.getElementById('kuraName').textContent = 'Kura için hazır!';
+    renderKura();
+  });
 
   /* ---------------- Initial render ---------------- */
   renderStudentList();
